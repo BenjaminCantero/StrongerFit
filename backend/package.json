@@ -1,0 +1,19 @@
+{
+  "name": "@strongerfit/backend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "deno task dev",
+    "start": "deno task start",
+    "typecheck": "deno task check",
+    "lint": "deno lint src supabase/functions"
+  },
+  "dependencies": {
+    "@hono/zod-openapi": "1.6.3",
+    "@strongerfit/contracts": "0.1.0",
+    "@supabase/supabase-js": "2.118.0",
+    "hono": "4.13.14",
+    "zod": "4.6.7"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "tasks": {
+    "dev": "deno run --config supabase/functions/api/deno.json --env-file=.env --allow-env --allow-net --watch src/server.ts",
+    "start": "deno run --config supabase/functions/api/deno.json --env-file=.env --allow-env --allow-net src/server.ts",
+    "check": "deno check --config supabase/functions/api/deno.json src/server.ts supabase/functions/api/index.ts"
+  }
+}

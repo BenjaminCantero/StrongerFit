@@ -1,0 +1,16 @@
+{
+  "compilerOptions": { "strict": true },
+  "nodeModulesDir": "auto",
+  "imports": {
+    "@hono/zod-openapi": "npm:@hono/zod-openapi@1.6.3",
+    "@supabase/supabase-js": "npm:@supabase/supabase-js@2.118.0",
+    "hono": "npm:hono@4.13.14",
+    "hono/cors": "npm:hono@4.13.14/cors",
+    "hono/body-limit": "npm:hono@4.13.14/body-limit",
+    "hono/secure-headers": "npm:hono@4.13.14/secure-headers",
+    "hono/factory": "npm:hono@4.13.14/factory",
+    "hono/utils/http-status": "npm:hono@4.13.14/utils/http-status",
+    "zod": "npm:zod@4.6.7",
+    "@strongerfit/contracts": "../../../../packages/contracts/src/index.ts"
+  }
+}

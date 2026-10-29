@@ -1,0 +1,26 @@
+{
+  "name": "strongerfit",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "workspaces": ["frontend", "backend", "packages/contracts"],
+  "engines": { "node": ">=22.16.0" },
+  "scripts": {
+    "dev:frontend": "npm run start --workspace @strongerfit/frontend",
+    "dev:backend": "npm run dev --workspace @strongerfit/backend",
+    "dev:web": "npm run web --workspace @strongerfit/frontend",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "test": "vitest run",
+    "check": "npm run typecheck && npm run lint && npm test",
+    "supabase:start": "supabase start --workdir backend",
+    "supabase:stop": "supabase stop --workdir backend",
+    "supabase:serve": "supabase functions serve api --workdir backend"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "supabase": "2.122.0",
+    "typescript": "~6.0.3",
+    "vitest": "5.0.5"
+  }
+}

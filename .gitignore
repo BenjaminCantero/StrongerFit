@@ -1,0 +1,15 @@
+node_modules/
+.env
+.env.*
+!.env.example
+.expo/
+dist/
+coverage/
+*.tsbuildinfo
+*.log
+.DS_Store
+backend/supabase/.temp/
+backend/supabase/.branches/
+frontend/android/
+frontend/ios/
+test-results/
