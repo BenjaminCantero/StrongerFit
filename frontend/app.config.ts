@@ -12,6 +12,7 @@ const config: ExpoConfig = {
   web: { bundler: 'metro', output: 'single' },
   plugins: [
     'expo-router',
+    'expo-font',
     'expo-secure-store',
     'expo-sqlite',
     ['expo-build-properties', {

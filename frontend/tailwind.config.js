@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+const { colors } = require('./src/theme/tokens.json');
+
 module.exports = {
   darkMode: 'class',
   content: ['./src/**/*.{ts,tsx}'],
@@ -6,11 +8,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        canvas: '#F5F7FA',
-        ink: '#18283B',
-        muted: '#536276',
-        brand: '#235C4B',
-        line: '#DCE3EA',
+        ...colors,
       },
     },
   },
