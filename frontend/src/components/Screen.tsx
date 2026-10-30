@@ -4,10 +4,10 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, layout, spacing } from '../theme';
 import { AppText } from './ui/AppText';
 
-export function Screen({ title, children }: PropsWithChildren<{ title?: string }>) {
+export function Screen({ title, children, safeBottom = false }: PropsWithChildren<{ title?: string; safeBottom?: boolean }>) {
   return (
-    <SafeAreaView style={styles.safeArea} edges={['left', 'right']}>
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+    <SafeAreaView style={styles.safeArea} edges={safeBottom ? ['left', 'right', 'bottom'] : ['left', 'right']}>
+      <ScrollView keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         <View style={styles.content}>
           {title && <AppText variant="title" accessibilityRole="header">{title}</AppText>}
           {children}

@@ -21,6 +21,16 @@ legales y estados de guardado del mockup deben corresponder a la implementación
 ## Implementación por pasos
 
 Paso 1: tema compartido, tipografías, componentes UI, encabezado, navegación e Inicio.
+Paso 2: sesión de entrenamiento según el HTML adjunto, con encabezado de retorno,
+tabla de series, descanso y panel de técnica/historial; durante la sesión se oculta
+la barra inferior. Se conservan el tema y los componentes comunes del primer paso.
+Paso 3: registro de alimento con búsqueda, comida, cantidades, macros y
+acompañamientos, siguiendo el HTML adjunto. La confirmación permanece fija y la
+barra inferior se oculta. Los textos largos se redistribuyen en anchos estrechos.
+Paso 4: diario principal de Alimentación con selector de fecha, balance y comidas.
+El formulario del paso 3 vive en una ruta aparte; añadir, editar y eliminar actualizan
+el diario en memoria. Las cinco pestañas permanecen visibles en el diario. El acceso
+a minuta semanal presenta un estado vacío hasta implementar esa funcionalidad.
 Las demás pantallas mantienen su aviso de funcionalidad pendiente. Modo Operate:
 controles familiares, lectura clara y acciones que responden a la navegación real.
 
@@ -39,5 +49,35 @@ ejemplo están separados y rotulados en desarrollo; producción utiliza el estad
 vacío hasta conectar datos reales. La imagen de perfil de muestra no representa
 una cuenta del usuario.
 
+La sesión de entrenamiento utiliza ejemplos separados y estado solo en memoria.
+La banda superior lo indica y reemplaza el mensaje de guardado automático del
+mockup hasta que exista persistencia. Finalizar pide confirmación y presenta un
+resumen de los valores editados en esa vista previa.
+
+El panel de alimentos conserva gramos exactos al alternar unidades, recalcula el
+desglose y confirma en memoria los alimentos seleccionados. El catálogo se rotula
+como ejemplo, sin atribuciones ni etiquetas de verificación que no estén respaldadas.
+
 La estructura de implementación está descrita en
 [arquitectura de frontend](docs/architecture/frontend.md).
+
+## Ajuste nativo de visibilidad
+
+Los controles con estilos nativos pasan por `AppPressable` para evitar que la
+conversión CSS de NativeWind elimine los estilos calculados al pulsar en Android.
+Se preservan los fondos verdes, la alineación de iconos y texto y las áreas táctiles.
+La navegación inferior adapta sus etiquetas y altura a ventanas pequeñas y a la
+escala de fuente; los nombres completos permanecen disponibles para accesibilidad.
+Los diálogos admiten desplazamiento y los campos de series tienen más ancho.
+Las fotos de alimentos mantienen un icono de respaldo mientras cargan.
+
+
+## Progreso — paso 5
+
+Pantalla basada en el HTML de Progreso recibido: selector de período, consistencia,
+volumen movilizado, registro corporal, historial y reflexión. El gráfico usa barras
+nativas proporcionales a sus valores, con etiquetas legibles y desplazamiento si
+los doce meses no caben. Los filtros, totales y registros de peso responden en memoria.
+La exportación PDF se identifica como pendiente; no se simula la descarga ni se
+promete accesibilidad de un archivo que aún no se genera. Las fuentes, colores,
+encabezado, navegación y controles táctiles siguen el sistema compartido.

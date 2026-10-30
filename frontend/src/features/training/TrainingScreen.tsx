@@ -1,0 +1,99 @@
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { useState } from 'react';
+import { StyleSheet, View } from 'react-native';
+import { Screen } from '../../components/Screen';
+import { AppButton } from '../../components/ui/AppButton';
+import { AppText } from '../../components/ui/AppText';
+import { Card } from '../../components/ui/Card';
+import { colors, radius, spacing } from '../../theme';
+import { ExerciseCard } from './components/ExerciseCard';
+import { ExerciseDetails } from './components/ExerciseDetails';
+import { RestTimer } from './components/RestTimer';
+import { SessionControls } from './components/SessionControls';
+import { SessionDialog } from './components/SessionDialog';
+import { activeSet, sessionSummary, type SessionTemplate } from './domain/session';
+import { formatDuration, formatWeight } from './format';
+import { useTrainingSession } from './useTrainingSession';
+
+type Props = { template: SessionTemplate | null; onExit: () => void };
+
+export function TrainingScreen({ template, onExit }: Props) {
+  if (!template) return (
+    <Screen title="Tu entrenamiento" safeBottom>
+      <Card>
+        <AppText variant="heading">No hay una sesión activa</AppText>
+        <AppText tone="muted">Tu sesión aparecerá aquí cuando tengas una rutina preparada.</AppText>
+        <AppButton label="Volver a Inicio" onPress={onExit} />
+      </Card>
+    </Screen>
+  );
+  return <TrainingSession template={template} onExit={onExit} />;
+}
+
+function TrainingSession({ template, onExit }: { template: SessionTemplate; onExit: () => void }) {
+  const { state, exercise, elapsedSeconds, restSeconds, send } = useTrainingSession(template);
+  const [dialog, setDialog] = useState<'details' | 'finish' | 'next' | null>(null);
+  const paused = state.status === 'paused';
+  const next = state.exercises[state.exerciseIndex + 1];
+  const summary = sessionSummary(state);
+
+  function nextExercise() {
+    if (activeSet(exercise)) setDialog('next');
+    else send({ type: 'next-exercise' });
+  }
+
+  if (state.status === 'finished') return (
+    <Screen title="Sesión finalizada" safeBottom>
+      <Card>
+        <AppText variant="heading">{state.title}</AppText>
+        <AppText>{summary.completedSets} de {summary.totalSets} series completadas</AppText>
+        <AppText>{formatWeight(summary.volumeKg)} kg de volumen registrado</AppText>
+        <AppText>Tiempo: {formatDuration(elapsedSeconds)}</AppText>
+        <AppText tone="muted">Esta fue una sesión de ejemplo. Los cambios de la vista previa no se guardan.</AppText>
+        <AppButton label="Volver a Inicio" onPress={onExit} />
+      </Card>
+    </Screen>
+  );
+
+  return (
+    <Screen safeBottom>
+      <View style={styles.preview}>
+        <Ionicons name="flask-outline" size={17} color={colors.brand} />
+        <AppText variant="caption" tone="muted" style={styles.previewText}>Vista previa · Cambios solo en memoria</AppText>
+      </View>
+      <SessionControls title={state.title} elapsedSeconds={elapsedSeconds} paused={paused}
+        onPause={() => send({ type: 'toggle-pause', now: Date.now() })} onFinish={() => setDialog('finish')} />
+      <ExerciseCard key={exercise.id} exercise={exercise} paused={paused} onDetails={() => setDialog('details')}
+        onAddSet={() => send({ type: 'add-set' })}
+        onComplete={(setId, weightKg, reps) => send({ type: 'complete-set', exerciseId: exercise.id, setId, weightKg, reps, now: Date.now() })} />
+      <RestTimer seconds={restSeconds} durationSeconds={state.rest.durationMs / 1000} paused={paused}
+        onAdd={() => send({ type: 'add-rest', now: Date.now() })} onSkip={() => send({ type: 'skip-rest' })} />
+      {next ? <Card style={styles.nextCard}>
+        <AppText variant="label" tone="brand">Siguiente ejercicio</AppText>
+        <AppText variant="header">{next.name}</AppText>
+        <AppButton label="Ir al siguiente ejercicio" icon="arrow-forward-outline" disabled={paused} onPress={nextExercise} />
+      </Card> : <AppButton label="Finalizar entrenamiento" icon="checkmark-circle-outline" onPress={() => setDialog('finish')} />}
+
+      <SessionDialog title={dialog === 'details' ? exercise.name : dialog === 'next' ? '¿Cambiar de ejercicio?' : '¿Finalizar entrenamiento?'}
+        visible={dialog !== null} onClose={() => setDialog(null)}>
+        {dialog === 'details' ? <ExerciseDetails exercise={exercise} onClose={() => setDialog(null)} />
+          : dialog === 'next' ? <>
+            <AppText>Quedan series pendientes en este ejercicio. Puedes pasar al siguiente; las series pendientes no se marcarán como completadas.</AppText>
+            <AppButton label="Continuar al siguiente" onPress={() => { send({ type: 'next-exercise' }); setDialog(null); }} />
+            <AppButton label="Seguir en este ejercicio" variant="secondary" onPress={() => setDialog(null)} />
+          </> : <>
+            <AppText>Completaste {summary.completedSets} de {summary.totalSets} series. Al finalizar se detendrán los temporizadores.</AppText>
+            <AppText tone="muted">Los datos de esta vista previa no se guardan.</AppText>
+            <AppButton label="Finalizar sesión de ejemplo" onPress={() => { send({ type: 'finish', now: Date.now() }); setDialog(null); }} />
+            <AppButton label="Seguir entrenando" variant="secondary" onPress={() => setDialog(null)} />
+          </>}
+      </SessionDialog>
+    </Screen>
+  );
+}
+
+const styles = StyleSheet.create({
+  preview: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, padding: spacing.md, borderRadius: radius.sm, backgroundColor: colors.sand },
+  previewText: { flex: 1 },
+  nextCard: { gap: spacing.sm },
+});

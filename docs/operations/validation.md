@@ -1,4 +1,4 @@
-# Validación de la base inicial
+    # Validación de la base inicial
 
 29 de octubre de 2026.
 

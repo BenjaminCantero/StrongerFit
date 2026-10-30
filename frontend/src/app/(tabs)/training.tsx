@@ -1,5 +1,9 @@
-import { PlannedFeature } from '../../components/PlannedFeature';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { TrainingScreen } from '../../features/training/TrainingScreen';
+import { sessionPreview } from '../../features/training/data/session.preview';
 
-export default function TrainingScreen() {
-  return <PlannedFeature title="Entrenar" description="Aquí podrás consultar tu rutina, registrar series y revisar tus entrenamientos anteriores." />;
+export default function TrainingRoute() {
+  const router = useRouter();
+  const { preview } = useLocalSearchParams<{ preview?: string }>();
+  return <TrainingScreen template={__DEV__ && preview !== 'empty' ? sessionPreview : null} onExit={() => router.navigate('/')} />;
 }

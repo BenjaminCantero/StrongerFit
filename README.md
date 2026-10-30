@@ -29,6 +29,17 @@ npm run dev:frontend
 La API escucha en `http://localhost:8000`. Expo muestra las opciones para abrir
 Android. Para la vista web de desarrollo, usar `npm run dev:web`.
 
+Para abrir la app en Expo Go desde otra red con internet, iniciar un túnel:
+
+```sh
+cd frontend
+npx expo start --go --tunnel
+```
+
+Escanear el QR desde Expo Go compatible con SDK 57 y mantener el computador y el
+celular conectados a internet. `@expo/ngrok` es una dependencia de desarrollo local
+del frontend y se instala con `npm ci`.
+
 Sin archivo `.env` del frontend, la API apunta a `10.0.2.2:8000` en el emulador
 Android y a `localhost:8000` en web/iOS. En un teléfono físico, copiar
 `frontend/.env.example` a `frontend/.env` y cambiar `EXPO_PUBLIC_API_URL` por la IP

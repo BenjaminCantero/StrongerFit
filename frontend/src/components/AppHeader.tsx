@@ -1,50 +1,54 @@
+import { AppPressable } from './ui/AppPressable';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Link } from 'expo-router';
 import { useState } from 'react';
-import { Image, Pressable, StyleSheet, View } from 'react-native';
+import { Image, StyleSheet, View, useWindowDimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, layout, radius, spacing } from '../theme';
 import { AppText } from './ui/AppText';
 
-export function AppHeader({ title }: { title: string }) {
+export function AppHeader({ title, onBack, backLabel = 'Volver a Inicio' }: { title: string; onBack?: () => void; backLabel?: string }) {
   const [notificationsVisible, setNotificationsVisible] = useState(false);
+  const { width, fontScale } = useWindowDimensions();
+  const compact = width < 360 || fontScale > 1.2;
 
   return (
     <SafeAreaView edges={['top', 'left', 'right']} style={styles.safeArea}>
       <View style={styles.content}>
         <View style={styles.brand}>
-          <View style={styles.mark} accessible={false}>
+          {onBack ? <AppPressable accessibilityRole="button" accessibilityLabel={backLabel} onPress={onBack} style={styles.iconButton}>
+            <Ionicons name="arrow-back" size={23} color={colors.ink} />
+          </AppPressable> : !compact && <View style={styles.mark} accessible={false}>
             <Ionicons name="barbell-outline" size={21} color={colors.brand} />
-          </View>
-          <View>
-            <AppText variant="label" tone="brand" style={styles.wordmark}>StrongerFit</AppText>
+          </View>}
+          <View style={styles.titleGroup}>
+            {!onBack && <AppText variant="label" tone="brand" style={styles.wordmark}>StrongerFit</AppText>}
             <AppText variant="header">{title}</AppText>
           </View>
         </View>
-        <View style={styles.actions}>
-          <Pressable accessibilityRole="button" accessibilityLabel="Notificaciones"
+        {(!onBack || !compact) && <View style={styles.actions}>
+          {!onBack && <AppPressable accessibilityRole="button" accessibilityLabel="Notificaciones"
             accessibilityState={{ expanded: notificationsVisible }}
             onPress={() => setNotificationsVisible((visible) => !visible)}
             style={({ pressed }) => [styles.iconButton, pressed && styles.pressed]}>
             <Ionicons name={notificationsVisible ? 'notifications' : 'notifications-outline'} size={23} color={colors.ink} />
-          </Pressable>
+          </AppPressable>}
           <Link href="/profile" asChild>
-            <Pressable accessibilityRole="link" accessibilityLabel="Abrir perfil"
-              style={({ pressed }) => [styles.iconButton, pressed && styles.pressed]}>
+            <AppPressable accessibilityRole="link" accessibilityLabel="Abrir perfil" style={styles.iconButton}>
               {__DEV__
                 ? <Image source={require('../../assets/images/preview-avatar.jpg')} style={styles.avatar} />
                 : <View style={[styles.avatar, styles.profilePlaceholder]}><Ionicons name="person-outline" size={20} color={colors.brand} /></View>}
-            </Pressable>
+            </AppPressable>
           </Link>
-        </View>
+        </View>}
       </View>
       {notificationsVisible && (
         <View style={styles.notice} accessibilityLiveRegion="polite">
           <AppText variant="strong">Notificaciones</AppText>
           <AppText tone="muted">No hay notificaciones para mostrar.</AppText>
-          <Pressable accessibilityRole="button" onPress={() => setNotificationsVisible(false)} style={styles.closeNotice}>
+          <AppPressable accessibilityRole="button" onPress={() => setNotificationsVisible(false)} style={styles.closeNotice}>
             <AppText variant="label" tone="brand">Cerrar</AppText>
-          </Pressable>
+          </AppPressable>
         </View>
       )}
     </SafeAreaView>
@@ -54,10 +58,11 @@ export function AppHeader({ title }: { title: string }) {
 const styles = StyleSheet.create({
   safeArea: { backgroundColor: colors.canvas, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.surfaceHigh },
   content: {
-    minHeight: 68, width: '100%', maxWidth: layout.contentWidth, alignSelf: 'center', paddingHorizontal: spacing.lg,
+    minHeight: 68, width: '100%', maxWidth: layout.contentWidth, alignSelf: 'center', paddingHorizontal: spacing.lg, paddingVertical: spacing.sm,
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.sm,
   },
   brand: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, flexShrink: 1 },
+  titleGroup: { flexShrink: 1 },
   mark: { width: 36, height: 36, borderRadius: radius.pill, backgroundColor: colors.brandSoft, alignItems: 'center', justifyContent: 'center' },
   wordmark: { letterSpacing: 0.8, textTransform: 'uppercase', fontSize: 10.5, lineHeight: 16 },
   actions: { flexDirection: 'row', alignItems: 'center' },

@@ -1,5 +1,5 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, useWindowDimensions } from 'react-native';
 import { AppButton } from '../../../components/ui/AppButton';
 import { AppText } from '../../../components/ui/AppText';
 import { Card } from '../../../components/ui/Card';
@@ -10,9 +10,9 @@ import type { HomeOverview, MacroSummary } from '../home.types';
 const number = new Intl.NumberFormat('es-CL', { maximumFractionDigits: 0 });
 const macroColors = { protein: colors.brand, carbs: colors.goldBar, fat: colors.muted };
 
-function Macro({ macro }: { macro: MacroSummary }) {
+function Macro({ macro, stacked }: { macro: MacroSummary; stacked: boolean }) {
   return (
-    <View style={styles.macro}>
+    <View style={[styles.macro, stacked && styles.stackedMacro]}>
       <View style={styles.macroLabel}>
         <AppText variant="label" tone="muted" style={styles.macroName}>{macro.name}</AppText>
         <View style={[styles.dot, { backgroundColor: macroColors[macro.kind] }]} />
@@ -26,6 +26,8 @@ function Macro({ macro }: { macro: MacroSummary }) {
 }
 
 export function NutritionSummary({ nutrition, onPress }: { nutrition: HomeOverview['nutrition']; onPress: () => void }) {
+  const { width, fontScale } = useWindowDimensions();
+  const stacked = width < 360 || fontScale > 1.2;
   if (!nutrition) {
     return (
       <Card tone="low">
@@ -38,7 +40,7 @@ export function NutritionSummary({ nutrition, onPress }: { nutrition: HomeOvervi
 
   const { consumedKcal, targetKcal } = nutrition;
   const percent = targetKcal > 0 ? Math.round(consumedKcal / targetKcal * 100) : null;
-  const remaining = targetKcal - consumedKcal;
+  const remaining = Math.round(targetKcal) - Math.round(consumedKcal);
 
   return (
     <Card tone="low">
@@ -65,7 +67,7 @@ export function NutritionSummary({ nutrition, onPress }: { nutrition: HomeOvervi
           <AppText variant="caption" tone="muted">Meta estimada</AppText>
         </View>
       </View>
-      <View style={styles.macros}>{nutrition.macros.map((macro) => <Macro key={macro.kind} macro={macro} />)}</View>
+      <View style={[styles.macros, stacked && styles.stacked]}>{nutrition.macros.map((macro) => <Macro key={macro.kind} macro={macro} stacked={stacked} />)}</View>
       <AppButton label="Registrar comida" icon="add-outline" variant="secondary" onPress={onPress} />
     </Card>
   );
@@ -79,6 +81,8 @@ const styles = StyleSheet.create({
   energyNumbers: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'baseline', justifyContent: 'space-between', gap: spacing.xs },
   legend: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', gap: spacing.xs },
   macros: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
+  stacked: { flexDirection: 'column' },
+  stackedMacro: { flex: 0 },
   macro: { flex: 1, minWidth: 80, padding: spacing.md, gap: spacing.xs, backgroundColor: colors.white, borderRadius: radius.lg },
   macroLabel: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 2 },
   macroName: { flexShrink: 1, fontSize: 11 },
