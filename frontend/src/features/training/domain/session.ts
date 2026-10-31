@@ -9,6 +9,7 @@ export type PerformedSet = {
 
 export type SessionExercise = {
   id: string;
+  exerciseId?: string;
   timer?: TimerSpec;
   tempo?: [number, number, number];
   name: string;
@@ -102,8 +103,12 @@ export function sessionSummary(state: SessionState) {
 export function sessionRecord(state: SessionState, meta: { id: string; date: string; time: string }) {
   const summary = sessionSummary(state);
   if (state.status !== 'finished' || summary.completedSets === 0) return null;
+  const exercises = state.exercises.flatMap((exercise) => {
+    const sets = exercise.sets.filter((set) => set.completed).map(({ weightKg, reps }) => ({ weightKg, reps }));
+    return exercise.exerciseId && sets.length ? [{ exerciseId: exercise.exerciseId, sets }] : [];
+  });
   return { ...meta, name: state.title, durationMinutes: Math.max(1, Math.round(state.elapsedMs / 60_000)),
-    volumeKg: summary.volumeKg, status: 'completed' as const };
+    volumeKg: summary.volumeKg, status: 'completed' as const, exercises };
 }
 
 export function sessionReducer(state: SessionState, action: SessionAction): SessionState {

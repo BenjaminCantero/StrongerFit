@@ -82,3 +82,13 @@ frente a los 5 s de CA-20. `timerAlerts.ts` es la versión web, sin avisos.
 `domain/draft.ts` valida el borrador con Zod; `storage/sessionDraft.ts` lo guarda en
 SQLite (`session_drafts`) o localStorage. Verificado en Android: tras recargar la app
 la sesión vuelve con sus series y Entrenar ofrece continuarla o descartarla.
+
+## Carga de la vez anterior
+
+Al finalizar, el registro de la sesión guarda las series completadas por ejercicio del
+catálogo (`exercises` en `WorkoutRecord`). Al abrir un día del plan, `sessionFromDay`
+precarga cada serie con la carga de la misma serie en la última sesión de ese
+ejercicio (o la última serie registrada si ahora hay más), mantiene las repeticiones
+del plan y muestra «La vez anterior» con la serie más pesada. Las últimas tres veces
+aparecen en el detalle del ejercicio. La persona confirma o ajusta cada serie antes
+de completarla; sin registros, la carga parte en 0 kg. No es una progresión automática.

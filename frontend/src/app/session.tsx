@@ -9,6 +9,7 @@ import type { SessionDraft } from '../features/training/domain/draft';
 import { sessionFromDay } from '../features/training/domain/plan';
 import type { SessionState } from '../features/training/domain/session';
 import { loadSessionDraft, persistSessionDraft } from '../features/training/useSessionDraft';
+import { todayDateKey } from '../shared/calendar';
 import { colors } from '../theme';
 
 export default function SessionRoute() {
@@ -40,7 +41,7 @@ export default function SessionRoute() {
   const sample = source.kind === 'sample';
   const planDay = source.kind === 'plan' ? profile.trainingPlan?.days[source.day] : undefined;
   // La sesión de ejemplo con historial solo existe en desarrollo.
-  const template = sample ? (__DEV__ ? sessionPreview : null) : planDay ? sessionFromDay(planDay) : null;
+  const template = sample ? (__DEV__ ? sessionPreview : null) : planDay ? sessionFromDay(planDay, progressStore.getState().workouts, todayDateKey()) : null;
   return <TrainingScreen template={template} sample={sample} onPersist={persist}
     restored={draft ? { sessionId: draft.sessionId, state: draft.state } : undefined}
     onExit={() => router.navigate('/')} onViewHistory={() => router.navigate('/progress')}

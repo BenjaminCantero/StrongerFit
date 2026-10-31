@@ -18,7 +18,7 @@ export function ExerciseDetails({ exercise, onClose }: { exercise: SessionExerci
         </> : <AppText tone="muted">Aún no hay indicaciones de técnica revisadas para este ejercicio. Muévete con control y detente si aparece dolor.</AppText>}
       </View>
       <View style={styles.history}>
-        <AppText variant="strong">Historial de ejemplo</AppText>
+        <AppText variant="strong">Últimas veces</AppText>
         {exercise.history.length ? exercise.history.map((item) => (
           <View key={item.label} style={styles.historyRow}>
             <AppText variant="caption" tone="muted">{item.label} · {item.sets} series</AppText>

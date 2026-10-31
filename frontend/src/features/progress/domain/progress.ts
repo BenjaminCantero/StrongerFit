@@ -4,7 +4,10 @@ export type Period = '4w' | '3m' | '1y';
 export type WorkoutRecord = {
   id: string; date: string; time: string; name: string; durationMinutes: number;
   volumeKg: number; status: 'completed' | 'missed';
+  // Series completadas por ejercicio del catálogo; base del historial y de la carga sugerida.
+  exercises?: ExerciseLog[];
 };
+export type ExerciseLog = { exerciseId: string; sets: { weightKg: number; reps: number }[] };
 export type WeightRecord = { date: string; kg: number };
 export type ProgressData = { workouts: WorkoutRecord[]; weights: WeightRecord[] };
 export type VolumePoint = { from: string; through: string; label: string; kg: number; current: boolean };

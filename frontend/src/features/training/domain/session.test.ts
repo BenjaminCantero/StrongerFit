@@ -103,7 +103,7 @@ describe('registro histórico', () => {
     expect(sessionRecord(state, meta)).toBeNull();
     const finished = sessionReducer(state, { type: 'finish', now: initialTime + 60_000 });
     expect(sessionRecord(finished, meta)).toEqual({ ...meta, name: finished.title, status: 'completed',
-      volumeKg: sessionSummary(finished).volumeKg, durationMinutes: Math.round(finished.elapsedMs / 60_000) });
+      volumeKg: sessionSummary(finished).volumeKg, durationMinutes: Math.round(finished.elapsedMs / 60_000), exercises: [] });
   });
 
   it('omite una sesión finalizada sin series completadas', () => {

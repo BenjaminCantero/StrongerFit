@@ -34,7 +34,7 @@ export function ExerciseCard({ exercise, paused, onDetails, onComplete, onAddSet
       <AppPressable accessibilityRole="button" onPress={onDetails} style={styles.history}>
         <Ionicons name="time-outline" size={16} color={colors.gold} />
         <AppText variant="caption" tone="muted" style={styles.historyText}>
-          {last ? `Historial: ${formatWeight(last.weightKg)} kg × ${last.reps} reps (${last.label.toLowerCase()})` : 'Sin historial previo'}
+          {last ? `La vez anterior: ${formatWeight(last.weightKg)} kg × ${last.reps} reps (${last.label.toLowerCase()})` : 'Primera vez con este ejercicio'}
         </AppText>
         <AppText variant="label" tone="brand">Técnica</AppText>
       </AppPressable>
