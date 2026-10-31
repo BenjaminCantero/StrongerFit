@@ -1,4 +1,4 @@
-import { isDateKey, shiftDate } from '../../../shared/calendar';
+import { isDateKey, shiftDate, weekStart } from '../../../shared/calendar';
 
 export type Period = '4w' | '3m' | '1y';
 export type WorkoutRecord = {
@@ -41,8 +41,30 @@ export function progressSummary(data: ProgressData, period: Period, today: strin
     points, totalKg: completed.reduce((sum, record) => sum + record.volumeKg, 0),
     changePercent: first > 0 ? (points.at(-1)!.kg - first) / first * 100 : null,
     history: [...completed].sort((a, b) => b.date.localeCompare(a.date) || b.time.localeCompare(a.time)).slice(0, 4),
-    latestWeight,
+    latestWeight, totalMinutes: completed.reduce((sum, record) => sum + record.durationMinutes, 0),
+    weights: data.weights.filter((record) => record.date >= from && record.date <= today).sort((a, b) => a.date.localeCompare(b.date)),
   };
+}
+
+export type ConsistencyCell = { key: string; label: string; sessions: number; state: 'done' | 'missed' | 'empty' | 'outside' };
+
+// Mapa de constancia: días en 4 semanas, semanas en 3 meses y un año. Las semanas empiezan el lunes.
+export function consistencyMap(data: ProgressData, period: Period, today: string): { unit: 'day' | 'week'; cells: ConsistencyCell[] } {
+  const from = periodStart(period, today);
+  const inPeriod = data.workouts.filter((record) => record.date >= from && record.date <= today);
+  const count = (start: string, end: string, status: WorkoutRecord['status']) =>
+    inPeriod.filter((record) => record.status === status && record.date >= start && record.date <= end).length;
+  const cells: ConsistencyCell[] = [];
+  const step = period === '4w' ? 1 : 7;
+  for (let date = weekStart(from); date <= today; date = shiftDate(date, step)) {
+    const end = shiftDate(date, step - 1);
+    const sessions = count(date, end, 'completed');
+    const outside = step === 1 && (date < from || date > today);
+    cells.push({ key: date, label: date, sessions,
+      state: outside ? 'outside' : sessions ? 'done' : count(date, end, 'missed') ? 'missed' : 'empty' });
+  }
+  if (step === 1) while (cells.length % 7) cells.push({ key: `pad-${cells.length}`, label: '', sessions: 0, state: 'outside' });
+  return { unit: step === 1 ? 'day' : 'week', cells };
 }
 
 export function parseWeight(value: string): number | null {

@@ -1,5 +1,5 @@
 import { exerciseById } from '@strongerfit/training-engine';
-import { shiftDate } from '../../../shared/calendar';
+import { shiftDate, weekStart } from '../../../shared/calendar';
 import type { Nutrients } from '../../nutrition/domain/food-entry';
 import type { ProfileData } from '../../profile/domain/profile';
 import type { ProgressData } from '../../progress/domain/progress';
@@ -7,8 +7,6 @@ import { estimatedMinutes } from '../../training/domain/plan';
 import type { HomeOverview, WeekDay } from '../home.types';
 
 const weekDays = [['Lunes', 'L'], ['Martes', 'M'], ['Miércoles', 'X'], ['Jueves', 'J'], ['Viernes', 'V'], ['Sábado', 'S'], ['Domingo', 'D']] as const;
-
-export const weekStart = (date: string) => shiftDate(date, -((new Date(`${date}T12:00:00Z`).getUTCDay() + 6) % 7));
 
 type Input = { profile: ProfileData; progress: ProgressData; consumed: Nutrients; targets: Nutrients | null; today: string; now: Date };
 

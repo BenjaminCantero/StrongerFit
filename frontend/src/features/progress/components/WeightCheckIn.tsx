@@ -9,12 +9,43 @@ import { colors, fontFamily, layout, radius, spacing } from '../../../theme';
 import { parseWeight, type WeightRecord } from '../domain/progress';
 import { formatKg, formatProgressDate } from '../presentation';
 
-export function WeightCheckIn({ record, today, onSave }: { record: WeightRecord | null; today: string; onSave: (value: string) => void }) {
+const CHART = 88;
+
+// Puntos por fecha y línea de meta; sin librería de gráficos para no sumar dependencias nativas.
+function WeightTrend({ weights, targetKg }: { weights: WeightRecord[]; targetKg: number | null }) {
+  const points = weights.slice(-8);
+  const values = [...points.map((point) => point.kg), ...(targetKg === null ? [] : [targetKg])];
+  const low = Math.min(...values) - 0.5;
+  const high = Math.max(...values) + 0.5;
+  const y = (kg: number) => (kg - low) / (high - low) * CHART;
+  return <View style={styles.chart} accessible
+    accessibilityLabel={`Pesos del período: ${points.map((point) => `${formatKg(point.kg)} kilos el ${formatProgressDate(point.date)}`).join('; ')}${targetKg === null ? '' : `. Meta ${formatKg(targetKg)} kilos`}`}>
+    <View style={styles.plot}>
+      {targetKg !== null && <View style={[styles.goal, { bottom: y(targetKg) }]}>
+        <AppText variant="caption" tone="brand" style={styles.goalLabel}>Meta {formatKg(targetKg)}</AppText>
+      </View>}
+      {points.map((point, index) => <View key={point.date} style={styles.column}>
+        <View style={[styles.stem, { height: y(point.kg) }]} />
+        <View style={[styles.dot, index === points.length - 1 && styles.lastDot, { bottom: y(point.kg) - 5 }]} />
+      </View>)}
+    </View>
+    <View style={styles.axis}>
+      {points.map((point) => <AppText key={point.date} variant="caption" tone="muted" style={styles.axisLabel}>
+        {formatProgressDate(point.date).replace(/ \d{4}$/, '').replace('.', '')}
+      </AppText>)}
+    </View>
+  </View>;
+}
+
+export function WeightCheckIn({ record, weights, targetKg, today, onSave }: {
+  record: WeightRecord | null; weights: WeightRecord[]; targetKg: number | null; today: string; onSave: (value: string) => void;
+}) {
   const [editing, setEditing] = useState(false);
   const [value, setValue] = useState('');
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
   const input = useRef<TextInput>(null);
+  const change = weights.length > 1 ? Math.round((weights.at(-1)!.kg - weights[0]!.kg) * 10) / 10 : null;
 
   function close() { setEditing(false); setError(''); Keyboard.dismiss(); }
   function save() {
@@ -27,16 +58,21 @@ export function WeightCheckIn({ record, today, onSave }: { record: WeightRecord 
   return <Card tone="low">
     <View style={styles.top}>
       <View style={styles.heading}>
-        <AppText variant="header" accessibilityRole="header">Registro corporal referencial</AppText>
-        <AppText variant="heading">{record ? `${formatKg(record.kg)} kg` : 'Sin registros de peso'}</AppText>
-        {record && <AppText variant="caption" tone="muted">Registrado el {formatProgressDate(record.date)}</AppText>}
+        <AppText variant="header" accessibilityRole="header">Peso corporal</AppText>
+        <AppText variant="metric">{record ? formatKg(record.kg) : '—'}<AppText variant="caption" tone="muted"> kg</AppText></AppText>
+        <AppText variant="caption" tone="muted">{record ? `Último registro: ${formatProgressDate(record.date)}` : 'Sin registros en este período'}</AppText>
       </View>
-      <AppButton label={record?.date === today ? 'Editar peso de hoy' : 'Registrar peso hoy'} icon="add-outline" variant="secondary"
-        onPress={() => { setValue(record?.date === today ? String(record.kg).replace('.', ',') : ''); setNotice(''); setEditing(true); }} />
+      {change !== null && <View style={styles.change}>
+        <Ionicons name={change > 0 ? 'arrow-up' : change < 0 ? 'arrow-down' : 'remove'} size={14} color={colors.brandText} />
+        <AppText variant="label" tone="brand">{formatKg(Math.abs(change))} kg en el período</AppText>
+      </View>}
     </View>
+    {weights.length > 1 && <WeightTrend weights={weights} targetKg={targetKg} />}
+    <AppButton label={record?.date === today ? 'Editar peso de hoy' : 'Registrar peso hoy'} icon="add-outline" variant="secondary"
+      onPress={() => { setValue(record?.date === today ? String(record.kg).replace('.', ',') : ''); setNotice(''); setEditing(true); }} />
     <View style={styles.note}>
-      <Ionicons name="leaf-outline" size={22} color={colors.gold} />
-      <AppText variant="caption" tone="muted" style={styles.noteText}>El peso es una referencia más. No resume por sí solo tu fuerza, tu constancia ni tu bienestar.</AppText>
+      <Ionicons name="leaf-outline" size={18} color={colors.gold} />
+      <AppText variant="caption" tone="muted" style={styles.noteText}>El peso fluctúa día a día. Mira la tendencia; no resume tu fuerza, constancia ni bienestar.</AppText>
     </View>
     {editing && <View style={styles.editor}>
       <View style={styles.editorTop}>
@@ -62,7 +98,18 @@ export function WeightCheckIn({ record, today, onSave }: { record: WeightRecord 
 const styles = StyleSheet.create({
   top: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: spacing.md },
   heading: { flex: 1, minWidth: 160, gap: spacing.xs },
-  note: { flexDirection: 'row', alignItems: 'flex-start', gap: spacing.sm, backgroundColor: colors.surface, padding: spacing.md, borderRadius: radius.md },
+  note: { flexDirection: 'row', alignItems: 'flex-start', gap: spacing.sm },
+  change: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs, paddingHorizontal: spacing.md, paddingVertical: spacing.sm, borderRadius: radius.pill, backgroundColor: colors.brandSoft },
+  chart: { backgroundColor: colors.white, borderRadius: radius.md, padding: spacing.lg, gap: spacing.sm },
+  plot: { height: CHART, flexDirection: 'row', alignItems: 'flex-end' },
+  column: { flex: 1, height: CHART, alignItems: 'center', justifyContent: 'flex-end' },
+  stem: { width: 2, backgroundColor: colors.brandSoft },
+  dot: { position: 'absolute', width: 10, height: 10, borderRadius: radius.pill, backgroundColor: colors.brandMedium, borderWidth: 2, borderColor: colors.brand },
+  lastDot: { backgroundColor: colors.brand },
+  goal: { position: 'absolute', left: 0, right: 0, borderTopWidth: 1, borderStyle: 'dashed', borderColor: colors.brand },
+  goalLabel: { position: 'absolute', right: 0, top: -18 },
+  axis: { flexDirection: 'row' },
+  axisLabel: { flex: 1, textAlign: 'center' },
   noteText: { flex: 1 },
   editor: { backgroundColor: colors.white, padding: spacing.md, borderRadius: radius.md, gap: spacing.md },
   editorTop: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },

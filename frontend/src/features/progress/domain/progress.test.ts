@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { createProgressPreview } from '../data/progress.preview';
-import { createEmptyProgress, monthStart, parseWeight, periodStart, progressReducer, progressSummary, type ProgressState } from './progress';
+import { consistencyMap, createEmptyProgress, monthStart, parseWeight, periodStart, progressReducer, progressSummary, type ProgressState } from './progress';
 
 const today = '2026-10-30';
 const initial = (): ProgressState => ({ ...createProgressPreview(today), period: '4w' });
@@ -87,5 +87,24 @@ describe('registro de peso temporal', () => {
     expect(state.workouts.filter((item) => item.id === 'session-1')).toHaveLength(1);
     expect(progressSummary(state, '4w', today).history[0]).toEqual(record);
     expect(progressReducer(state, { type: 'record-workout', record: { ...record, id: 'x', date: '2026-02-30' } })).toBe(state);
+  });
+});
+
+describe('mapa de constancia', () => {
+  it('en 4 semanas usa días alineados al lunes y marca los días fuera del período', () => {
+    const { unit, cells } = consistencyMap(initial(), '4w', today);
+    expect(unit).toBe('day');
+    expect(cells.length % 7).toBe(0);
+    expect(cells[0]!.key).toBe('2026-09-28');
+    expect(cells.filter((cell) => cell.state === 'done')).toHaveLength(14);
+    expect(cells.filter((cell) => cell.state === 'missed')).toHaveLength(2);
+    expect(cells.find((cell) => cell.key === '2026-10-02')!.state).toBe('outside');
+  });
+
+  it('en 3 meses y un año agrupa por semana', () => {
+    const map = consistencyMap(initial(), '3m', today);
+    expect(map.unit).toBe('week');
+    expect(map.cells.reduce((sum, cell) => sum + cell.sessions, 0)).toBe(16);
+    expect(consistencyMap(initial(), '1y', today).cells.length).toBeGreaterThanOrEqual(48);
   });
 });

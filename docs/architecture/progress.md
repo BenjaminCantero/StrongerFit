@@ -57,7 +57,15 @@ clasificación del peso ni generación de informes en este corte.
 
 Producción muestra estado vacío, con el registro de peso temporal identificado.
 `/progress?preview=empty` permite comprobar ese estado en desarrollo.
-Las dos fotografías provienen del HTML adjunto y se empaquetan localmente.
+
+## Diseño
+
+La tarjeta de constancia es el elemento principal: un mapa de días (4 semanas) o de
+semanas (3 meses, año) alineado al lunes, calculado por `consistencyMap`. Las sesiones
+no realizadas llevan borde, no solo color. Debajo resume volumen, horas y minutos por
+sesión. El peso muestra su variación en el período y, con dos o más registros, puntos
+por fecha con la meta del onboarding como línea de referencia; se dibuja con vistas,
+sin librería de gráficos. Se quitaron las fotografías decorativas.
 
 ## Verificación
 

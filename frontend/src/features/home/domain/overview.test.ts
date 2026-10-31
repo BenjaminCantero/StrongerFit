@@ -2,7 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { createProfilePreview } from '../../profile/data/profile.preview';
 import { createEmptyProfile } from '../../profile/domain/profile';
 import { createEmptyProgress, type WorkoutRecord } from '../../progress/domain/progress';
-import { activeWeeks, homeOverview, weekStart } from './overview';
+import { weekStart } from '../../../shared/calendar';
+import { activeWeeks, homeOverview } from './overview';
 
 const today = '2026-10-29'; // jueves
 const now = new Date('2026-10-29T15:00:00Z');

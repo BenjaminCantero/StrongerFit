@@ -19,3 +19,6 @@ export function shiftDate(date: string, days: number): string {
 export function currentTimeLabel(now = new Date()): string {
   return new Intl.DateTimeFormat('es-CL', { timeZone: 'America/Santiago', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).format(now);
 }
+
+// Lunes de la semana de la fecha (semana ISO).
+export const weekStart = (date: string) => shiftDate(date, -((new Date(`${date}T12:00:00Z`).getUTCDay() + 6) % 7));
