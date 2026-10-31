@@ -24,11 +24,12 @@ type Props = {
   state: SessionState;
   elapsedSeconds: number;
   recorded: boolean;
+  records: { exerciseId: string; name: string; top: { weightKg: number; reps: number }; before: { weightKg: number; reps: number } }[];
   onGoHome: () => void;
   onViewHistory: () => void;
 };
 
-export function TrainingSummaryScreen({ state, elapsedSeconds, recorded, onGoHome, onViewHistory }: Props) {
+export function TrainingSummaryScreen({ state, elapsedSeconds, recorded, records, onGoHome, onViewHistory }: Props) {
   const allSets = state.exercises.flatMap((ex) => ex.sets);
   const completedSets = allSets.filter((s) => s.completed);
   const totalVolumeKg = completedSets.reduce((sum, s) => sum + s.weightKg * s.reps, 0);
@@ -83,6 +84,25 @@ export function TrainingSummaryScreen({ state, elapsedSeconds, recorded, onGoHom
               </View>
             </View>
           </Card>
+
+          {records.length > 0 && (
+            <View style={styles.records} accessibilityLiveRegion="polite">
+              <View style={styles.recordsTitle}>
+                <Ionicons name="trophy" size={20} color={colors.gold} />
+                <AppText variant="header">{records.length === 1 ? 'Nuevo récord personal' : `${records.length} récords personales`}</AppText>
+              </View>
+              {records.map((record) => (
+                <View key={record.exerciseId} style={styles.recordRow}
+                  accessible accessibilityLabel={`${record.name}: ${formatWeight(record.top.weightKg)} kilos por ${record.top.reps}. Antes ${formatWeight(record.before.weightKg)} por ${record.before.reps}`}>
+                  <AppText variant="strong" style={styles.recordName}>{record.name}</AppText>
+                  <View style={styles.recordValues}>
+                    <AppText variant="strong">{formatWeight(record.top.weightKg)} kg × {record.top.reps}</AppText>
+                    <AppText variant="caption" tone="muted">antes {formatWeight(record.before.weightKg)} × {record.before.reps}</AppText>
+                  </View>
+                </View>
+              ))}
+            </View>
+          )}
 
           {/* ── Movement summary ── */}
           {exercisesDone.length > 0 && (
@@ -172,6 +192,12 @@ export function TrainingSummaryScreen({ state, elapsedSeconds, recorded, onGoHom
 }
 
 const styles = StyleSheet.create({
+  records: { gap: spacing.md, padding: spacing.xl, borderRadius: radius.lg, backgroundColor: colors.goldSoft },
+  recordsTitle: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
+  recordRow: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: spacing.sm,
+    paddingTop: spacing.md, borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: colors.goldBar },
+  recordName: { flex: 1, minWidth: 140 },
+  recordValues: { alignItems: 'flex-end' },
   safeArea: { flex: 1, backgroundColor: colors.canvas },
   scroll: { flexGrow: 1 },
   content: {

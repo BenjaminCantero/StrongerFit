@@ -100,13 +100,18 @@ export function sessionSummary(state: SessionState) {
 }
 
 // Registro histórico de una sesión finalizada; null si no se completó ninguna serie.
-export function sessionRecord(state: SessionState, meta: { id: string; date: string; time: string }) {
-  const summary = sessionSummary(state);
-  if (state.status !== 'finished' || summary.completedSets === 0) return null;
-  const exercises = state.exercises.flatMap((exercise) => {
+// Series completadas por ejercicio del catálogo; los ejercicios de ejemplo sin id se omiten.
+export function sessionLogs(state: SessionState) {
+  return state.exercises.flatMap((exercise) => {
     const sets = exercise.sets.filter((set) => set.completed).map(({ weightKg, reps }) => ({ weightKg, reps }));
     return exercise.exerciseId && sets.length ? [{ exerciseId: exercise.exerciseId, sets }] : [];
   });
+}
+
+export function sessionRecord(state: SessionState, meta: { id: string; date: string; time: string }) {
+  const summary = sessionSummary(state);
+  if (state.status !== 'finished' || summary.completedSets === 0) return null;
+  const exercises = sessionLogs(state);
   return { ...meta, name: state.title, durationMinutes: Math.max(1, Math.round(state.elapsedMs / 60_000)),
     volumeKg: summary.volumeKg, status: 'completed' as const, exercises };
 }

@@ -7,11 +7,13 @@ import { PreviewNotice } from '../../components/ui/PreviewNotice';
 import { spacing } from '../../theme';
 import type { WeightGoal } from '../onboarding/domain/onboarding';
 import { ConsistencyHero } from './components/ConsistencyHero';
+import { ExerciseProgress } from './components/ExerciseProgress';
 import { PeriodSelector } from './components/PeriodSelector';
 import { VolumeChart } from './components/VolumeChart';
 import { WeightCheckIn } from './components/WeightCheckIn';
 import { WorkoutHistory } from './components/WorkoutHistory';
 import { consistencyMap, progressSummary, type ProgressAction, type ProgressState } from './domain/progress';
+import { exerciseTrends } from './domain/records';
 
 type Props = { state: ProgressState; dispatch: (action: ProgressAction) => void; today: string; isPreview: boolean; goal: WeightGoal | null };
 
@@ -25,6 +27,7 @@ export function ProgressScreen({ state, dispatch, today, isPreview, goal }: Prop
     <ConsistencyHero completed={summary.completed} planned={summary.planned} adherence={summary.adherence} from={summary.from}
       through={summary.through} unit={map.unit} cells={map.cells} totalKg={summary.totalKg} totalMinutes={summary.totalMinutes} />
     <VolumeChart points={summary.points} totalKg={summary.totalKg} changePercent={summary.changePercent} period={state.period} />
+    <ExerciseProgress trends={exerciseTrends(state.workouts, summary.from, today)} />
     <WeightCheckIn record={summary.latestWeight} weights={summary.weights} allWeights={state.weights} goal={goal} today={today} onSave={(value) => dispatch({ type: 'record-weight', date: today, value })} />
     <WorkoutHistory records={summary.history} />
 

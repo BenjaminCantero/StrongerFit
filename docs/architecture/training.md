@@ -92,3 +92,12 @@ ejercicio (o la última serie registrada si ahora hay más), mantiene las repeti
 del plan y muestra «La vez anterior» con la serie más pesada. Las últimas tres veces
 aparecen en el detalle del ejercicio. La persona confirma o ajusta cada serie antes
 de completarla; sin registros, la carga parte en 0 kg. No es una progresión automática.
+
+## Récords y carga por ejercicio
+
+`progress/domain/records.ts` define la mejor serie (más carga y, a igual carga, más
+repeticiones). Al finalizar, el resumen muestra «Nuevo récord personal» cuando una
+serie supera la mejor anterior del ejercicio; la primera vez no cuenta como récord y
+la comparación usa el historial previo a la sesión. Progreso incluye «Carga por
+ejercicio»: la serie más pesada de cada sesión del período, mejor serie, cambio y
+número de sesiones. Los ejercicios sin carga se omiten del gráfico.

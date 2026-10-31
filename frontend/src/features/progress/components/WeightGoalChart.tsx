@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { AppText } from '../../../components/ui/AppText';
+import { ChartSegment, type ChartPoint } from '../../../components/ui/ChartSegment';
 import { colors, radius, spacing } from '../../../theme';
 import type { WeightGoal } from '../../onboarding/domain/onboarding';
 import { MIN_WEIGHINS, weightGoalSummary } from '../domain/weight-goal';
@@ -13,25 +14,14 @@ const time = (date: string) => Date.parse(`${date}T12:00:00Z`);
 const shortDate = (date: string) => formatProgressDate(date).replace(/ \d{4}$/, '').replace('.', '');
 const signed = (value: number) => `${value > 0 ? '+' : value < 0 ? '−' : ''}${formatKg(Math.abs(value))}`;
 
-type Point = { x: number; y: number };
-
-// Segmento recto como vista rotada: evita sumar una librería nativa de gráficos.
-function Segment({ from, to, color, thickness }: { from: Point; to: Point; color: string; thickness: number }) {
-  const length = Math.hypot(to.x - from.x, to.y - from.y);
-  if (length < 0.5) return null;
-  return <View pointerEvents="none" style={{
-    position: 'absolute', width: length, height: thickness, backgroundColor: color, borderRadius: thickness,
-    left: (from.x + to.x) / 2 - length / 2, top: (from.y + to.y) / 2 - thickness / 2,
-    transform: [{ rotate: `${Math.atan2(to.y - from.y, to.x - from.x)}rad` }],
-  }} />;
-}
+type Point = ChartPoint;
 
 function Dashed({ from, to }: { from: Point; to: Point }) {
   const length = Math.hypot(to.x - from.x, to.y - from.y);
   const count = Math.floor(length / 9);
   return <>{Array.from({ length: count }, (_, index) => {
     const a = index / count; const b = Math.min(1, a + 5 / length);
-    return <Segment key={index} color={colors.gold} thickness={1.5}
+    return <ChartSegment key={index} color={colors.gold} thickness={1.5}
       from={{ x: from.x + (to.x - from.x) * a, y: from.y + (to.y - from.y) * a }}
       to={{ x: from.x + (to.x - from.x) * b, y: from.y + (to.y - from.y) * b }} />;
   })}</>;
@@ -83,7 +73,7 @@ export function WeightGoalChart({ goal, weights: records, today }: { goal: Weigh
           <View style={[styles.grid, { top: 0 }]} /><View style={[styles.grid, { top: HEIGHT / 2 }]} /><View style={[styles.grid, { top: HEIGHT - 1 }]} />
           {todayX > 0 && todayX < width && <View style={[styles.today, { left: todayX }]} />}
           <Dashed from={at(goal.startDate, goal.startKg)} to={at(goal.endDate, goal.targetKg)} />
-          {trend.slice(1).map((point, index) => <Segment key={point.date} color={colors.brand} thickness={3}
+          {trend.slice(1).map((point, index) => <ChartSegment key={point.date} color={colors.brand} thickness={3}
             from={at(trend[index]!.date, trend[index]!.kg)} to={at(point.date, point.kg)} />)}
           {weights.map((record, index) => {
             const point = at(record.date, record.kg);

@@ -1,6 +1,7 @@
 import { exerciseById, generatePlan, type Plan, type PlanDay } from '@strongerfit/training-engine';
 import type { ProfileData } from '../../profile/domain/profile';
 import type { WorkoutRecord } from '../../progress/domain/progress';
+import { topSet } from '../../progress/domain/records';
 import type { SessionTemplate } from './session';
 
 // Entrada del generador desde el onboarding (BR-02: sin estos datos no se planifica).
@@ -32,7 +33,7 @@ export function exerciseHistory(workouts: WorkoutRecord[], exerciseId: string, t
     .flatMap((record) => {
       const log = record.exercises?.find((item) => item.exerciseId === exerciseId);
       if (!log?.sets.length) return [];
-      const top = log.sets.reduce((best, set) => set.weightKg > best.weightKg || (set.weightKg === best.weightKg && set.reps > best.reps) ? set : best);
+      const top = topSet(log.sets);
       return [{ label: ago(record.date, today), weightKg: top.weightKg, reps: top.reps, sets: log.sets.length, all: log.sets }];
     }).slice(0, limit);
 }

@@ -42,7 +42,7 @@ export default function SessionRoute() {
   const planDay = source.kind === 'plan' ? profile.trainingPlan?.days[source.day] : undefined;
   // La sesión de ejemplo con historial solo existe en desarrollo.
   const template = sample ? (__DEV__ ? sessionPreview : null) : planDay ? sessionFromDay(planDay, progressStore.getState().workouts, todayDateKey()) : null;
-  return <TrainingScreen template={template} sample={sample} onPersist={persist}
+  return <TrainingScreen template={template} sample={sample} onPersist={persist} previous={progressStore.getState().workouts}
     restored={draft ? { sessionId: draft.sessionId, state: draft.state } : undefined}
     onExit={() => router.navigate('/')} onViewHistory={() => router.navigate('/progress')}
     onRecord={(record) => progressStore.getState().dispatch({ type: 'record-workout', record })} />;

@@ -13,8 +13,10 @@ import { RestTimer } from './components/RestTimer';
 import { SessionControls } from './components/SessionControls';
 import { SessionDialog } from './components/SessionDialog';
 import { currentTimeLabel, todayDateKey } from '../../shared/calendar';
-import { activeSet, sessionRecord, sessionSummary, type SessionState, type SessionTemplate } from './domain/session';
+import { activeSet, sessionLogs, sessionRecord, sessionSummary, type SessionState, type SessionTemplate } from './domain/session';
 import { TrainingSummaryScreen } from './TrainingSummaryScreen';
+import { newRecords } from '../progress/domain/records';
+import type { WorkoutRecord } from '../progress/domain/progress';
 import { useTrainingSession } from './useTrainingSession';
 import { useTimerAlert } from './timerAlerts';
 import { pauseTimer, type TimerRun } from './domain/timers';
@@ -28,6 +30,7 @@ type Props = {
   onExit: () => void;
   onViewHistory: () => void;
   onRecord: (record: SessionRecord) => void;
+  previous?: WorkoutRecord[];
 };
 
 export function TrainingScreen({ template, ...actions }: Props) {
@@ -44,7 +47,9 @@ export function TrainingScreen({ template, ...actions }: Props) {
   return <TrainingSession template={template} {...actions} />;
 }
 
-function TrainingSession({ template, sample = false, restored, onPersist, onExit, onViewHistory, onRecord }: Props & { template: SessionTemplate }) {
+function TrainingSession({ template, sample = false, restored, onPersist, onExit, onViewHistory, onRecord, previous }: Props & { template: SessionTemplate }) {
+  // Historial previo a esta sesión: los récords se comparan contra él, no contra la sesión recién registrada.
+  const [before] = useState(() => previous ?? []);
   const { state, exercise, elapsedSeconds, restSeconds, send } = useTrainingSession(template, restored?.state);
   const [sessionId] = useState(() => restored?.sessionId ?? `session-${Date.now()}`);
   const [timerRun, setTimerRun] = useState<TimerRun | null>(null);
@@ -87,6 +92,8 @@ function TrainingSession({ template, sample = false, restored, onPersist, onExit
       state={state}
       elapsedSeconds={elapsedSeconds}
       recorded={recorded}
+      records={newRecords(before, sessionLogs(state)).map((record) => ({
+        ...record, name: state.exercises.find((item) => item.exerciseId === record.exerciseId)?.name ?? record.exerciseId }))}
       onGoHome={onExit}
       onViewHistory={onViewHistory}
     />
