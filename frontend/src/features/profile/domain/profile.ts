@@ -1,4 +1,8 @@
+import type { NutritionTargets } from '@strongerfit/nutrition-engine';
 import type { OnboardingRecord } from '../../onboarding/domain/onboarding';
+
+// Meta guardada con sus parámetros y versión de reglas (RF-19, RNF-08).
+export type NutritionPlan = { proteinPerKg: number; fatShare: number; result: NutritionTargets; savedAt: string };
 
 export type ProfilePhoto = { uri: string } | 'preview' | null;
 
@@ -15,11 +19,12 @@ export type ProfileData = {
   exclusions: string[];
   dietFocus: string;
   onboarding: OnboardingRecord | null;
+  nutritionPlan: NutritionPlan | null;
 };
 
 export type PersonalField = 'name' | 'age' | 'height' | 'weight' | 'goal' | 'days' | 'minutes' | 'equipment';
 export type PersonalForm = Record<PersonalField, string>;
-export type PersonalValues = Omit<ProfileData, 'photo' | 'exclusions' | 'dietFocus' | 'onboarding'>;
+export type PersonalValues = Omit<ProfileData, 'photo' | 'exclusions' | 'dietFocus' | 'onboarding' | 'nutritionPlan'>;
 export type FormErrors<Field extends string> = Partial<Record<Field, string>>;
 
 export type NutritionField = 'exclusions' | 'dietFocus';
@@ -29,6 +34,7 @@ export type ProfileAction =
   | { type: 'update-personal'; values: PersonalValues }
   | { type: 'update-nutrition'; exclusions: string[]; dietFocus: string }
   | { type: 'set-photo'; photo: ProfilePhoto }
+  | { type: 'set-nutrition-plan'; plan: NutritionPlan }
   | { type: 'complete-onboarding'; values: PersonalValues; exclusions: string[]; dietFocus: string; onboarding: OnboardingRecord }
   | { type: 'reset' };
 
@@ -47,7 +53,7 @@ const MAX_EXCLUSION_LENGTH = 40;
 
 export const createEmptyProfile = (): ProfileData => ({
   name: '', photo: null, ageYears: null, heightCm: null, weightKg: null, goal: '',
-  daysPerWeek: null, sessionMinutes: null, equipment: '', exclusions: [], dietFocus: '', onboarding: null,
+  daysPerWeek: null, sessionMinutes: null, equipment: '', exclusions: [], dietFocus: '', onboarding: null, nutritionPlan: null,
 });
 
 export function isProfileEmpty(profile: ProfileData): boolean {
@@ -132,6 +138,7 @@ export function profileReducer(state: ProfileData, action: ProfileAction): Profi
     case 'update-personal': return { ...state, ...action.values };
     case 'update-nutrition': return { ...state, exclusions: action.exclusions, dietFocus: action.dietFocus };
     case 'set-photo': return { ...state, photo: action.photo };
+    case 'set-nutrition-plan': return { ...state, nutritionPlan: action.plan };
     case 'complete-onboarding':
       return { ...state, ...action.values, exclusions: action.exclusions, dietFocus: action.dietFocus, onboarding: action.onboarding };
     case 'reset': return createEmptyProfile();

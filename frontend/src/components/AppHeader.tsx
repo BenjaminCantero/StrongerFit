@@ -7,9 +7,10 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, layout, radius, spacing } from '../theme';
 import { AppText } from './ui/AppText';
 
+// Sin `avatar` (pantallas secundarias) no se muestra el acceso al perfil.
 type Props = { title: string; onBack?: () => void; backLabel?: string; avatar?: ImageSourcePropType | null };
 
-export function AppHeader({ title, onBack, backLabel = 'Volver a Inicio', avatar = null }: Props) {
+export function AppHeader({ title, onBack, backLabel = 'Volver a Inicio', avatar }: Props) {
   const [notificationsVisible, setNotificationsVisible] = useState(false);
   const { width, fontScale } = useWindowDimensions();
   const compact = width < 360 || fontScale > 1.2;
@@ -30,13 +31,13 @@ export function AppHeader({ title, onBack, backLabel = 'Volver a Inicio', avatar
             style={({ pressed }) => [styles.iconButton, pressed && styles.pressed]}>
             <Ionicons name={notificationsVisible ? 'notifications' : 'notifications-outline'} size={23} color={colors.ink} />
           </AppPressable>}
-          <Link href="/profile" asChild>
+          {avatar !== undefined && <Link href="/profile" asChild>
             <AppPressable accessibilityRole="link" accessibilityLabel="Abrir perfil" style={styles.iconButton}>
               {avatar
                 ? <Image source={avatar} style={styles.avatar} />
                 : <View style={[styles.avatar, styles.profilePlaceholder]}><Ionicons name="person-outline" size={20} color={colors.brand} /></View>}
             </AppPressable>
-          </Link>
+          </Link>}
         </View>}
       </View>
       {notificationsVisible && (

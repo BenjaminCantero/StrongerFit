@@ -4,7 +4,11 @@ import { AppPressable } from '../../../components/ui/AppPressable';
 import { AppText } from '../../../components/ui/AppText';
 import { colors, layout, radius, spacing } from '../../../theme';
 
-export function NutritionCard({ exclusions, dietFocus, onAdjust }: { exclusions: string[]; dietFocus: string; onAdjust: () => void }) {
+type Target = { kcal: number; protein: number; carbs: number; fat: number } | null;
+
+export function NutritionCard({ exclusions, dietFocus, target, onAdjust, onGoals }: {
+  exclusions: string[]; dietFocus: string; target: Target; onAdjust: () => void; onGoals: () => void;
+}) {
   return (
     <View style={styles.section}>
       <View style={styles.sectionHeader}>
@@ -19,6 +23,15 @@ export function NutritionCard({ exclusions, dietFocus, onAdjust }: { exclusions:
       </View>
 
       <View style={styles.card}>
+        <AppPressable accessibilityRole="button" accessibilityLabel={target ? `Meta diaria ${target.kcal} kcal. Ajustar metas nutricionales` : 'Calcular metas nutricionales'}
+          onPress={onGoals} style={({ pressed }) => [styles.dietRow, pressed && styles.pressed]}>
+          <View style={styles.dietIcon}><Ionicons name="flame-outline" size={20} color={colors.brand} /></View>
+          <View style={styles.dietText}>
+            <AppText variant="label" tone="muted">Meta diaria estimada</AppText>
+            <AppText variant="strong">{target ? `${target.kcal} kcal · P ${target.protein} g · C ${target.carbs} g · G ${target.fat} g` : 'Sin calcular'}</AppText>
+          </View>
+          <Ionicons name="chevron-forward" size={18} color={colors.muted} />
+        </AppPressable>
         <View style={styles.group}>
           <AppText variant="label" tone="muted">Exclusiones obligatorias</AppText>
           {exclusions.length ? <View style={styles.chipRow}>
@@ -69,4 +82,5 @@ const styles = StyleSheet.create({
     backgroundColor: colors.brandSoft, alignItems: 'center', justifyContent: 'center',
   },
   dietText: { flex: 1 },
+  pressed: { opacity: 0.7 },
 });

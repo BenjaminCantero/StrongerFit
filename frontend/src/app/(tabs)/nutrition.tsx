@@ -19,5 +19,6 @@ export default function NutritionRoute() {
     isPreview={__DEV__} onAdd={add} onEdit={edit}
     onDelete={(meal) => diary.dispatch({ type: 'delete-meal', date: diary.selectedDate, meal })}
     onMoveDate={(direction) => diary.dispatch({ type: 'select-date', date: shiftDate(diary.selectedDate, direction) })}
-    onToday={() => diary.dispatch({ type: 'select-date', date: todayDateKey() })} />;
+    onToday={() => diary.dispatch({ type: 'select-date', date: todayDateKey() })}
+    onAdjustGoals={() => router.push('/nutrition-goals')} />;
 }

@@ -26,6 +26,7 @@ type Props = {
   onPickPhoto: () => Promise<string | null>;
   onExport: () => Promise<ExportResult>;
   onDeleteLocalData: () => void;
+  onGoals: () => void;
 };
 
 const exportNotice: Record<ExportResult, string> = {
@@ -42,7 +43,7 @@ function heroSummary(profile: ProfileData): string {
   return parts.length ? parts.join(' · ') : 'Completa tu ficha para preparar tu plan';
 }
 
-export function ProfileScreen({ profile, dispatch, isPreview, onPickPhoto, onExport, onDeleteLocalData }: Props) {
+export function ProfileScreen({ profile, dispatch, isPreview, onPickPhoto, onExport, onDeleteLocalData, onGoals }: Props) {
   const [dialog, setDialog] = useState<Dialog>(null);
   const [notice, setNotice] = useState('');
   const [exporting, setExporting] = useState(false);
@@ -81,7 +82,7 @@ export function ProfileScreen({ profile, dispatch, isPreview, onPickPhoto, onExp
       {!!notice && <AppText accessibilityLiveRegion="polite" variant="caption" tone="brand">{notice}</AppText>}
 
       <PersonalDataCard profile={profile} onEdit={() => { setNotice(''); setDialog('personal'); }} />
-      <NutritionCard exclusions={profile.exclusions} dietFocus={profile.dietFocus} onAdjust={() => { setNotice(''); setDialog('nutrition'); }} />
+      <NutritionCard exclusions={profile.exclusions} dietFocus={profile.dietFocus} target={profile.nutritionPlan?.result ?? null} onGoals={onGoals} onAdjust={() => { setNotice(''); setDialog('nutrition'); }} />
       <PrivacyCard exporting={exporting} consentDate={formatDay(profile.onboarding?.consent.acceptedAt)}
         healthDate={formatDay(profile.onboarding?.completedAt)} healthRisk={!!profile.onboarding?.healthFlags.length} onExport={exportData} onDelete={() => { setNotice(''); setDialog('delete'); }} />
       <AppInfoCard />

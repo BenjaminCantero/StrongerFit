@@ -138,3 +138,11 @@ de contenido: el consentimiento cita la Ley 19.628 y la Ley 21.719 (no la 20.584
 no se afirma revisión de kinesiólogos ni nutricionistas, aún pendiente (SRS 11.1).
 Opciones en chips en lugar de texto libre; etiquetas en tipo oración. Detalle en
 [onboarding](docs/architecture/onboarding.md).
+
+## Metas nutricionales — paso 10
+
+`/nutrition-goals` muestra TMB y gasto total estimados (fórmula, factor y rótulo de
+estimación, RNF-07), deja elegir dirección, ajuste, proteína y grasa con opciones
+acotadas y propone la meta con macros. Nada se aplica hasta «Guardar meta»
+(SRS 9.3). El cálculo vive en `packages/nutrition-engine` con los vectores de
+CA-14 y CA-19. Se abre desde el balance del diario y desde Perfil.

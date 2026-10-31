@@ -20,9 +20,10 @@ type Props = {
   date: string; entries: DiaryEntry[]; targets: Nutrients | null; isPreview: boolean;
   onMoveDate: (direction: number) => void; onToday: () => void;
   onAdd: (meal: MealId) => void; onEdit: (entry: DiaryEntry) => void; onDelete: (meal: MealId) => void;
+  onAdjustGoals: () => void;
 };
 
-export function NutritionScreen({ date, entries, targets, isPreview, onMoveDate, onToday, onAdd, onEdit, onDelete }: Props) {
+export function NutritionScreen({ date, entries, targets, isPreview, onMoveDate, onToday, onAdd, onEdit, onDelete, onAdjustGoals }: Props) {
   const [deleting, setDeleting] = useState<MealId | null>(null);
   const [showPlan, setShowPlan] = useState(false);
   const [notice, setNotice] = useState('');
@@ -47,7 +48,7 @@ export function NutritionScreen({ date, entries, targets, isPreview, onMoveDate,
         </View>
         <Ionicons name="chevron-forward" size={20} color={colors.muted} />
       </AppPressable>
-      <DiaryBalance consumed={consumed} targets={targets} />
+      <DiaryBalance consumed={consumed} targets={targets} onAdjust={onAdjustGoals} />
       {!!notice && <AppText accessibilityLiveRegion="polite" variant="label" tone="brand">{notice}</AppText>}
       {meals.map((meal) => <DiaryMealCard key={`${date}-${meal}`} meal={meal} entries={entries.filter((entry) => entry.meal === meal)}
         onAdd={() => onAdd(meal)} onEdit={onEdit} onDelete={() => setDeleting(meal)} />)}

@@ -20,4 +20,5 @@ export const createProfilePreview = (): ProfileData => ({
     weightGoal: { startKg: 71.4, targetKg: 73, startDate: '2026-10-01', endDate: '2026-12-24' },
     consent: { version: CONSENT_VERSION, acceptedAt: '2026-10-01T12:00:00.000Z' }, completedAt: '2026-10-01T12:00:00.000Z',
   },
+  nutritionPlan: null,
 });

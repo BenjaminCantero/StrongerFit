@@ -7,7 +7,7 @@ import { colors, radius, spacing } from '../../../theme';
 import { formatProgressDate } from '../../progress/presentation';
 import { shiftDate } from '../../../shared/calendar';
 import { athleteDays, hasHealthRisk, labels, paceSummary, toggle, type Draft, type DraftField, type Equipment, type HealthFlag } from '../domain/onboarding';
-import { ChoiceChips } from './ChoiceChips';
+import { ChoiceChips } from '../../../components/ui/ChoiceChips';
 import { CheckRow } from './CheckRow';
 
 export type StepProps = {

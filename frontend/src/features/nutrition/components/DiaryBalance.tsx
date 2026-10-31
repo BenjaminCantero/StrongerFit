@@ -1,8 +1,10 @@
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { StyleSheet, View, useWindowDimensions } from 'react-native';
+import { AppPressable } from '../../../components/ui/AppPressable';
 import { AppText } from '../../../components/ui/AppText';
 import { Card } from '../../../components/ui/Card';
 import { ProgressBar } from '../../../components/ui/ProgressBar';
-import { colors, radius, spacing } from '../../../theme';
+import { colors, layout, radius, spacing } from '../../../theme';
 import type { Nutrients } from '../domain/food-entry';
 import { formatKcal } from '../presentation';
 
@@ -12,16 +14,22 @@ const macros = [
   { key: 'fat', name: 'Grasas', color: colors.muted },
 ] as const;
 
-export function DiaryBalance({ consumed, targets }: { consumed: Nutrients; targets: Nutrients | null }) {
+export function DiaryBalance({ consumed, targets, onAdjust }: { consumed: Nutrients; targets: Nutrients | null; onAdjust: () => void }) {
   const { width, fontScale } = useWindowDimensions();
   const stacked = width < 360 || fontScale > 1.2;
   const percent = targets && targets.kcal > 0 ? Math.round(consumed.kcal / targets.kcal * 100) : null;
   const remaining = targets ? Math.round(targets.kcal) - Math.round(consumed.kcal) : null;
   return (
     <Card tone="low" style={styles.card}>
-      <View>
-        <AppText variant="heading" accessibilityRole="header">Balance diario</AppText>
-        <AppText variant="caption" tone="muted">Estimación calculada desde tus registros</AppText>
+      <View style={styles.header}>
+        <View style={styles.headerText}>
+          <AppText variant="heading" accessibilityRole="header">Balance diario</AppText>
+          <AppText variant="caption" tone="muted">Estimación calculada desde tus registros</AppText>
+        </View>
+        <AppPressable accessibilityRole="button" onPress={onAdjust} style={({ pressed }) => [styles.adjust, pressed && styles.pressed]}>
+          <Ionicons name="options-outline" size={16} color={colors.brandText} />
+          <AppText variant="label" tone="brand">{targets ? 'Ajustar meta' : 'Calcular mi meta'}</AppText>
+        </AppPressable>
       </View>
       <View style={styles.energy}>
         <View style={styles.energyNumbers}>
@@ -52,6 +60,10 @@ export function DiaryBalance({ consumed, targets }: { consumed: Nutrients; targe
 
 const styles = StyleSheet.create({
   card: { padding: spacing.lg },
+  header: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: spacing.sm },
+  headerText: { flex: 1, minWidth: 170 },
+  adjust: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs, minHeight: layout.touchTarget, paddingHorizontal: spacing.sm },
+  pressed: { opacity: 0.6 },
   energy: { gap: spacing.md, padding: spacing.md, borderRadius: radius.md, backgroundColor: colors.canvas },
   energyNumbers: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'baseline', justifyContent: 'space-between', gap: spacing.sm },
   legend: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', gap: spacing.xs },

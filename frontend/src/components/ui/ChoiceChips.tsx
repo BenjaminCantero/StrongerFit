@@ -1,8 +1,8 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { StyleSheet, View } from 'react-native';
-import { AppPressable } from '../../../components/ui/AppPressable';
-import { AppText } from '../../../components/ui/AppText';
-import { colors, layout, radius, spacing } from '../../../theme';
+import { AppPressable } from './AppPressable';
+import { AppText } from './AppText';
+import { colors, layout, radius, spacing } from '../../theme';
 
 type Props<T extends string> = {
   label: string; options: Record<T, string>; error?: string;

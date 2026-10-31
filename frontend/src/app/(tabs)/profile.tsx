@@ -1,4 +1,4 @@
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { pickProfilePhoto, shareJsonExport } from '../../features/profile/device';
 import { buildLocalExport } from '../../features/profile/domain/profile';
 import { ProfileScreen } from '../../features/profile/ProfileScreen';
@@ -12,8 +12,9 @@ export default function ProfileRoute() {
   const empty = preview === 'empty';
   const { profile, dispatch } = useProfile(empty);
   const isPreview = __DEV__ && !empty;
+  const router = useRouter();
 
-  return <ProfileScreen profile={profile} dispatch={dispatch} isPreview={isPreview} onPickPhoto={pickProfilePhoto}
+  return <ProfileScreen profile={profile} dispatch={dispatch} isPreview={isPreview} onPickPhoto={pickProfilePhoto} onGoals={() => router.push('/nutrition-goals')}
     onExport={() => shareJsonExport(`strongerfit-datos-${todayDateKey()}.json`, buildLocalExport({
       profile, exportedAt: new Date(), isPreview, nutritionDiary: nutritionDiarySnapshot(), progress: progressSnapshot(),
     }))}

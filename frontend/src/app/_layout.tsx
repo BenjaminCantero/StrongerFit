@@ -37,6 +37,9 @@ export default function RootLayout() {
           <Stack.Screen name="food-entry" options={{ headerShown: true, title: 'Registro de alimento',
             header: ({ options }) => <AppHeader title={options.title ?? 'Registro de alimento'}
               backLabel="Volver a Alimentación" onBack={() => router.dismissTo('/nutrition')} /> }} />
+          <Stack.Screen name="nutrition-goals" options={{ headerShown: true, title: 'Metas nutricionales',
+            header: ({ options }) => <AppHeader title={options.title ?? 'Metas nutricionales'}
+              backLabel="Volver" onBack={() => router.back()} /> }} />
           <Stack.Screen name="dev-status" options={{ headerShown: true, title: 'Conexión de desarrollo' }} />
         </Stack>
       </QueryClientProvider>

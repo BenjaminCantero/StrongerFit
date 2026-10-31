@@ -13,7 +13,8 @@ export type DiaryAction =
   | { type: 'select-date'; date: string }
   | { type: 'add'; date: string; entry: FoodEntry }
   | { type: 'update'; id: number; entry: FoodEntry }
-  | { type: 'delete-meal'; date: string; meal: MealId };
+  | { type: 'delete-meal'; date: string; meal: MealId }
+  | { type: 'set-targets'; targets: Nutrients };
 
 export function entriesForDate(state: DiaryState, date = state.selectedDate): DiaryEntry[] {
   return state.entries.filter((entry) => entry.date === date);
@@ -34,6 +35,7 @@ function snapshot(entry: FoodEntry, id: number, date: string): DiaryEntry {
 }
 
 export function diaryReducer(state: DiaryState, action: DiaryAction): DiaryState {
+  if (action.type === 'set-targets') return { ...state, targets: action.targets };
   switch (action.type) {
     case 'select-date': return isDateKey(action.date) ? { ...state, selectedDate: action.date } : state;
     case 'add':

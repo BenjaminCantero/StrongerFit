@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "workspaces": ["frontend", "backend", "packages/contracts"],
+  "workspaces": ["frontend", "backend", "packages/contracts", "packages/nutrition-engine"],
   "engines": { "node": ">=22.16.0" },
   "scripts": {
     "start": "npm run start --workspace @strongerfit/frontend",
