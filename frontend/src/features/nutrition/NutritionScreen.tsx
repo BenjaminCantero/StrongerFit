@@ -6,7 +6,8 @@ import { Screen } from '../../components/Screen';
 import { AppButton } from '../../components/ui/AppButton';
 import { AppDialog } from '../../components/ui/AppDialog';
 import { AppText } from '../../components/ui/AppText';
-import { colors, radius, spacing } from '../../theme';
+import { PreviewNotice } from '../../components/ui/PreviewNotice';
+import { colors, layout, radius, spacing } from '../../theme';
 import { DiaryBalance } from './components/DiaryBalance';
 import { DiaryDateSelector } from './components/DiaryDateSelector';
 import { DiaryMealCard } from './components/DiaryMealCard';
@@ -36,15 +37,15 @@ export function NutritionScreen({ date, entries, targets, isPreview, onMoveDate,
   return (
     <Screen>
       <DiaryDateSelector date={date} onPrevious={() => moveDate(-1)} onNext={() => moveDate(1)} onToday={() => { setNotice(''); onToday(); }} />
-      {isPreview && <AppText variant="caption" tone="muted">Vista previa · Diario de ejemplo, cambios en memoria</AppText>}
+      {isPreview && <PreviewNotice>Vista previa · Diario de ejemplo y cambios solo en memoria</PreviewNotice>}
       <AppPressable accessibilityRole="button" accessibilityLabel="Abrir minuta semanal" onPress={() => setShowPlan(true)}
         style={({ pressed }) => [styles.plan, pressed && styles.pressed]}>
-        <View style={styles.planIcon}><Ionicons name="restaurant-outline" size={26} color={colors.white} /></View>
+        <View style={styles.planIcon}><Ionicons name="calendar-outline" size={22} color={colors.brand} /></View>
         <View style={styles.planText}>
-          <AppText variant="header" tone="white">Plan semanal: minuta</AppText>
-          <AppText variant="caption" tone="white">Revisar tu propuesta de comidas</AppText>
+          <AppText variant="header">Minuta semanal</AppText>
+          <AppText variant="caption" tone="muted">Propuesta de comidas para la semana · Próximamente</AppText>
         </View>
-        <Ionicons name="arrow-forward" size={23} color={colors.white} />
+        <Ionicons name="chevron-forward" size={20} color={colors.muted} />
       </AppPressable>
       <DiaryBalance consumed={consumed} targets={targets} />
       {!!notice && <AppText accessibilityLiveRegion="polite" variant="label" tone="brand">{notice}</AppText>}
@@ -69,8 +70,9 @@ export function NutritionScreen({ date, entries, targets, isPreview, onMoveDate,
 }
 
 const styles = StyleSheet.create({
-  plan: { backgroundColor: colors.brand, borderRadius: radius.md, padding: spacing.xl, flexDirection: 'row', alignItems: 'center', gap: spacing.md },
-  planIcon: { width: 42, height: 48, alignItems: 'center', justifyContent: 'center' },
+  plan: { backgroundColor: colors.surfaceLow, borderRadius: radius.md, padding: spacing.lg, minHeight: layout.touchTarget,
+    flexDirection: 'row', alignItems: 'center', gap: spacing.md },
+  planIcon: { width: 40, height: 40, borderRadius: radius.sm, backgroundColor: colors.brandSoft, alignItems: 'center', justifyContent: 'center' },
   planText: { flex: 1, gap: spacing.xs },
   pressed: { opacity: 0.8 },
   deleteButton: { backgroundColor: colors.error },

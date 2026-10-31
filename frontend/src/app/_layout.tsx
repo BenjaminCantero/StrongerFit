@@ -30,6 +30,10 @@ export default function RootLayout() {
         <StatusBar style="dark" />
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="(tabs)" />
+          <Stack.Screen name="welcome" />
+          <Stack.Screen name="onboarding" options={{ headerShown: true, title: 'Crear tu perfil',
+            header: ({ options }) => <AppHeader title={options.title ?? 'Crear tu perfil'}
+              backLabel="Volver a Bienvenida" onBack={() => router.dismissTo('/welcome')} /> }} />
           <Stack.Screen name="food-entry" options={{ headerShown: true, title: 'Registro de alimento',
             header: ({ options }) => <AppHeader title={options.title ?? 'Registro de alimento'}
               backLabel="Volver a Alimentación" onBack={() => router.dismissTo('/nutrition')} /> }} />

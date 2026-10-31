@@ -1,6 +1,6 @@
 import { StyleSheet, TextInput, View, type TextInputProps } from 'react-native';
-import { AppText } from '../../../components/ui/AppText';
-import { colors, fontFamily, layout, radius, spacing } from '../../../theme';
+import { AppText } from './AppText';
+import { colors, fontFamily, layout, radius, spacing } from '../../theme';
 
 type Props = Omit<TextInputProps, 'style' | 'onChange' | 'onChangeText'> & {
   label: string; value: string; onChange: (value: string) => void; error?: string; unit?: string; hint?: string;

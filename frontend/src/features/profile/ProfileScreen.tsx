@@ -1,10 +1,11 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useState } from 'react';
-import { StyleSheet, View, type ImageSourcePropType } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Screen } from '../../components/Screen';
 import { AppButton } from '../../components/ui/AppButton';
 import { AppDialog } from '../../components/ui/AppDialog';
 import { AppText } from '../../components/ui/AppText';
+import { PreviewNotice } from '../../components/ui/PreviewNotice';
 import { colors, radius, spacing } from '../../theme';
 import { AppInfoCard } from './components/AppInfoCard';
 import { NutritionCard } from './components/NutritionCard';
@@ -12,6 +13,7 @@ import { PersonalDataCard } from './components/PersonalDataCard';
 import { PrivacyCard } from './components/PrivacyCard';
 import { NutritionEditor, PersonalEditor } from './components/ProfileEditors';
 import { ProfileHero } from './components/ProfileHero';
+import { profileAvatar } from './presentation';
 import type { ExportResult } from './device';
 import type { ProfileAction, ProfileData } from './domain/profile';
 
@@ -32,6 +34,9 @@ const exportNotice: Record<ExportResult, string> = {
   unavailable: 'Este dispositivo no permite compartir archivos.',
 };
 
+const formatDay = (iso?: string) => iso
+  ? new Intl.DateTimeFormat('es-CL', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'America/Santiago' }).format(new Date(iso)) : null;
+
 function heroSummary(profile: ProfileData): string {
   const parts = [profile.goal, profile.daysPerWeek && `${profile.daysPerWeek} días por semana`].filter(Boolean);
   return parts.length ? parts.join(' · ') : 'Completa tu ficha para preparar tu plan';
@@ -44,8 +49,7 @@ export function ProfileScreen({ profile, dispatch, isPreview, onPickPhoto, onExp
   const close = () => setDialog(null);
   const done = (message: string) => { close(); setNotice(message); };
 
-  const photo: ImageSourcePropType | null = profile.photo === 'preview'
-    ? require('../../../assets/images/preview-avatar.jpg') : profile.photo;
+  const photo = profileAvatar(profile.photo);
 
   async function pickPhoto() {
     close();
@@ -67,12 +71,9 @@ export function ProfileScreen({ profile, dispatch, isPreview, onPickPhoto, onExp
 
   return (
     <Screen>
-      <View style={styles.preview}>
-        <Ionicons name={isPreview ? 'flask-outline' : 'phone-portrait-outline'} size={17} color={colors.brand} />
-        <AppText variant="caption" tone="muted" style={styles.previewText}>
-          {isPreview ? 'Vista previa · Datos de ejemplo y cambios solo en memoria' : 'Perfil local · Los cambios se borran al cerrar la app'}
-        </AppText>
-      </View>
+      <PreviewNotice local={!isPreview}>
+        {isPreview ? 'Vista previa · Datos de ejemplo y cambios solo en memoria' : 'Perfil local · Los cambios se borran al cerrar la app'}
+      </PreviewNotice>
 
       <ProfileHero name={profile.name} photo={photo} summary={heroSummary(profile)}
         onPhoto={() => profile.photo ? setDialog('photo') : pickPhoto()} />
@@ -81,7 +82,8 @@ export function ProfileScreen({ profile, dispatch, isPreview, onPickPhoto, onExp
 
       <PersonalDataCard profile={profile} onEdit={() => { setNotice(''); setDialog('personal'); }} />
       <NutritionCard exclusions={profile.exclusions} dietFocus={profile.dietFocus} onAdjust={() => { setNotice(''); setDialog('nutrition'); }} />
-      <PrivacyCard exporting={exporting} onExport={exportData} onDelete={() => { setNotice(''); setDialog('delete'); }} />
+      <PrivacyCard exporting={exporting} consentDate={formatDay(profile.onboarding?.consent.acceptedAt)}
+        healthDate={formatDay(profile.onboarding?.completedAt)} healthRisk={!!profile.onboarding?.healthFlags.length} onExport={exportData} onDelete={() => { setNotice(''); setDialog('delete'); }} />
       <AppInfoCard />
 
       <View style={styles.account}>
@@ -130,8 +132,6 @@ export function ProfileScreen({ profile, dispatch, isPreview, onPickPhoto, onExp
 }
 
 const styles = StyleSheet.create({
-  preview: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, padding: spacing.md, borderRadius: radius.sm, backgroundColor: colors.sand },
-  previewText: { flex: 1 },
   account: { flexDirection: 'row', alignItems: 'flex-start', gap: spacing.md, padding: spacing.lg, borderRadius: radius.md, backgroundColor: colors.surfaceLow },
   accountText: { flex: 1, gap: spacing.xs },
   dangerIcon: {

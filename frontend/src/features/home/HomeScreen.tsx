@@ -2,6 +2,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { StyleSheet, View } from 'react-native';
 import { Screen } from '../../components/Screen';
 import { AppText } from '../../components/ui/AppText';
+import { PreviewNotice } from '../../components/ui/PreviewNotice';
 import { colors, radius, spacing } from '../../theme';
 import { NutritionSummary } from './components/NutritionSummary';
 import { WeeklyAdherence } from './components/WeeklyAdherence';
@@ -36,7 +37,7 @@ export function HomeScreen({ overview, isPreview, onTrainingPress, onNutritionPr
           <AppText variant="label">{overview.streakDays} días racha</AppText>
         </View>}
       </View>
-      {isPreview && <AppText variant="caption" tone="muted" style={styles.preview}>Vista previa de diseño · Datos de ejemplo</AppText>}
+      {isPreview && <PreviewNotice>Vista previa · Datos de ejemplo</PreviewNotice>}
       <WorkoutSummary workout={overview.workout} onPress={onTrainingPress} />
       <NutritionSummary nutrition={overview.nutrition} onPress={onNutritionPress} />
       <WeeklyAdherence adherence={overview.adherence} />
@@ -50,5 +51,4 @@ const styles = StyleSheet.create({
   date: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs, marginTop: 2 },
   dateDot: { width: 5, height: 5, borderRadius: radius.pill, backgroundColor: colors.brand },
   streak: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs, paddingHorizontal: spacing.md, paddingVertical: spacing.sm, backgroundColor: colors.surfaceLow, borderRadius: radius.pill },
-  preview: { marginTop: -spacing.sm },
 });

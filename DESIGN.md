@@ -115,3 +115,26 @@ tipografía y color) con capturas a 360 px de todas las pantallas.
 
 La app se inicia desde `frontend/` (o `npm start` en la raíz). `npx expo start` en
 la raíz falla con `Unable to resolve "../../App"` porque allí no hay app Expo.
+
+## Revisión con apple-design — paso 8
+
+Principios y fundamentos de Apple aplicados a una app Android-first en React Native
+(sin convenciones exclusivas de iOS). La paleta y tipografía del PDF se mantienen.
+
+- `typography.md`: etiquetas de pestañas a 11 px como mínimo (antes 10 en anchos estrechos).
+- `branding.md` («Resist the temptation to display your logo throughout your app»):
+  el encabezado ya no repite el ícono ni la marca STRONGERFIT; el título usa `heading`.
+- El avatar del encabezado muestra la foto del perfil local o un ícono neutro,
+  en vez de la foto de ejemplo fija.
+- `color.md` / `buttons.md`: la minuta semanal, aún pendiente, pasa de fondo verde a
+  tarjeta secundaria; el verde de fondo queda para la acción principal.
+- Aviso de vista previa unificado en `PreviewNotice`.
+- Resumen de entrenamiento sin doble margen superior bajo el encabezado.
+
+## Bienvenida y onboarding — paso 9
+
+Siguen la lámina del PDF (bienvenida y «salud y confirmación») con dos correcciones
+de contenido: el consentimiento cita la Ley 19.628 y la Ley 21.719 (no la 20.584), y
+no se afirma revisión de kinesiólogos ni nutricionistas, aún pendiente (SRS 11.1).
+Opciones en chips en lugar de texto libre; etiquetas en tipo oración. Detalle en
+[onboarding](docs/architecture/onboarding.md).

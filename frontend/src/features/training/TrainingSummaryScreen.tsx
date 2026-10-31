@@ -35,7 +35,7 @@ export function TrainingSummaryScreen({ state, elapsedSeconds, recorded, onGoHom
   const exercisesDone = state.exercises.filter((ex) => ex.sets.some((s) => s.completed));
 
   return (
-    <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right', 'bottom']}>
+    <SafeAreaView style={styles.safeArea} edges={['left', 'right', 'bottom']}>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scroll}>
         <View style={styles.content}>
 

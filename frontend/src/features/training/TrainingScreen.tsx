@@ -1,11 +1,11 @@
-import Ionicons from '@expo/vector-icons/Ionicons';
 import { useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { Screen } from '../../components/Screen';
 import { AppButton } from '../../components/ui/AppButton';
 import { AppText } from '../../components/ui/AppText';
+import { PreviewNotice } from '../../components/ui/PreviewNotice';
 import { Card } from '../../components/ui/Card';
-import { colors, radius, spacing } from '../../theme';
+import { spacing } from '../../theme';
 import { ExerciseCard } from './components/ExerciseCard';
 import { ExerciseDetails } from './components/ExerciseDetails';
 import { RestTimer } from './components/RestTimer';
@@ -72,10 +72,7 @@ function TrainingSession({ template, onExit, onViewHistory, onRecord }: Props & 
 
   return (
     <Screen safeBottom>
-      <View style={styles.preview}>
-        <Ionicons name="flask-outline" size={17} color={colors.brand} />
-        <AppText variant="caption" tone="muted" style={styles.previewText}>Vista previa · Cambios solo en memoria</AppText>
-      </View>
+      <PreviewNotice>Vista previa · Cambios solo en memoria</PreviewNotice>
       <SessionControls title={state.title} elapsedSeconds={elapsedSeconds} paused={paused}
         onPause={() => send({ type: 'toggle-pause', now: Date.now() })} onFinish={() => setDialog('finish')} />
       <ExerciseCard key={exercise.id} exercise={exercise} paused={paused} onDetails={() => setDialog('details')}
@@ -108,7 +105,5 @@ function TrainingSession({ template, onExit, onViewHistory, onRecord }: Props & 
 }
 
 const styles = StyleSheet.create({
-  preview: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, padding: spacing.md, borderRadius: radius.sm, backgroundColor: colors.sand },
-  previewText: { flex: 1 },
   nextCard: { gap: spacing.sm },
 });

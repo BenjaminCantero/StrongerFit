@@ -4,6 +4,7 @@ import { Image, StyleSheet, View } from 'react-native';
 import { Screen } from '../../components/Screen';
 import { AppButton } from '../../components/ui/AppButton';
 import { AppText } from '../../components/ui/AppText';
+import { PreviewNotice } from '../../components/ui/PreviewNotice';
 import { Card } from '../../components/ui/Card';
 import { ProgressBar } from '../../components/ui/ProgressBar';
 import { colors, radius, spacing } from '../../theme';
@@ -21,7 +22,7 @@ export function ProgressScreen({ state, dispatch, today, isPreview }: Props) {
   const [exportInfo, setExportInfo] = useState(false);
   return <Screen>
     <PeriodSelector selected={state.period} onSelect={(period) => { dispatch({ type: 'select-period', period }); setExportInfo(false); }} />
-    <AppText variant="caption" tone="muted">{isPreview ? 'Vista previa · Datos de ejemplo y cambios solo en memoria' : 'Registro temporal · Los cambios se borran al cerrar la app'}</AppText>
+    <PreviewNotice local={!isPreview}>{isPreview ? 'Vista previa · Datos de ejemplo y cambios solo en memoria' : 'Registro temporal · Los cambios se borran al cerrar la app'}</PreviewNotice>
     <Card tone="low">
       <View style={styles.summaryTop}>
         <View style={styles.summaryHeading}>

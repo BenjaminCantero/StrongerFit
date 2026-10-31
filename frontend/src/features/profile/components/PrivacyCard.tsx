@@ -7,21 +7,24 @@ import { colors, layout, radius, spacing } from '../../../theme';
 
 type IconName = ComponentProps<typeof Ionicons>['name'];
 
-function PendingRow({ icon, title, description }: { icon: IconName; title: string; description: string }) {
-  return <View style={styles.row} accessible accessibilityLabel={`${title}. Pendiente. ${description}`}>
-    <View style={styles.rowIcon}><Ionicons name={icon} size={20} color={colors.gold} /></View>
+function StatusRow({ icon, title, description, done }: { icon: IconName; title: string; description: string; done: boolean }) {
+  const status = done ? 'Vigente' : 'Pendiente';
+  return <View style={styles.row} accessible accessibilityLabel={`${title}. ${status}. ${description}`}>
+    <View style={styles.rowIcon}><Ionicons name={icon} size={20} color={done ? colors.brand : colors.gold} /></View>
     <View style={styles.rowText}>
       <AppText variant="strong">{title}</AppText>
       <AppText variant="caption" tone="muted">{description}</AppText>
-      <View style={styles.badge}>
-        <Ionicons name="time-outline" size={12} color={colors.gold} />
-        <AppText variant="label" style={styles.badgeText}>Pendiente</AppText>
+      <View style={[styles.badge, done && styles.badgeDone]}>
+        <Ionicons name={done ? 'checkmark' : 'time-outline'} size={12} color={done ? colors.brandStrong : colors.gold} />
+        <AppText variant="label" style={done ? styles.badgeDoneText : styles.badgeText}>{status}</AppText>
       </View>
     </View>
   </View>;
 }
 
-export function PrivacyCard({ exporting, onExport, onDelete }: { exporting: boolean; onExport: () => void; onDelete: () => void }) {
+type Props = { exporting: boolean; consentDate: string | null; healthDate: string | null; healthRisk: boolean; onExport: () => void; onDelete: () => void };
+
+export function PrivacyCard({ exporting, consentDate, healthDate, healthRisk, onExport, onDelete }: Props) {
   return (
     <View style={styles.section}>
       <View style={styles.sectionTitle}>
@@ -30,10 +33,13 @@ export function PrivacyCard({ exporting, onExport, onDelete }: { exporting: bool
       </View>
 
       <View style={styles.card}>
-        <PendingRow icon="shield-checkmark-outline" title="Consentimiento de datos de salud"
-          description="Se solicitará al crear tu cuenta, conforme a la Ley 19.628 y la Ley 21.719." />
-        <PendingRow icon="document-text-outline" title="Aviso de salud y cuestionario de aptitud"
-          description="Se completará antes de generar planes automáticos." />
+        <StatusRow icon="shield-checkmark-outline" title="Consentimiento de datos de salud" done={!!consentDate}
+          description={consentDate ? `Aceptado el ${consentDate}, conforme a la Ley 19.628 y la Ley 21.719.`
+            : 'Se solicita al crear tu perfil, conforme a la Ley 19.628 y la Ley 21.719.'} />
+        <StatusRow icon="document-text-outline" title="Aviso de salud y cuestionario de aptitud" done={!!healthDate}
+          description={!healthDate ? 'Se completa antes de generar planes automáticos.'
+            : healthRisk ? `Completado el ${healthDate}. Declaraste condiciones que conviene revisar con un profesional.`
+              : `Completado el ${healthDate}. Sin condiciones declaradas.`} />
 
         <AppPressable accessibilityRole="button" accessibilityState={{ busy: exporting, disabled: exporting }} disabled={exporting}
           accessibilityHint="Comparte un archivo JSON con los datos guardados en este dispositivo." onPress={onExport}
@@ -84,6 +90,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.goldSoft, borderRadius: radius.pill,
   },
   badgeText: { color: colors.gold },
+  badgeDone: { backgroundColor: colors.brandSoft },
+  badgeDoneText: { color: colors.brandStrong },
   divider: { height: StyleSheet.hairlineWidth, backgroundColor: colors.line },
   actionRow: {
     flexDirection: 'row', alignItems: 'center', gap: spacing.sm,

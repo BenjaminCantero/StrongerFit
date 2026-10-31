@@ -2,12 +2,14 @@ import { AppPressable } from './ui/AppPressable';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Link } from 'expo-router';
 import { useState } from 'react';
-import { Image, StyleSheet, View, useWindowDimensions } from 'react-native';
+import { Image, StyleSheet, View, useWindowDimensions, type ImageSourcePropType } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, layout, radius, spacing } from '../theme';
 import { AppText } from './ui/AppText';
 
-export function AppHeader({ title, onBack, backLabel = 'Volver a Inicio' }: { title: string; onBack?: () => void; backLabel?: string }) {
+type Props = { title: string; onBack?: () => void; backLabel?: string; avatar?: ImageSourcePropType | null };
+
+export function AppHeader({ title, onBack, backLabel = 'Volver a Inicio', avatar = null }: Props) {
   const [notificationsVisible, setNotificationsVisible] = useState(false);
   const { width, fontScale } = useWindowDimensions();
   const compact = width < 360 || fontScale > 1.2;
@@ -18,13 +20,8 @@ export function AppHeader({ title, onBack, backLabel = 'Volver a Inicio' }: { ti
         <View style={styles.brand}>
           {onBack ? <AppPressable accessibilityRole="button" accessibilityLabel={backLabel} onPress={onBack} style={styles.iconButton}>
             <Ionicons name="arrow-back" size={23} color={colors.ink} />
-          </AppPressable> : !compact && <View style={styles.mark} accessible={false}>
-            <Ionicons name="barbell-outline" size={21} color={colors.brand} />
-          </View>}
-          <View style={styles.titleGroup}>
-            {!onBack && <AppText variant="label" tone="brand" style={styles.wordmark}>StrongerFit</AppText>}
-            <AppText variant="header">{title}</AppText>
-          </View>
+          </AppPressable> : null}
+          <AppText variant={onBack ? 'header' : 'heading'} accessibilityRole="header" style={styles.title}>{title}</AppText>
         </View>
         {(!onBack || !compact) && <View style={styles.actions}>
           {!onBack && <AppPressable accessibilityRole="button" accessibilityLabel="Notificaciones"
@@ -35,8 +32,8 @@ export function AppHeader({ title, onBack, backLabel = 'Volver a Inicio' }: { ti
           </AppPressable>}
           <Link href="/profile" asChild>
             <AppPressable accessibilityRole="link" accessibilityLabel="Abrir perfil" style={styles.iconButton}>
-              {__DEV__
-                ? <Image source={require('../../assets/images/preview-avatar.jpg')} style={styles.avatar} />
+              {avatar
+                ? <Image source={avatar} style={styles.avatar} />
                 : <View style={[styles.avatar, styles.profilePlaceholder]}><Ionicons name="person-outline" size={20} color={colors.brand} /></View>}
             </AppPressable>
           </Link>
@@ -58,13 +55,11 @@ export function AppHeader({ title, onBack, backLabel = 'Volver a Inicio' }: { ti
 const styles = StyleSheet.create({
   safeArea: { backgroundColor: colors.canvas, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.surfaceHigh },
   content: {
-    minHeight: 68, width: '100%', maxWidth: layout.contentWidth, alignSelf: 'center', paddingHorizontal: spacing.lg, paddingVertical: spacing.sm,
+    minHeight: 60, width: '100%', maxWidth: layout.contentWidth, alignSelf: 'center', paddingHorizontal: spacing.lg, paddingVertical: spacing.sm,
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.sm,
   },
   brand: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, flexShrink: 1 },
-  titleGroup: { flexShrink: 1 },
-  mark: { width: 36, height: 36, borderRadius: radius.pill, backgroundColor: colors.brandSoft, alignItems: 'center', justifyContent: 'center' },
-  wordmark: { letterSpacing: 0.8, textTransform: 'uppercase', fontSize: 10.5, lineHeight: 16 },
+  title: { flexShrink: 1 },
   actions: { flexDirection: 'row', alignItems: 'center' },
   iconButton: { width: layout.touchTarget, height: layout.touchTarget, borderRadius: radius.pill, alignItems: 'center', justifyContent: 'center' },
   avatar: { width: 34, height: 34, borderRadius: radius.pill, borderWidth: 2, borderColor: colors.brandSoft },

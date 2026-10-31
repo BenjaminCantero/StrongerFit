@@ -5,7 +5,7 @@ import { AppText } from '../../../components/ui/AppText';
 import { colors, spacing } from '../../../theme';
 import { limits, nutritionForm, parseNutritionForm, parsePersonalForm, personalForm, type FormErrors, type NutritionField,
   type PersonalField, type PersonalValues, type ProfileData } from '../domain/profile';
-import { FormField } from './FormField';
+import { FormField } from '../../../components/ui/FormField';
 
 const personalLabels: Record<PersonalField, string> = {
   name: 'nombre', age: 'edad', height: 'altura', weight: 'peso', goal: 'objetivo', days: 'días por semana',

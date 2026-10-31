@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Screen } from '../../components/Screen';
 import { AppButton } from '../../components/ui/AppButton';
 import { AppText } from '../../components/ui/AppText';
+import { PreviewNotice } from '../../components/ui/PreviewNotice';
 import { Card } from '../../components/ui/Card';
 import { colors, layout, spacing } from '../../theme';
 import { FoodSearch } from './components/FoodSearch';
@@ -38,7 +39,7 @@ function FoodEntryPanel({ foods, initial, onExit, onSave }: Props) {
   return (
     <View style={styles.screen}>
       <Screen>
-        <AppText variant="caption" tone="muted">Vista previa de alimentos · Datos de ejemplo</AppText>
+        {foods.length > 0 && <PreviewNotice>Vista previa · Catálogo de ejemplo</PreviewNotice>}
         <FoodSearch foods={foods} selected={food} onSelect={(foodId) => send({ type: 'select-food', foodId })} />
         <MealSelector selected={draft.meal} onSelect={(meal) => send({ type: 'select-meal', meal })} />
         <FoodSummary food={food} />
