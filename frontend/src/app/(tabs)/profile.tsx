@@ -5,6 +5,7 @@ import { ProfileScreen } from '../../features/profile/ProfileScreen';
 import { useProfile } from '../../features/profile/useProfile';
 import { nutritionDiarySnapshot, resetNutritionDiary } from '../../features/nutrition/useNutritionDiary';
 import { progressSnapshot, resetProgress } from '../../features/progress/useProgress';
+import { resetSleep, sleepStore } from '../../features/sleep/useSleep';
 import { todayDateKey } from '../../shared/calendar';
 import { clearSessionDraft } from '../../storage/sessionDraft';
 
@@ -18,6 +19,7 @@ export default function ProfileRoute() {
   return <ProfileScreen profile={profile} dispatch={dispatch} isPreview={isPreview} onPickPhoto={pickProfilePhoto} onGoals={() => router.push('/nutrition-goals')}
     onExport={() => shareJsonExport(`strongerfit-datos-${todayDateKey()}.json`, buildLocalExport({
       profile, exportedAt: new Date(), isPreview, nutritionDiary: nutritionDiarySnapshot(), progress: progressSnapshot(),
+      sleep: { records: sleepStore.getState().records, cycleMinutes: sleepStore.getState().cycleMinutes },
     }))}
-    onDeleteLocalData={() => { dispatch({ type: 'reset' }); resetNutritionDiary(); resetProgress(); clearSessionDraft().catch(() => undefined); }} />;
+    onDeleteLocalData={() => { dispatch({ type: 'reset' }); resetNutritionDiary(); resetProgress(); resetSleep(); clearSessionDraft().catch(() => undefined); }} />;
 }

@@ -6,6 +6,7 @@ import { PreviewNotice } from '../../components/ui/PreviewNotice';
 import { colors, radius, spacing } from '../../theme';
 import { NutritionSummary } from './components/NutritionSummary';
 import { ResumeSession, type PendingSession } from './components/ResumeSession';
+import { SleepSummary, type SleepOverview } from './components/SleepSummary';
 import { WeeklyAdherence } from './components/WeeklyAdherence';
 import { WeightGoal } from './components/WeightGoal';
 import { WorkoutSummary } from './components/WorkoutSummary';
@@ -21,9 +22,11 @@ type Props = {
   onNutritionPress: () => void;
   onWeightPress: () => void;
   onHistory: () => void;
+  sleep: SleepOverview;
+  onSleep: () => void;
 };
 
-export function HomeScreen({ overview, today, pending, isPreview, onTrainingPress, onResume, onNutritionPress, onWeightPress, onHistory }: Props) {
+export function HomeScreen({ overview, today, pending, isPreview, onTrainingPress, onResume, onNutritionPress, onWeightPress, onHistory, sleep, onSleep }: Props) {
   const formattedDate = new Intl.DateTimeFormat('es-CL', {
     weekday: 'long', day: 'numeric', month: 'long', timeZone: 'America/Santiago',
   }).format(overview.date);
@@ -50,6 +53,7 @@ export function HomeScreen({ overview, today, pending, isPreview, onTrainingPres
         : <WorkoutSummary workout={overview.workout} onPress={onTrainingPress} />}
       <NutritionSummary nutrition={overview.nutrition} onPress={onNutritionPress} />
       {overview.weight && <WeightGoal weight={overview.weight} onPress={onWeightPress} />}
+      <SleepSummary sleep={sleep} onPress={onSleep} />
       <WeeklyAdherence adherence={overview.adherence} today={today} onHistory={onHistory} />
     </Screen>
   );

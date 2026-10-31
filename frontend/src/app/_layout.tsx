@@ -43,6 +43,9 @@ export default function RootLayout() {
           <Stack.Screen name="meal-plan" options={{ headerShown: true, title: 'Minuta semanal',
             header: ({ options }) => <AppHeader title={options.title ?? 'Minuta semanal'}
               backLabel="Volver" onBack={() => router.canGoBack() ? router.back() : router.navigate('/nutrition')} /> }} />
+          <Stack.Screen name="sleep" options={{ headerShown: true, title: 'Sueño',
+            header: ({ options }) => <AppHeader title={options.title ?? 'Sueño'}
+              backLabel="Volver" onBack={() => router.canGoBack() ? router.back() : router.navigate('/')} /> }} />
           <Stack.Screen name="nutrition-goals" options={{ headerShown: true, title: 'Metas nutricionales',
             header: ({ options }) => <AppHeader title={options.title ?? 'Metas nutricionales'}
               backLabel="Volver" onBack={() => router.back()} /> }} />
