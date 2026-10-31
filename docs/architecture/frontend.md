@@ -36,12 +36,16 @@ modo que las pantallas existentes comparten la misma paleta.
 
 ## Vista previa
 
-En desarrollo, Inicio utiliza los datos de ejemplo del mockup e incluye una etiqueta
-explícita. `/?preview=empty` permite revisar el estado vacío. En producción siempre
-se muestra el estado sin datos hasta conectar una fuente real. El avatar de muestra
-solo se utiliza en desarrollo; proviene de la referencia HTML entregada por el usuario.
+Inicio se arma con `homeOverview` (`features/home/domain/overview.ts`) a partir del
+perfil, la rutina, el diario y el historial guardados (RF-14). Muestra la sesión en
+curso si hay borrador, o el siguiente día de la rutina (la rutina no fija días de la
+semana: se sugiere el día que sigue al último registrado); la energía del día; el
+avance hacia la meta de peso del onboarding con el último peso registrado; la semana
+de lunes a domingo y la última sesión. La racha cuenta semanas seguidas con al menos
+una sesión, para no castigar los días de descanso. Cada bloque sin datos muestra su
+estado vacío. En desarrollo los almacenes parten con datos de ejemplo rotulados;
+`/?preview=empty` revisa el estado vacío.
 
-La acción de entrenamiento abre la sesión de ejemplo del segundo corte visual.
 La pestaña Alimentación abre el diario del cuarto corte visual. Registrar comida
 en Inicio abre el formulario del tercer corte; su confirmación actualiza el diario
 y el balance de hoy en Inicio. Los ejemplos solo existen en memoria y están rotulados.

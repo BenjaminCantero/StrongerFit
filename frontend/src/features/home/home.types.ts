@@ -8,17 +8,19 @@ export type MacroSummary = {
 export type WeekDay = {
   name: string;
   label: string;
-  state: 'completed' | 'current' | 'planned' | 'rest';
+  state: 'completed' | 'current' | 'missed' | 'upcoming';
 };
 
 export type HomeOverview = {
   firstName: string | null;
   date: Date;
-  streakDays: number;
+  activeWeeks: number;
   workout: {
+    day: number;
     title: string;
     durationMinutes: number;
     exercises: string[];
+    doneToday: boolean;
   } | null;
   nutrition: {
     consumedKcal: number;
@@ -29,5 +31,14 @@ export type HomeOverview = {
     completedSessions: number;
     targetSessions: number;
     days: WeekDay[];
+    last: { name: string; date: string; durationMinutes: number; volumeKg: number } | null;
+  } | null;
+  weight: {
+    startKg: number;
+    currentKg: number;
+    targetKg: number;
+    endDate: string;
+    progress: number;
+    weeksLeft: number;
   } | null;
 };

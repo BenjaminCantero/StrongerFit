@@ -1,23 +1,33 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { HomeScreen } from '../../features/home/HomeScreen';
-import { createEmptyHome, homePreview } from '../../features/home/home.preview';
-import { diaryTotals, entriesForDate, todayDateKey } from '../../features/nutrition/domain/diary';
+import { homeOverview } from '../../features/home/domain/overview';
+import { diaryTotals, entriesForDate } from '../../features/nutrition/domain/diary';
 import { useNutritionDiary } from '../../features/nutrition/useNutritionDiary';
+import { useProfile } from '../../features/profile/useProfile';
+import { useProgressStore } from '../../features/progress/useProgress';
+import { sessionSummary } from '../../features/training/domain/session';
+import { useSessionDraft } from '../../features/training/useSessionDraft';
+import { todayDateKey } from '../../shared/calendar';
 
 export default function HomeRoute() {
   const router = useRouter();
   const { preview } = useLocalSearchParams<{ preview?: string }>();
-  const isPreview = __DEV__ && preview !== 'empty';
+  const empty = __DEV__ && preview === 'empty';
+  const { profile } = useProfile(empty);
+  const progress = useProgressStore(empty);
   const diary = useNutritionDiary();
-  const consumed = diaryTotals(entriesForDate(diary, todayDateKey()));
-  const targets = diary.targets;
-  const overview = isPreview ? { ...homePreview, nutrition: targets ? {
-    consumedKcal: consumed.kcal, targetKcal: targets.kcal,
-    macros: ([['protein', 'Proteínas'], ['carbs', 'Carbos'], ['fat', 'Grasas']] as const)
-      .map(([kind, name]) => ({ kind, name, consumed: consumed[kind], target: targets[kind] })),
-  } : null } : createEmptyHome();
+  const { draft } = useSessionDraft();
+  const today = todayDateKey();
+  const overview = homeOverview({
+    profile, progress, today, now: new Date(),
+    consumed: diaryTotals(empty ? [] : entriesForDate(diary, today)), targets: empty ? null : diary.targets,
+  });
+  const pending = draft && !empty ? { title: draft.state.title, ...sessionSummary(draft.state) } : null;
+  const day = overview.workout?.day;
 
-  return <HomeScreen overview={overview} isPreview={isPreview}
-    onTrainingPress={() => __DEV__ ? router.push('/session?preview=sample') : router.navigate('/training')}
-    onNutritionPress={() => isPreview ? router.push({ pathname: '/food-entry', params: { date: todayDateKey() } }) : router.navigate('/nutrition')} />;
+  return <HomeScreen overview={overview} today={today} pending={pending} isPreview={__DEV__ && !empty}
+    onTrainingPress={() => day === undefined ? router.navigate('/training') : router.push({ pathname: '/session', params: { day: String(day) } })}
+    onResume={() => router.push({ pathname: '/session', params: { resume: '1' } })}
+    onNutritionPress={() => overview.nutrition ? router.push({ pathname: '/food-entry', params: { date: today } }) : router.navigate('/nutrition')}
+    onWeightPress={() => router.navigate('/progress')} onHistory={() => router.navigate('/progress')} />;
 }

@@ -5,18 +5,25 @@ import { AppText } from '../../components/ui/AppText';
 import { PreviewNotice } from '../../components/ui/PreviewNotice';
 import { colors, radius, spacing } from '../../theme';
 import { NutritionSummary } from './components/NutritionSummary';
+import { ResumeSession, type PendingSession } from './components/ResumeSession';
 import { WeeklyAdherence } from './components/WeeklyAdherence';
+import { WeightGoal } from './components/WeightGoal';
 import { WorkoutSummary } from './components/WorkoutSummary';
 import type { HomeOverview } from './home.types';
 
 type Props = {
   overview: HomeOverview;
+  today: string;
+  pending: PendingSession | null;
   isPreview?: boolean;
   onTrainingPress: () => void;
+  onResume: () => void;
   onNutritionPress: () => void;
+  onWeightPress: () => void;
+  onHistory: () => void;
 };
 
-export function HomeScreen({ overview, isPreview, onTrainingPress, onNutritionPress }: Props) {
+export function HomeScreen({ overview, today, pending, isPreview, onTrainingPress, onResume, onNutritionPress, onWeightPress, onHistory }: Props) {
   const formattedDate = new Intl.DateTimeFormat('es-CL', {
     weekday: 'long', day: 'numeric', month: 'long', timeZone: 'America/Santiago',
   }).format(overview.date);
@@ -32,15 +39,18 @@ export function HomeScreen({ overview, isPreview, onTrainingPress, onNutritionPr
             <AppText variant="caption" tone="muted">{date}</AppText>
           </View>
         </View>
-        {overview.streakDays > 0 && <View style={styles.streak}>
+        {overview.activeWeeks > 1 && <View style={styles.streak} accessible
+          accessibilityLabel={`${overview.activeWeeks} semanas seguidas con al menos un entrenamiento`}>
           <Ionicons name="flame" size={15} color={colors.gold} />
-          <AppText variant="label">{overview.streakDays} días racha</AppText>
+          <AppText variant="label">{overview.activeWeeks} semanas activas</AppText>
         </View>}
       </View>
       {isPreview && <PreviewNotice>Vista previa · Datos de ejemplo</PreviewNotice>}
-      <WorkoutSummary workout={overview.workout} onPress={onTrainingPress} />
+      {pending ? <ResumeSession session={pending} onPress={onResume} />
+        : <WorkoutSummary workout={overview.workout} onPress={onTrainingPress} />}
       <NutritionSummary nutrition={overview.nutrition} onPress={onNutritionPress} />
-      <WeeklyAdherence adherence={overview.adherence} />
+      {overview.weight && <WeightGoal weight={overview.weight} onPress={onWeightPress} />}
+      <WeeklyAdherence adherence={overview.adherence} today={today} onHistory={onHistory} />
     </Screen>
   );
 }

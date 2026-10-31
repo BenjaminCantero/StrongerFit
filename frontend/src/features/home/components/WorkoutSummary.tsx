@@ -11,8 +11,8 @@ export function WorkoutSummary({ workout, onPress }: { workout: HomeOverview['wo
     return (
       <Card>
         <AppText variant="heading" accessibilityRole="header">Tu próximo entrenamiento</AppText>
-        <AppText tone="muted">Tu rutina aparecerá aquí cuando hayas configurado tu plan.</AppText>
-        <AppButton label="Explorar entrenamiento" icon="barbell-outline" onPress={onPress} />
+        <AppText tone="muted">Genera tu rutina semanal con tus días, minutos y equipamiento. Podrás editarla antes de entrenar.</AppText>
+        <AppButton label="Generar mi rutina" icon="sparkles-outline" onPress={onPress} />
       </Card>
     );
   }
@@ -22,8 +22,8 @@ export function WorkoutSummary({ workout, onPress }: { workout: HomeOverview['wo
       <View style={styles.top}>
         <View style={styles.titleGroup}>
           <View style={styles.badge}>
-            <Ionicons name="calendar-outline" size={12} color={colors.brand} />
-            <AppText variant="label" tone="brand">Para hoy</AppText>
+            <Ionicons name={workout.doneToday ? 'checkmark-circle-outline' : 'repeat-outline'} size={12} color={colors.brand} />
+            <AppText variant="label" tone="brand">{workout.doneToday ? 'Hoy ya entrenaste · Siguiente' : `Día ${workout.day + 1} de tu rutina`}</AppText>
           </View>
           <AppText variant="heading" accessibilityRole="header">{workout.title}</AppText>
         </View>
@@ -36,11 +36,11 @@ export function WorkoutSummary({ workout, onPress }: { workout: HomeOverview['wo
         </View>
         <View style={styles.metadataItem}>
           <Ionicons name="list-outline" size={16} color={colors.muted} />
-          <AppText variant="caption">{workout.exercises.length} ejercicios guía</AppText>
+          <AppText variant="caption">{workout.exercises.length} ejercicios</AppText>
         </View>
       </View>
       <AppText variant="caption" tone="muted">{workout.exercises.join(' · ')}</AppText>
-      <AppButton label="Iniciar entrenamiento" icon="play-outline" onPress={onPress} />
+      <AppButton label="Iniciar entrenamiento" icon="play-outline" variant={workout.doneToday ? 'secondary' : 'primary'} onPress={onPress} />
     </Card>
   );
 }
