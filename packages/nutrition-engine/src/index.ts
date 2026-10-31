@@ -66,3 +66,6 @@ export function nutritionTargets(input: TargetInput) {
 }
 
 export type NutritionTargets = ReturnType<typeof nutritionTargets>;
+
+export * from './foods';
+export * from './meal-plan';

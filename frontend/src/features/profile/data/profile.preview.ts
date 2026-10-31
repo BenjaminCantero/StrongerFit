@@ -22,6 +22,7 @@ export const createProfilePreview = (): ProfileData => ({
     consent: { version: CONSENT_VERSION, acceptedAt: '2026-10-01T12:00:00.000Z' }, completedAt: '2026-10-01T12:00:00.000Z',
   },
   nutritionPlan: null,
+  mealPlan: null,
   trainingPlan: { ...generatePlan({ days: 4, minutes: 50, equipment: ['dumbbells', 'barbell'], athleteProfile: 'strength-hypertrophy',
     level: 'intermediate', injury: false }), createdAt: '2026-10-01T12:00:00.000Z' },
 });

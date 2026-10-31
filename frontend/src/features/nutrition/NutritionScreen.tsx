@@ -20,12 +20,11 @@ type Props = {
   date: string; entries: DiaryEntry[]; targets: Nutrients | null; isPreview: boolean;
   onMoveDate: (direction: number) => void; onToday: () => void;
   onAdd: (meal: MealId) => void; onEdit: (entry: DiaryEntry) => void; onDelete: (meal: MealId) => void;
-  onAdjustGoals: () => void;
+  onAdjustGoals: () => void; onMealPlan: () => void; mealPlanSummary: string | null;
 };
 
-export function NutritionScreen({ date, entries, targets, isPreview, onMoveDate, onToday, onAdd, onEdit, onDelete, onAdjustGoals }: Props) {
+export function NutritionScreen({ date, entries, targets, isPreview, onMoveDate, onToday, onAdd, onEdit, onDelete, onAdjustGoals, onMealPlan, mealPlanSummary }: Props) {
   const [deleting, setDeleting] = useState<MealId | null>(null);
-  const [showPlan, setShowPlan] = useState(false);
   const [notice, setNotice] = useState('');
   const consumed = diaryTotals(entries);
   const deletingTotal = diaryTotals(entries.filter((entry) => entry.meal === deleting));
@@ -39,12 +38,12 @@ export function NutritionScreen({ date, entries, targets, isPreview, onMoveDate,
     <Screen>
       <DiaryDateSelector date={date} onPrevious={() => moveDate(-1)} onNext={() => moveDate(1)} onToday={() => { setNotice(''); onToday(); }} />
       {isPreview && <PreviewNotice>Vista previa · Diario de ejemplo y cambios solo en memoria</PreviewNotice>}
-      <AppPressable accessibilityRole="button" accessibilityLabel="Abrir minuta semanal" onPress={() => setShowPlan(true)}
+      <AppPressable accessibilityRole="button" accessibilityLabel="Abrir minuta semanal" onPress={onMealPlan}
         style={({ pressed }) => [styles.plan, pressed && styles.pressed]}>
         <View style={styles.planIcon}><Ionicons name="calendar-outline" size={22} color={colors.brand} /></View>
         <View style={styles.planText}>
           <AppText variant="header">Minuta semanal</AppText>
-          <AppText variant="caption" tone="muted">Propuesta de comidas para la semana · Próximamente</AppText>
+          <AppText variant="caption" tone="muted">{mealPlanSummary ?? 'Genera una propuesta de comidas para la semana'}</AppText>
         </View>
         <Ionicons name="chevron-forward" size={20} color={colors.muted} />
       </AppPressable>
@@ -61,10 +60,6 @@ export function NutritionScreen({ date, entries, targets, isPreview, onMoveDate,
           setDeleting(null);
         }} style={styles.deleteButton} />
         <AppButton label="Cancelar" variant="secondary" onPress={() => setDeleting(null)} />
-      </AppDialog>
-      <AppDialog title="Tu minuta semanal" visible={showPlan} onClose={() => setShowPlan(false)}>
-        <AppText>Todavía no hay una minuta guardada.</AppText>
-        <AppButton label="Volver al diario" onPress={() => setShowPlan(false)} />
       </AppDialog>
     </Screen>
   );

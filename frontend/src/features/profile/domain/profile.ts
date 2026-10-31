@@ -1,4 +1,4 @@
-import type { NutritionTargets } from '@strongerfit/nutrition-engine';
+import type { MealPlan, NutritionTargets } from '@strongerfit/nutrition-engine';
 import type { Plan, PlannedExercise } from '@strongerfit/training-engine';
 import type { OnboardingRecord } from '../../onboarding/domain/onboarding';
 
@@ -22,11 +22,14 @@ export type ProfileData = {
   onboarding: OnboardingRecord | null;
   nutritionPlan: NutritionPlan | null;
   trainingPlan: (Plan & { createdAt: string }) | null;
+  mealPlan: SavedMealPlan | null;
 };
+
+export type SavedMealPlan = MealPlan & { createdAt: string };
 
 export type PersonalField = 'name' | 'age' | 'height' | 'weight' | 'goal' | 'days' | 'minutes' | 'equipment';
 export type PersonalForm = Record<PersonalField, string>;
-export type PersonalValues = Omit<ProfileData, 'photo' | 'exclusions' | 'dietFocus' | 'onboarding' | 'nutritionPlan' | 'trainingPlan'>;
+export type PersonalValues = Omit<ProfileData, 'photo' | 'exclusions' | 'dietFocus' | 'onboarding' | 'nutritionPlan' | 'trainingPlan' | 'mealPlan'>;
 export type FormErrors<Field extends string> = Partial<Record<Field, string>>;
 
 export type NutritionField = 'exclusions' | 'dietFocus';
@@ -38,6 +41,7 @@ export type ProfileAction =
   | { type: 'set-photo'; photo: ProfilePhoto }
   | { type: 'set-nutrition-plan'; plan: NutritionPlan }
   | { type: 'set-training-plan'; plan: Plan & { createdAt: string } }
+  | { type: 'set-meal-plan'; plan: SavedMealPlan | null }
   | { type: 'update-plan-exercise'; day: number; index: number; exercise: PlannedExercise }
   | { type: 'complete-onboarding'; values: PersonalValues; exclusions: string[]; dietFocus: string; onboarding: OnboardingRecord }
   | { type: 'reset' };
@@ -57,7 +61,7 @@ const MAX_EXCLUSION_LENGTH = 40;
 
 export const createEmptyProfile = (): ProfileData => ({
   name: '', photo: null, ageYears: null, heightCm: null, weightKg: null, goal: '',
-  daysPerWeek: null, sessionMinutes: null, equipment: '', exclusions: [], dietFocus: '', onboarding: null, nutritionPlan: null, trainingPlan: null,
+  daysPerWeek: null, sessionMinutes: null, equipment: '', exclusions: [], dietFocus: '', onboarding: null, nutritionPlan: null, trainingPlan: null, mealPlan: null,
 });
 
 export function isProfileEmpty(profile: ProfileData): boolean {
@@ -144,6 +148,7 @@ export function profileReducer(state: ProfileData, action: ProfileAction): Profi
     case 'set-photo': return { ...state, photo: action.photo };
     case 'set-nutrition-plan': return { ...state, nutritionPlan: action.plan };
     case 'set-training-plan': return { ...state, trainingPlan: action.plan };
+    case 'set-meal-plan': return { ...state, mealPlan: action.plan };
     case 'update-plan-exercise': {
       const plan = state.trainingPlan;
       if (!plan?.days[action.day]?.exercises[action.index]) return state;

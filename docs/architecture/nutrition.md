@@ -86,3 +86,29 @@ Android físico queda pendiente.
 
 Capturas: [diario — paso 4](../design/step-04-nutrition-diary.png),
 [registro — paso 3](../design/step-03-food.png).
+
+## Minuta semanal (RF-12, RF-13)
+
+`packages/nutrition-engine` incluye un catálogo de referencia (`foods.ts`, versión
+`alimentos-referencia-0.1`) con rol, comidas posibles y etiquetas de restricción por
+alimento. Sus valores por 100 g son aproximados y deben reemplazarse por una fuente
+importada con procedencia (RF-18); también alimenta el buscador de desarrollo.
+
+`generateMealPlan` arma 7 días con desayuno, almuerzo, once y cena combinando
+alimentos y porciones (sin recetas). Reparte la meta diaria por comida, deja las
+verduras en su porción habitual, escala el resto y redondea a 5 g. Es determinista y
+guarda versión de reglas y catálogo (RF-19). Cada día informa su desviación frente a
+la meta con tolerancia ±10 % (BR-09).
+
+Las exclusiones del perfil se reconocen como alérgenos (gluten, lactosa, lácteos,
+frutos secos, maní, huevo, pescado, mariscos, soya) o como nombres de alimentos; lo
+no reconocido se muestra como aviso. «Lácteos» o «leche» bloquea también lo sin
+lactosa. Vegetariana y vegana se leen del enfoque alimentario. Un alimento excluido
+nunca entra en la minuta (BR-08, CA-05); si una restricción deja una comida sin
+opciones, se informa qué la bloquea en lugar de ignorarla (CU-05).
+
+La minuta se genera como propuesta y se guarda solo al aceptar. «Cambiar» ofrece
+alimentos del mismo rol, compatibles, con porción de energía similar y diferencias de
+kcal y proteína; en la minuta guardada elegir una opción confirma el cambio. Cada
+comida guardada puede registrarse en el diario de hoy. Hay pruebas que exigen al
+menos dos alternativas por casillero con las exclusiones comunes.
