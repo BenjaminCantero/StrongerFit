@@ -59,3 +59,12 @@ Exportación Android/web y comprobación de tipos y lint. Falta ejecución en un
 dispositivo Android.
 
 Captura: [sesión — paso 2](../design/step-02-training.png).
+
+## Plan semanal
+
+`packages/training-engine` genera el plan desde días, minutos, equipamiento,
+nivel y perfil de deportista del onboarding. `features/training/domain/plan.ts`
+lo crea desde el perfil y convierte un día en `SessionTemplate`
+(series vacías, sin historial ni técnica inventados). El plan se guarda en el
+perfil con versión de reglas y de catálogo; las ediciones pasan por
+`validateExercise`. La pestaña Entrenar es el plan y la sesión vive en `/session`.

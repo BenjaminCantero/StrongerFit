@@ -12,8 +12,10 @@ export function ExerciseDetails({ exercise, onClose }: { exercise: SessionExerci
         accessibilityLabel="Imagen ilustrativa del ejercicio de la referencia de diseño" style={styles.image} />}
       <View style={styles.section}>
         <AppText variant="strong">Puntos clave de ejecución</AppText>
-        {exercise.technique.map((point) => <AppText key={point}>{point}</AppText>)}
-        <AppText variant="caption" tone="muted">Contenido de ejemplo pendiente de revisión profesional.</AppText>
+        {exercise.technique.length ? <>
+          {exercise.technique.map((point) => <AppText key={point}>{point}</AppText>)}
+          <AppText variant="caption" tone="muted">Contenido de ejemplo pendiente de revisión profesional.</AppText>
+        </> : <AppText tone="muted">Aún no hay indicaciones de técnica revisadas para este ejercicio. Muévete con control y detente si aparece dolor.</AppText>}
       </View>
       <View style={styles.history}>
         <AppText variant="strong">Historial de ejemplo</AppText>

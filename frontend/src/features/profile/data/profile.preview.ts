@@ -1,3 +1,4 @@
+import { generatePlan } from '@strongerfit/training-engine';
 import { CONSENT_VERSION } from '../../onboarding/domain/onboarding';
 import type { ProfileData } from '../domain/profile';
 
@@ -21,4 +22,6 @@ export const createProfilePreview = (): ProfileData => ({
     consent: { version: CONSENT_VERSION, acceptedAt: '2026-10-01T12:00:00.000Z' }, completedAt: '2026-10-01T12:00:00.000Z',
   },
   nutritionPlan: null,
+  trainingPlan: { ...generatePlan({ days: 4, minutes: 50, equipment: ['dumbbells', 'barbell'], athleteProfile: 'strength-hypertrophy',
+    level: 'intermediate', injury: false }), createdAt: '2026-10-01T12:00:00.000Z' },
 });

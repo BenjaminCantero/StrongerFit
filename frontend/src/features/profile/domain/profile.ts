@@ -1,4 +1,5 @@
 import type { NutritionTargets } from '@strongerfit/nutrition-engine';
+import type { Plan, PlannedExercise } from '@strongerfit/training-engine';
 import type { OnboardingRecord } from '../../onboarding/domain/onboarding';
 
 // Meta guardada con sus parámetros y versión de reglas (RF-19, RNF-08).
@@ -20,11 +21,12 @@ export type ProfileData = {
   dietFocus: string;
   onboarding: OnboardingRecord | null;
   nutritionPlan: NutritionPlan | null;
+  trainingPlan: (Plan & { createdAt: string }) | null;
 };
 
 export type PersonalField = 'name' | 'age' | 'height' | 'weight' | 'goal' | 'days' | 'minutes' | 'equipment';
 export type PersonalForm = Record<PersonalField, string>;
-export type PersonalValues = Omit<ProfileData, 'photo' | 'exclusions' | 'dietFocus' | 'onboarding' | 'nutritionPlan'>;
+export type PersonalValues = Omit<ProfileData, 'photo' | 'exclusions' | 'dietFocus' | 'onboarding' | 'nutritionPlan' | 'trainingPlan'>;
 export type FormErrors<Field extends string> = Partial<Record<Field, string>>;
 
 export type NutritionField = 'exclusions' | 'dietFocus';
@@ -35,6 +37,8 @@ export type ProfileAction =
   | { type: 'update-nutrition'; exclusions: string[]; dietFocus: string }
   | { type: 'set-photo'; photo: ProfilePhoto }
   | { type: 'set-nutrition-plan'; plan: NutritionPlan }
+  | { type: 'set-training-plan'; plan: Plan & { createdAt: string } }
+  | { type: 'update-plan-exercise'; day: number; index: number; exercise: PlannedExercise }
   | { type: 'complete-onboarding'; values: PersonalValues; exclusions: string[]; dietFocus: string; onboarding: OnboardingRecord }
   | { type: 'reset' };
 
@@ -53,7 +57,7 @@ const MAX_EXCLUSION_LENGTH = 40;
 
 export const createEmptyProfile = (): ProfileData => ({
   name: '', photo: null, ageYears: null, heightCm: null, weightKg: null, goal: '',
-  daysPerWeek: null, sessionMinutes: null, equipment: '', exclusions: [], dietFocus: '', onboarding: null, nutritionPlan: null,
+  daysPerWeek: null, sessionMinutes: null, equipment: '', exclusions: [], dietFocus: '', onboarding: null, nutritionPlan: null, trainingPlan: null,
 });
 
 export function isProfileEmpty(profile: ProfileData): boolean {
@@ -139,6 +143,13 @@ export function profileReducer(state: ProfileData, action: ProfileAction): Profi
     case 'update-nutrition': return { ...state, exclusions: action.exclusions, dietFocus: action.dietFocus };
     case 'set-photo': return { ...state, photo: action.photo };
     case 'set-nutrition-plan': return { ...state, nutritionPlan: action.plan };
+    case 'set-training-plan': return { ...state, trainingPlan: action.plan };
+    case 'update-plan-exercise': {
+      const plan = state.trainingPlan;
+      if (!plan?.days[action.day]?.exercises[action.index]) return state;
+      return { ...state, trainingPlan: { ...plan, days: plan.days.map((day, dayIndex) => dayIndex !== action.day ? day
+        : { ...day, exercises: day.exercises.map((item, index) => index === action.index ? action.exercise : item) }) } };
+    }
     case 'complete-onboarding':
       return { ...state, ...action.values, exclusions: action.exclusions, dietFocus: action.dietFocus, onboarding: action.onboarding };
     case 'reset': return createEmptyProfile();

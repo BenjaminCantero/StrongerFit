@@ -18,6 +18,6 @@ export default function HomeRoute() {
   } : null } : createEmptyHome();
 
   return <HomeScreen overview={overview} isPreview={isPreview}
-    onTrainingPress={() => router.navigate('/training')}
+    onTrainingPress={() => __DEV__ ? router.push('/session?preview=sample') : router.navigate('/training')}
     onNutritionPress={() => isPreview ? router.push({ pathname: '/food-entry', params: { date: todayDateKey() } }) : router.navigate('/nutrition')} />;
 }

@@ -1,5 +1,5 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { Redirect, Tabs, useRouter } from 'expo-router';
+import { Redirect, Tabs } from 'expo-router';
 import type { ComponentProps } from 'react';
 import { useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -18,7 +18,6 @@ const screens: { name: string; title: string; icon: ComponentProps<typeof Ionico
 ];
 
 export default function TabLayout() {
-  const router = useRouter();
   const insets = useSafeAreaInsets();
   const { width, fontScale } = useWindowDimensions();
   const compact = width < 360 || fontScale > 1.2;
@@ -51,10 +50,6 @@ export default function TabLayout() {
             {compact && name === 'nutrition' ? 'Comidas' : compact && name === 'training' ? 'Entreno' : title}
           </AppText>,
           tabBarIcon: ({ color }) => <Ionicons name={icon} color={color} size={23} />,
-          ...(name === 'training' ? {
-            header: () => <AppHeader title="Sesión de entrenamiento" avatar={avatar} onBack={() => router.navigate('/')} />,
-            tabBarStyle: { display: 'none' },
-          } : {}),
         }} />
       ))}
     </Tabs>

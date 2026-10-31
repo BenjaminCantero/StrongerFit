@@ -19,6 +19,7 @@ import { useTrainingSession } from './useTrainingSession';
 type SessionRecord = NonNullable<ReturnType<typeof sessionRecord>>;
 type Props = {
   template: SessionTemplate | null;
+  sample?: boolean;
   onExit: () => void;
   onViewHistory: () => void;
   onRecord: (record: SessionRecord) => void;
@@ -38,7 +39,7 @@ export function TrainingScreen({ template, ...actions }: Props) {
   return <TrainingSession template={template} {...actions} />;
 }
 
-function TrainingSession({ template, onExit, onViewHistory, onRecord }: Props & { template: SessionTemplate }) {
+function TrainingSession({ template, sample = false, onExit, onViewHistory, onRecord }: Props & { template: SessionTemplate }) {
   const { state, exercise, elapsedSeconds, restSeconds, send } = useTrainingSession(template);
   const [sessionId] = useState(() => `session-${Date.now()}`);
   const [dialog, setDialog] = useState<'details' | 'finish' | 'next' | null>(null);
@@ -72,7 +73,7 @@ function TrainingSession({ template, onExit, onViewHistory, onRecord }: Props & 
 
   return (
     <Screen safeBottom>
-      <PreviewNotice>Vista previa · Cambios solo en memoria</PreviewNotice>
+      <PreviewNotice local={!sample}>{sample ? 'Vista previa · Sesión de ejemplo y cambios solo en memoria' : 'Registro en memoria · Se borra al cerrar la app'}</PreviewNotice>
       <SessionControls title={state.title} elapsedSeconds={elapsedSeconds} paused={paused}
         onPause={() => send({ type: 'toggle-pause', now: Date.now() })} onFinish={() => setDialog('finish')} />
       <ExerciseCard key={exercise.id} exercise={exercise} paused={paused} onDetails={() => setDialog('details')}
@@ -96,7 +97,7 @@ function TrainingSession({ template, onExit, onViewHistory, onRecord }: Props & 
           </> : <>
             <AppText>Completaste {summary.completedSets} de {summary.totalSets} series. Al finalizar se detendrán los temporizadores.</AppText>
             <AppText tone="muted">La sesión se añadirá al historial de Progreso solo mientras la app esté abierta; aún no se guarda en el dispositivo ni en la nube.</AppText>
-            <AppButton label="Finalizar sesión de ejemplo" onPress={() => { send({ type: 'finish', now: Date.now() }); setDialog(null); }} />
+            <AppButton label={sample ? 'Finalizar sesión de ejemplo' : 'Finalizar sesión'} onPress={() => { send({ type: 'finish', now: Date.now() }); setDialog(null); }} />
             <AppButton label="Seguir entrenando" variant="secondary" onPress={() => setDialog(null)} />
           </>}
       </SessionDialog>

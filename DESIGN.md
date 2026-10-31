@@ -146,3 +146,14 @@ estimación, RNF-07), deja elegir dirección, ajuste, proteína y grasa con opci
 acotadas y propone la meta con macros. Nada se aplica hasta «Guardar meta»
 (SRS 9.3). El cálculo vive en `packages/nutrition-engine` con los vectores de
 CA-14 y CA-19. Se abre desde el balance del diario y desde Perfil.
+
+## Rutina semanal — paso 11
+
+La pestaña Entrenar muestra «Tu plan semanal» (lámina del PDF) con la barra
+inferior visible: selector de días, ejercicios con series, repeticiones y
+descanso, edición por ejercicio con alternativas del mismo patrón y equipo
+propio (CA-12) y regeneración con confirmación. «Iniciar entrenamiento» abre
+`/session` a pantalla completa con las series del día. El generador vive en
+`packages/training-engine` (RF-05/06/28, CA-02, CA-16, CA-23) con un catálogo
+inicial de movimientos genéricos sin imágenes, pendiente de licencia (SRS 11.1).
+En desarrollo, Inicio sigue abriendo la sesión de ejemplo con historial.
