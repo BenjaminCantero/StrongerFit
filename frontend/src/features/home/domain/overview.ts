@@ -3,6 +3,7 @@ import { shiftDate, weekStart } from '../../../shared/calendar';
 import type { Nutrients } from '../../nutrition/domain/food-entry';
 import type { ProfileData } from '../../profile/domain/profile';
 import type { ProgressData } from '../../progress/domain/progress';
+import { weightGoalSummary } from '../../progress/domain/weight-goal';
 import { estimatedMinutes } from '../../training/domain/plan';
 import type { HomeOverview, WeekDay } from '../home.types';
 
@@ -73,11 +74,7 @@ export function activeWeeks(dates: string[], today: string): number {
 function weightProgress(profile: ProfileData, progress: ProgressData, today: string): HomeOverview['weight'] {
   const goal = profile.onboarding?.weightGoal;
   if (!goal) return null;
-  const latest = progress.weights.filter((record) => record.date >= goal.startDate && record.date <= today)
-    .sort((a, b) => b.date.localeCompare(a.date))[0];
-  const currentKg = latest?.kg ?? goal.startKg;
-  const span = goal.targetKg - goal.startKg;
-  const progressRatio = span === 0 ? 1 : Math.max(0, Math.min(1, (currentKg - goal.startKg) / span));
-  const days = (Date.parse(`${goal.endDate}T12:00:00Z`) - Date.parse(`${today}T12:00:00Z`)) / 86_400_000;
-  return { startKg: goal.startKg, currentKg, targetKg: goal.targetKg, endDate: goal.endDate, progress: progressRatio, weeksLeft: Math.max(0, Math.ceil(days / 7)) };
+  const summary = weightGoalSummary(goal, progress.weights, today);
+  return { startKg: goal.startKg, currentKg: summary.currentKg, targetKg: goal.targetKg, endDate: goal.endDate,
+    progress: Math.max(0, Math.min(1, summary.progressPercent / 100)), weeksLeft: summary.weeksLeft };
 }

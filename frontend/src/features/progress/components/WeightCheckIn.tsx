@@ -6,8 +6,10 @@ import { AppPressable } from '../../../components/ui/AppPressable';
 import { AppText } from '../../../components/ui/AppText';
 import { Card } from '../../../components/ui/Card';
 import { colors, fontFamily, layout, radius, spacing } from '../../../theme';
+import type { WeightGoal } from '../../onboarding/domain/onboarding';
 import { parseWeight, type WeightRecord } from '../domain/progress';
 import { formatKg, formatProgressDate } from '../presentation';
+import { WeightGoalChart } from './WeightGoalChart';
 
 const CHART = 88;
 
@@ -37,8 +39,8 @@ function WeightTrend({ weights, targetKg }: { weights: WeightRecord[]; targetKg:
   </View>;
 }
 
-export function WeightCheckIn({ record, weights, targetKg, today, onSave }: {
-  record: WeightRecord | null; weights: WeightRecord[]; targetKg: number | null; today: string; onSave: (value: string) => void;
+export function WeightCheckIn({ record, weights, allWeights, goal, today, onSave }: {
+  record: WeightRecord | null; weights: WeightRecord[]; allWeights: WeightRecord[]; goal: WeightGoal | null; today: string; onSave: (value: string) => void;
 }) {
   const [editing, setEditing] = useState(false);
   const [value, setValue] = useState('');
@@ -61,13 +63,15 @@ export function WeightCheckIn({ record, weights, targetKg, today, onSave }: {
         <AppText variant="header" accessibilityRole="header">Peso corporal</AppText>
         <AppText variant="metric">{record ? formatKg(record.kg) : '—'}<AppText variant="caption" tone="muted"> kg</AppText></AppText>
         <AppText variant="caption" tone="muted">{record ? `Último registro: ${formatProgressDate(record.date)}` : 'Sin registros en este período'}</AppText>
+        {goal && <AppText variant="label" tone="brand">Meta {formatKg(goal.targetKg)} kg · hasta el {formatProgressDate(goal.endDate)}</AppText>}
       </View>
-      {change !== null && <View style={styles.change}>
+      {!goal && change !== null && <View style={styles.change}>
         <Ionicons name={change > 0 ? 'arrow-up' : change < 0 ? 'arrow-down' : 'remove'} size={14} color={colors.brandText} />
         <AppText variant="label" tone="brand">{formatKg(Math.abs(change))} kg en el período</AppText>
       </View>}
     </View>
-    {weights.length > 1 && <WeightTrend weights={weights} targetKg={targetKg} />}
+    {goal ? <WeightGoalChart goal={goal} weights={allWeights} today={today} />
+      : weights.length > 1 && <WeightTrend weights={weights} targetKg={null} />}
     <AppButton label={record?.date === today ? 'Editar peso de hoy' : 'Registrar peso hoy'} icon="add-outline" variant="secondary"
       onPress={() => { setValue(record?.date === today ? String(record.kg).replace('.', ',') : ''); setNotice(''); setEditing(true); }} />
     <View style={styles.note}>

@@ -14,5 +14,7 @@ export function createProgressPreview(today = todayDateKey()): ProgressData {
   for (const [month, day, volumeKg, status] of [[-2, 5, 2800, 'completed'], [-2, 12, 3100, 'completed'], [-2, 20, 0, 'missed'], [-6, 10, 2600, 'completed'], [-6, 11, 0, 'missed']] as const) {
     workouts.push({ id: `older-${month}-${day}`, date: shiftDate(monthStart(today, month), day - 1), time: '18:30', name: names[0]!, durationMinutes: status === 'completed' ? 50 : 0, volumeKg, status });
   }
-  return { workouts, weights: [{ date: shiftDate(today, -3), kg: 71.4 }, { date: shiftDate(today, -35), kg: 72.1 }] };
+  const weights = ([[35, 71.9], [27, 71.4], [24, 71.6], [20, 71.5], [17, 71.8], [13, 71.9], [10, 71.8], [6, 72.1], [3, 72.2]] as const)
+    .map(([days, kg]) => ({ date: shiftDate(today, -days), kg }));
+  return { workouts, weights };
 }

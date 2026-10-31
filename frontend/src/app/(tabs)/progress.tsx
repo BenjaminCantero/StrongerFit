@@ -10,5 +10,5 @@ export default function ProgressRoute() {
   const progress = useProgressStore(empty);
   const { profile } = useProfile(empty);
   return <ProgressScreen today={todayDateKey()} isPreview={__DEV__ && !empty} state={progress} dispatch={progress.dispatch}
-    targetKg={profile.onboarding?.weightGoal?.targetKg ?? null} />;
+    goal={profile.onboarding?.weightGoal ?? null} />;
 }

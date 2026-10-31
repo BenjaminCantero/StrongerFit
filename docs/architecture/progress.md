@@ -67,6 +67,17 @@ sesión. El peso muestra su variación en el período y, con dos o más registro
 por fecha con la meta del onboarding como línea de referencia; se dibuja con vistas,
 sin librería de gráficos. Se quitaron las fotografías decorativas.
 
+## Objetivo de peso (RF-29)
+
+`domain/weight-goal.ts` aplica las fórmulas de la sección 8.9 del SRS: línea ideal
+lineal entre inicio y meta, variación acumulada (último pesaje − inicial), avance
+porcentual y tendencia como promedio móvil de 7 días. Con menos de 3 pesajes no hay
+tendencia ni comparación con la línea ideal (CA-21 está cubierto por pruebas). El
+gráfico abarca todo el plazo del objetivo, independiente del período elegido, y
+distingue los elementos por forma además de color: círculos para pesajes, línea
+continua para la tendencia y discontinua para la línea ideal (RNF-27). Tiene una
+descripción textual completa para lector de pantalla. Inicio usa el mismo cálculo.
+
 ## Verificación
 
 Ocho pruebas nuevas de agrupación, adherencia, historial, filtros de fecha,

@@ -70,11 +70,12 @@ describe('registro de peso temporal', () => {
   });
 
   it('añade o reemplaza el peso de hoy, conservando los otros días y la selección de período', () => {
+    const count = initial().weights.length;
     let state = progressReducer(initial(), { type: 'record-weight', date: today, value: '71,2' });
-    expect(state.weights).toHaveLength(3);
+    expect(state.weights).toHaveLength(count + 1);
     state = progressReducer(state, { type: 'select-period', period: '3m' });
     state = progressReducer(state, { type: 'record-weight', date: today, value: '71,1' });
-    expect(state.weights).toHaveLength(3);
+    expect(state.weights).toHaveLength(count + 1);
     expect(state.period).toBe('3m');
     expect(progressSummary(state, state.period, today).latestWeight).toEqual({ date: today, kg: 71.1 });
     expect(state.weights[0]).toEqual(initial().weights[0]);
