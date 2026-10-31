@@ -17,6 +17,7 @@ describe('plan semanal en el perfil', () => {
     const template = sessionFromDay(day);
     expect(template.exercises.map((item) => item.sets.length)).toEqual(day.exercises.map((item) => item.sets));
     expect(() => createSession(template, 0)).not.toThrow();
+    expect(template.exercises.filter((item) => !item.timer).every((item) => item.tempo?.join('-') === '3-1-1')).toBe(true);
   });
 
   it('edita un ejercicio del plan sin tocar los demás', () => {

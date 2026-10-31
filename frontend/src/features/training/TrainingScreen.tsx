@@ -8,18 +8,23 @@ import { Card } from '../../components/ui/Card';
 import { spacing } from '../../theme';
 import { ExerciseCard } from './components/ExerciseCard';
 import { ExerciseDetails } from './components/ExerciseDetails';
+import { ExerciseTimer } from './components/ExerciseTimer';
 import { RestTimer } from './components/RestTimer';
 import { SessionControls } from './components/SessionControls';
 import { SessionDialog } from './components/SessionDialog';
 import { currentTimeLabel, todayDateKey } from '../../shared/calendar';
-import { activeSet, sessionRecord, sessionSummary, type SessionTemplate } from './domain/session';
+import { activeSet, sessionRecord, sessionSummary, type SessionState, type SessionTemplate } from './domain/session';
 import { TrainingSummaryScreen } from './TrainingSummaryScreen';
 import { useTrainingSession } from './useTrainingSession';
+import { useTimerAlert } from './timerAlerts';
+import { pauseTimer, type TimerRun } from './domain/timers';
 
 type SessionRecord = NonNullable<ReturnType<typeof sessionRecord>>;
 type Props = {
   template: SessionTemplate | null;
   sample?: boolean;
+  restored?: { sessionId: string; state: SessionState };
+  onPersist?: (sessionId: string, state: SessionState) => void;
   onExit: () => void;
   onViewHistory: () => void;
   onRecord: (record: SessionRecord) => void;
@@ -39,20 +44,36 @@ export function TrainingScreen({ template, ...actions }: Props) {
   return <TrainingSession template={template} {...actions} />;
 }
 
-function TrainingSession({ template, sample = false, onExit, onViewHistory, onRecord }: Props & { template: SessionTemplate }) {
-  const { state, exercise, elapsedSeconds, restSeconds, send } = useTrainingSession(template);
-  const [sessionId] = useState(() => `session-${Date.now()}`);
+function TrainingSession({ template, sample = false, restored, onPersist, onExit, onViewHistory, onRecord }: Props & { template: SessionTemplate }) {
+  const { state, exercise, elapsedSeconds, restSeconds, send } = useTrainingSession(template, restored?.state);
+  const [sessionId] = useState(() => restored?.sessionId ?? `session-${Date.now()}`);
+  const [timerRun, setTimerRun] = useState<TimerRun | null>(null);
   const [dialog, setDialog] = useState<'details' | 'finish' | 'next' | null>(null);
   const paused = state.status === 'paused';
   const next = state.exercises[state.exerciseIndex + 1];
   const summary = sessionSummary(state);
 
+  function togglePause() {
+    const now = Date.now();
+    if (!paused) setTimerRun((current) => current?.startedAtMs != null ? pauseTimer(current, now) : current);
+    send({ type: 'toggle-pause', now });
+  }
+
+  function goToNext() {
+    setTimerRun(null);
+    send({ type: 'next-exercise' });
+  }
+
   function nextExercise() {
     if (activeSet(exercise)) setDialog('next');
-    else send({ type: 'next-exercise' });
+    else goToNext();
   }
 
   const recorded = state.status === 'finished' && summary.completedSets > 0;
+  useTimerAlert(state.status === 'active' ? state.rest.endsAtMs : null, 'Descanso terminado', `Sigue con ${exercise.name}`);
+
+  // Cada cambio de la sesión se guarda como borrador hasta finalizar (RNF-06).
+  useEffect(() => { onPersist?.(sessionId, state); }, [onPersist, sessionId, state]);
 
   useEffect(() => {
     // El id de la sesión evita duplicados si el efecto se repite.
@@ -73,12 +94,13 @@ function TrainingSession({ template, sample = false, onExit, onViewHistory, onRe
 
   return (
     <Screen safeBottom>
-      <PreviewNotice local={!sample}>{sample ? 'Vista previa · Sesión de ejemplo y cambios solo en memoria' : 'Registro en memoria · Se borra al cerrar la app'}</PreviewNotice>
+      <PreviewNotice local={!sample}>{sample ? 'Vista previa · Sesión de ejemplo y cambios solo en memoria' : 'Se guarda en este dispositivo hasta que finalices la sesión'}</PreviewNotice>
       <SessionControls title={state.title} elapsedSeconds={elapsedSeconds} paused={paused}
-        onPause={() => send({ type: 'toggle-pause', now: Date.now() })} onFinish={() => setDialog('finish')} />
+        onPause={togglePause} onFinish={() => setDialog('finish')} />
       <ExerciseCard key={exercise.id} exercise={exercise} paused={paused} onDetails={() => setDialog('details')}
         onAddSet={() => send({ type: 'add-set' })}
         onComplete={(setId, weightKg, reps) => send({ type: 'complete-set', exerciseId: exercise.id, setId, weightKg, reps, now: Date.now() })} />
+      <ExerciseTimer exercise={exercise} paused={paused} run={timerRun} setRun={setTimerRun} />
       <RestTimer seconds={restSeconds} durationSeconds={state.rest.durationMs / 1000} paused={paused}
         onAdd={() => send({ type: 'add-rest', now: Date.now() })} onSkip={() => send({ type: 'skip-rest' })} />
       {next ? <Card style={styles.nextCard}>
@@ -92,7 +114,7 @@ function TrainingSession({ template, sample = false, onExit, onViewHistory, onRe
         {dialog === 'details' ? <ExerciseDetails exercise={exercise} onClose={() => setDialog(null)} />
           : dialog === 'next' ? <>
             <AppText>Quedan series pendientes en este ejercicio. Puedes pasar al siguiente; las series pendientes no se marcarán como completadas.</AppText>
-            <AppButton label="Continuar al siguiente" onPress={() => { send({ type: 'next-exercise' }); setDialog(null); }} />
+            <AppButton label="Continuar al siguiente" onPress={() => { goToNext(); setDialog(null); }} />
             <AppButton label="Seguir en este ejercicio" variant="secondary" onPress={() => setDialog(null)} />
           </> : <>
             <AppText>Completaste {summary.completedSets} de {summary.totalSets} series. Al finalizar se detendrán los temporizadores.</AppText>

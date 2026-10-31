@@ -1,9 +1,10 @@
 import { useEffect, useReducer, useState } from 'react';
 import { createSession, currentExercise, elapsedMs, restRemainingMs, sessionReducer,
-  type SessionAction, type SessionTemplate } from './domain/session';
+  type SessionAction, type SessionState, type SessionTemplate } from './domain/session';
 
-export function useTrainingSession(template: SessionTemplate) {
-  const [state, dispatch] = useReducer(sessionReducer, template, (initial) => createSession(initial, Date.now()));
+// `restored` retoma un borrador guardado; sus marcas de tiempo son absolutas.
+export function useTrainingSession(template: SessionTemplate, restored?: SessionState) {
+  const [state, dispatch] = useReducer(sessionReducer, template, (initial) => restored ?? createSession(initial, Date.now()));
   const [now, setNow] = useState(Date.now);
 
   useEffect(() => {

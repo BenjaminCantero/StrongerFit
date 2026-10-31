@@ -68,3 +68,17 @@ lo crea desde el perfil y convierte un día en `SessionTemplate`
 (series vacías, sin historial ni técnica inventados). El plan se guarda en el
 perfil con versión de reglas y de catálogo; las ediciones pasan por
 `validateExercise`. La pestaña Entrenar es el plan y la sesión vive en `/session`.
+
+## Temporizadores y borrador
+
+`domain/timers.ts` modela sostén e intervalos con marcas absolutas (CA-20 en pruebas).
+`timerAlerts.native.ts` programa notificaciones locales importando solo los
+submódulos locales de `expo-notifications`: el índice exige un módulo de push que
+Expo Go 57 no trae y rompía la ruta. En Expo Go la creación del canal falla
+(NullPointerException interno) y se usa el canal predeterminado. En el emulador el
+aviso llegó con ~8 s de desvío (alarma inexacta); falta medirlo en un build propio
+frente a los 5 s de CA-20. `timerAlerts.ts` es la versión web, sin avisos.
+
+`domain/draft.ts` valida el borrador con Zod; `storage/sessionDraft.ts` lo guarda en
+SQLite (`session_drafts`) o localStorage. Verificado en Android: tras recargar la app
+la sesión vuelve con sus series y Entrenar ofrece continuarla o descartarla.

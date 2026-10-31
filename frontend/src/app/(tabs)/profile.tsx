@@ -6,6 +6,7 @@ import { useProfile } from '../../features/profile/useProfile';
 import { nutritionDiarySnapshot, resetNutritionDiary } from '../../features/nutrition/useNutritionDiary';
 import { progressSnapshot, resetProgress } from '../../features/progress/useProgress';
 import { todayDateKey } from '../../shared/calendar';
+import { clearSessionDraft } from '../../storage/sessionDraft';
 
 export default function ProfileRoute() {
   const { preview } = useLocalSearchParams<{ preview?: string }>();
@@ -18,5 +19,5 @@ export default function ProfileRoute() {
     onExport={() => shareJsonExport(`strongerfit-datos-${todayDateKey()}.json`, buildLocalExport({
       profile, exportedAt: new Date(), isPreview, nutritionDiary: nutritionDiarySnapshot(), progress: progressSnapshot(),
     }))}
-    onDeleteLocalData={() => { dispatch({ type: 'reset' }); resetNutritionDiary(); resetProgress(); }} />;
+    onDeleteLocalData={() => { dispatch({ type: 'reset' }); resetNutritionDiary(); resetProgress(); clearSessionDraft().catch(() => undefined); }} />;
 }

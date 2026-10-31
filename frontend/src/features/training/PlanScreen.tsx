@@ -12,16 +12,22 @@ import { colors, layout, radius, spacing } from '../../theme';
 import { labels } from '../onboarding/domain/onboarding';
 import type { ProfileAction, ProfileData } from '../profile/domain/profile';
 import { PlanExerciseEditor } from './components/PlanExerciseEditor';
+import type { SessionDraft } from './domain/draft';
 import { createPlan, estimatedMinutes } from './domain/plan';
+import { sessionSummary } from './domain/session';
 
-type Props = { profile: ProfileData; dispatch: (action: ProfileAction) => void; onStart: (day: number) => void };
+type Props = {
+  profile: ProfileData; dispatch: (action: ProfileAction) => void; onStart: (day: number) => void;
+  draft: SessionDraft | null; onResume: () => void; onDiscard: () => void;
+};
 
-export function PlanScreen({ profile, dispatch, onStart }: Props) {
+export function PlanScreen({ profile, dispatch, onStart, draft, onResume, onDiscard }: Props) {
   const plan = profile.trainingPlan;
   const [selected, setSelected] = useState(0);
   const [editing, setEditing] = useState<number | null>(null);
   const [confirmRegenerate, setConfirmRegenerate] = useState(false);
   const [notice, setNotice] = useState('');
+  const [confirmDiscard, setConfirmDiscard] = useState(false);
   const generate = () => {
     const next = createPlan(profile, new Date());
     if (next) { dispatch({ type: 'set-training-plan', plan: next }); setSelected(0); setNotice('Rutina generada. Revísala y edítala antes de entrenar.'); }
@@ -37,6 +43,7 @@ export function PlanScreen({ profile, dispatch, onStart }: Props) {
   </Screen>;
 
   const day = plan.days[Math.min(selected, plan.days.length - 1)]!;
+  const pending = draft && sessionSummary(draft.state);
   const profileParams = profiles[plan.input.athleteProfile];
   return <Screen>
     <View style={styles.heading}>
@@ -45,6 +52,18 @@ export function PlanScreen({ profile, dispatch, onStart }: Props) {
         {plan.days.length} días · Perfil {labels.athleteProfile[plan.input.athleteProfile].toLowerCase()} · {profileParams.sets[0]} a {profileParams.sets[1]} series
       </AppText>
     </View>
+
+    {draft && pending && <Card style={styles.resume}>
+      <View style={styles.resumeTop}>
+        <Ionicons name="play-circle-outline" size={26} color={colors.brand} />
+        <View style={styles.dayTitle}>
+          <AppText variant="header">Tienes una sesión en curso</AppText>
+          <AppText variant="caption" tone="muted">{draft.state.title} · {pending.completedSets} de {pending.totalSets} series completadas</AppText>
+        </View>
+      </View>
+      <AppButton label="Continuar sesión" icon="play-outline" onPress={onResume} />
+      <AppButton label="Descartar" variant="secondary" onPress={() => setConfirmDiscard(true)} />
+    </Card>}
 
     <View role="tablist" style={styles.days}>
       {plan.days.map((item, index) => <AppPressable key={item.name} role="tab" accessibilityState={{ selected: index === selected }}
@@ -95,6 +114,12 @@ export function PlanScreen({ profile, dispatch, onStart }: Props) {
         onSave={(exercise) => { dispatch({ type: 'update-plan-exercise', day: selected, index: editing, exercise }); setEditing(null); setNotice('Ejercicio actualizado.'); }} />}
     </AppDialog>
 
+    <AppDialog title="¿Descartar la sesión en curso?" visible={confirmDiscard} onClose={() => setConfirmDiscard(false)}>
+      <AppText tone="muted">Las series registradas en esa sesión no se añadirán al historial. Esta acción no se puede deshacer.</AppText>
+      <AppButton label="Descartar sesión" icon="trash-outline" variant="danger" onPress={() => { onDiscard(); setConfirmDiscard(false); }} />
+      <AppButton label="Mantenerla" variant="secondary" onPress={() => setConfirmDiscard(false)} />
+    </AppDialog>
+
     <AppDialog title="¿Regenerar la rutina?" visible={confirmRegenerate} onClose={() => setConfirmRegenerate(false)}>
       <AppText tone="muted">Se reemplazarán los ejercicios y tus ediciones del plan con los datos actuales de tu perfil. El historial de entrenamientos no cambia.</AppText>
       <AppButton label="Regenerar" icon="refresh-outline" onPress={generate} />
@@ -105,6 +130,8 @@ export function PlanScreen({ profile, dispatch, onStart }: Props) {
 
 const styles = StyleSheet.create({
   heading: { gap: spacing.xs },
+  resume: { gap: spacing.md, borderWidth: 1, borderColor: colors.brandMedium },
+  resumeTop: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
   days: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
   day: { minHeight: layout.touchTarget, minWidth: 72, paddingHorizontal: spacing.md, borderRadius: radius.pill, alignItems: 'center', justifyContent: 'center',
     backgroundColor: colors.surface },

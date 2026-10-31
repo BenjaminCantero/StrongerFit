@@ -15,6 +15,7 @@ const config: ExpoConfig = {
     'expo-font',
     'expo-secure-store',
     'expo-sqlite',
+    'expo-notifications',
     ['expo-build-properties', {
       android: { minSdkVersion: 29, usesCleartextTraffic: process.env.APP_VARIANT === 'development' },
     }],

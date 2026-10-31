@@ -1,3 +1,5 @@
+import type { TimerSpec } from './timers';
+
 export type PerformedSet = {
   id: number;
   weightKg: number;
@@ -7,6 +9,8 @@ export type PerformedSet = {
 
 export type SessionExercise = {
   id: string;
+  timer?: TimerSpec;
+  tempo?: [number, number, number];
   name: string;
   muscleGroup: string;
   restSeconds: number;

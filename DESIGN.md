@@ -157,3 +157,14 @@ propio (CA-12) y regeneración con confirmación. «Iniciar entrenamiento» abre
 `packages/training-engine` (RF-05/06/28, CA-02, CA-16, CA-23) con un catálogo
 inicial de movimientos genéricos sin imágenes, pendiente de licencia (SRS 11.1).
 En desarrollo, Inicio sigue abriendo la sesión de ejemplo con historial.
+
+## Temporizadores y borrador de sesión — paso 12
+
+Cada ejercicio muestra una tarjeta de temporizador: sostén para isométricos, tempo
+3-1-1 con tiempo bajo tensión estimado en el perfil de fuerza e intervalos
+configurables (trabajo, descanso, rondas). Todo se calcula desde marcas absolutas
+(RNF-26) y pausar la sesión pausa también el temporizador. Al terminar un descanso o
+temporizador llega una notificación local; el permiso se pide al iniciar el primero.
+La sesión se guarda como borrador (SQLite; localStorage en web) en cada cambio y se
+retoma desde Entrenar («Tienes una sesión en curso») o al reabrir la misma sesión.
+Al finalizar se registra una sola vez y el borrador se elimina (CA-03).

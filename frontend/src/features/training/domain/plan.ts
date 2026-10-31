@@ -27,6 +27,8 @@ export function sessionFromDay(day: PlanDay): SessionTemplate {
       return {
         id: `${item.exerciseId}-${index}`, name: exercise.name, muscleGroup: exercise.muscleGroup, restSeconds: item.restSeconds,
         technique: [], history: [],
+        ...(exercise.kind === 'isometric' ? { timer: { kind: 'hold' as const, seconds: item.repsMax } } : {}),
+        ...(item.tempo ? { tempo: item.tempo } : {}),
         sets: Array.from({ length: item.sets }, (_, set) => ({ id: set + 1, weightKg: 0, reps: item.repsMax, completed: false })),
       };
     }),

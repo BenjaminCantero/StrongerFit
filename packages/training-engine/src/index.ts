@@ -8,11 +8,12 @@ export type Level = 'beginner' | 'intermediate' | 'advanced';
 
 // Parámetros por perfil (SRS 8.10, valores de referencia).
 export const profiles: Record<AthleteProfile, {
+  tempo: [number, number, number] | null;
   days: [number, number]; sets: [number, number]; reps: Record<Exercise['kind'], [number, number]>; rest: Record<Exercise['kind'], number>; minutes: [number, number];
 }> = {
-  general: { days: [2, 5], sets: [2, 4], reps: { compound: [8, 12], isolation: [8, 12], isometric: [20, 40] },
+  general: { tempo: null, days: [2, 5], sets: [2, 4], reps: { compound: [8, 12], isolation: [8, 12], isometric: [20, 40] },
     rest: { compound: 90, isolation: 60, isometric: 60 }, minutes: [30, 60] },
-  'strength-hypertrophy': { days: [3, 6], sets: [3, 4], reps: { compound: [6, 10], isolation: [10, 15], isometric: [30, 45] },
+  'strength-hypertrophy': { tempo: [3, 1, 1], days: [3, 6], sets: [3, 4], reps: { compound: [6, 10], isolation: [10, 15], isometric: [30, 45] },
     rest: { compound: 120, isolation: 75, isometric: 60 }, minutes: [45, 75] },
 };
 
@@ -29,7 +30,8 @@ const templates: Record<number, { names: string[]; days: Pattern[][] }> = {
 };
 
 export type PlanInput = { days: number; minutes: number; equipment: Equipment[]; athleteProfile: AthleteProfile; level: Level; injury: boolean };
-export type PlannedExercise = { exerciseId: string; sets: number; repsMin: number; repsMax: number; restSeconds: number };
+// tempo: segundos de bajada, pausa y subida (tiempo bajo tensión, SRS 8.9).
+export type PlannedExercise = { exerciseId: string; sets: number; repsMin: number; repsMax: number; restSeconds: number; tempo?: [number, number, number] };
 export type PlanDay = { name: string; exercises: PlannedExercise[] };
 export type Plan = { ruleVersion: string; catalogVersion: string; input: PlanInput; days: PlanDay[]; warnings: ('injury-review' | 'missing-patterns')[] };
 
@@ -61,7 +63,8 @@ export function generatePlan(input: PlanInput): Plan {
       const exercise = options[dayIndex % options.length]!;
       used.add(exercise.id);
       const [repsMin, repsMax] = profile.reps[exercise.kind];
-      exercises.push({ exerciseId: exercise.id, sets, repsMin, repsMax, restSeconds: profile.rest[exercise.kind] });
+      exercises.push({ exerciseId: exercise.id, sets, repsMin, repsMax, restSeconds: profile.rest[exercise.kind],
+        ...(profile.tempo && exercise.kind !== 'isometric' ? { tempo: profile.tempo } : {}) });
     }
     return { name: template.names[dayIndex]!, exercises };
   });

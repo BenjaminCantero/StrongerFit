@@ -24,6 +24,9 @@ describe('generador de rutina', () => {
       expect([item.repsMin, item.repsMax]).toEqual(profiles['strength-hypertrophy'].reps[kind]);
     }
     expect(generatePlan({ ...base, days: 6 }).days).toHaveLength(5);
+    const items = strength.days.flatMap((day) => day.exercises);
+    expect(items.filter((item) => exerciseById(item.exerciseId)!.kind !== 'isometric').every((item) => item.tempo?.join('-') === '3-1-1')).toBe(true);
+    expect(generatePlan(base).days.flatMap((day) => day.exercises).some((item) => item.tempo)).toBe(false);
   });
 
   it('es determinista, guarda versión y avisa por lesión (CA-16, BR-04)', () => {
