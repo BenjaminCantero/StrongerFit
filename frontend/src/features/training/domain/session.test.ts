@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { sessionPreview } from '../data/session.preview';
-import { activeSet, createSession, currentExercise, elapsedMs, parseSetInput, restRemainingMs, sessionReducer, sessionSummary,
+import { activeSet, createSession, currentExercise, elapsedMs, parseSetInput, restRemainingMs, sessionRecord, sessionReducer, sessionSummary,
   type SessionAction } from './session';
 
 const initialTime = 1_000_000;
@@ -92,5 +92,24 @@ describe('relojes y validación', () => {
     for (const [weight, reps] of [['', '8'], ['25', ''], ['25', '0'], ['25', '2,5'], ['Infinity', '8'], ['-1', '8']]) {
       expect(parseSetInput(weight!, reps!)).toBeNull();
     }
+  });
+});
+
+describe('registro histórico', () => {
+  const meta = { id: 'session-1', date: '2026-10-30', time: '19:40' };
+
+  it('solo genera el registro al finalizar y usa el mismo volumen que el resumen', () => {
+    const state = sessionReducer(initial(), complete);
+    expect(sessionRecord(state, meta)).toBeNull();
+    const finished = sessionReducer(state, { type: 'finish', now: initialTime + 60_000 });
+    expect(sessionRecord(finished, meta)).toEqual({ ...meta, name: finished.title, status: 'completed',
+      volumeKg: sessionSummary(finished).volumeKg, durationMinutes: Math.round(finished.elapsedMs / 60_000) });
+  });
+
+  it('omite una sesión finalizada sin series completadas', () => {
+    const template = { ...sessionPreview, exercises: sessionPreview.exercises.map((exercise) => ({
+      ...exercise, sets: exercise.sets.map((set) => ({ ...set, completed: false })) })) };
+    const finished = sessionReducer(createSession(template, initialTime), { type: 'finish', now: initialTime });
+    expect(sessionRecord(finished, meta)).toBeNull();
   });
 });

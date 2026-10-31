@@ -39,7 +39,7 @@ export function FoodSuggestions({ foods, selectedIds, onToggle }: { foods: Food[
 const styles = StyleSheet.create({
   section: { gap: spacing.sm },
   foods: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
-  food: { flex: 1, minWidth: 155, flexDirection: 'row', alignItems: 'center', gap: spacing.sm, backgroundColor: colors.surfaceLow,
+  food: { flexGrow: 1, flexBasis: 260, flexDirection: 'row', alignItems: 'center', gap: spacing.sm, backgroundColor: colors.surfaceLow,
     borderRadius: radius.md, padding: spacing.md, borderWidth: 1, borderColor: 'transparent' },
   selected: { borderColor: colors.brand, backgroundColor: colors.brandSoft },
   image: { width: 40, height: 40, borderRadius: radius.sm, overflow: 'hidden', backgroundColor: colors.surface,

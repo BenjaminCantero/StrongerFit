@@ -9,3 +9,12 @@ const diaryStore = createDiaryStore(__DEV__ ? createPreviewDiary() : createEmpty
 export function useNutritionDiary() {
   return useStore(diaryStore);
 }
+
+export function resetNutritionDiary() {
+  diaryStore.setState(createEmptyDiary());
+}
+
+export function nutritionDiarySnapshot() {
+  const { dispatch: _dispatch, ...diary } = diaryStore.getState();
+  return diary;
+}

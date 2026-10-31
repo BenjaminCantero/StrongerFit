@@ -1,13 +1,11 @@
 import { useLocalSearchParams } from 'expo-router';
 import { ProgressScreen } from '../../features/progress/ProgressScreen';
-import { createProgressPreview } from '../../features/progress/data/progress.preview';
-import { createEmptyProgress } from '../../features/progress/domain/progress';
+import { useProgressStore } from '../../features/progress/useProgress';
 import { todayDateKey } from '../../shared/calendar';
 
 export default function ProgressRoute() {
   const { preview } = useLocalSearchParams<{ preview?: string }>();
-  const isPreview = __DEV__ && preview !== 'empty';
-  const today = todayDateKey();
-  return <ProgressScreen key={isPreview ? 'preview' : 'empty'} today={today} isPreview={isPreview}
-    initial={isPreview ? createProgressPreview(today) : createEmptyProgress()} />;
+  const empty = preview === 'empty';
+  const progress = useProgressStore(empty);
+  return <ProgressScreen today={todayDateKey()} isPreview={__DEV__ && !empty} state={progress} dispatch={progress.dispatch} />;
 }

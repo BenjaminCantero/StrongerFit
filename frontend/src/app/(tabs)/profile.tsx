@@ -1,13 +1,21 @@
-import { Link } from 'expo-router';
-import { Screen } from '../../components/Screen';
-import { AppText } from '../../components/ui/AppText';
+import { useLocalSearchParams } from 'expo-router';
+import { pickProfilePhoto, shareJsonExport } from '../../features/profile/device';
+import { buildLocalExport } from '../../features/profile/domain/profile';
+import { ProfileScreen } from '../../features/profile/ProfileScreen';
+import { useProfile } from '../../features/profile/useProfile';
+import { nutritionDiarySnapshot, resetNutritionDiary } from '../../features/nutrition/useNutritionDiary';
+import { progressSnapshot, resetProgress } from '../../features/progress/useProgress';
+import { todayDateKey } from '../../shared/calendar';
 
-export default function ProfileScreen() {
-  return (
-    <Screen title="Perfil">
-      <AppText>Aquí podrás gestionar tu cuenta, objetivos, preferencias y privacidad.</AppText>
-      <AppText tone="muted">El registro y la configuración de tu perfil estarán disponibles en una próxima etapa.</AppText>
-      {__DEV__ && <Link href="/dev-status" className="mt-10 py-4 text-base font-semibold text-brand">Comprobar conexión de desarrollo</Link>}
-    </Screen>
-  );
+export default function ProfileRoute() {
+  const { preview } = useLocalSearchParams<{ preview?: string }>();
+  const empty = preview === 'empty';
+  const { profile, dispatch } = useProfile(empty);
+  const isPreview = __DEV__ && !empty;
+
+  return <ProfileScreen profile={profile} dispatch={dispatch} isPreview={isPreview} onPickPhoto={pickProfilePhoto}
+    onExport={() => shareJsonExport(`strongerfit-datos-${todayDateKey()}.json`, buildLocalExport({
+      profile, exportedAt: new Date(), isPreview, nutritionDiary: nutritionDiarySnapshot(), progress: progressSnapshot(),
+    }))}
+    onDeleteLocalData={() => { dispatch({ type: 'reset' }); resetNutritionDiary(); resetProgress(); }} />;
 }

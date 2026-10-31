@@ -9,7 +9,8 @@ export type WeightRecord = { date: string; kg: number };
 export type ProgressData = { workouts: WorkoutRecord[]; weights: WeightRecord[] };
 export type VolumePoint = { from: string; through: string; label: string; kg: number; current: boolean };
 export type ProgressState = ProgressData & { period: Period };
-export type ProgressAction = { type: 'select-period'; period: Period } | { type: 'record-weight'; date: string; value: string };
+export type ProgressAction = { type: 'select-period'; period: Period } | { type: 'record-weight'; date: string; value: string }
+  | { type: 'record-workout'; record: WorkoutRecord };
 
 export function monthStart(date: string, offset = 0): string {
   const [year, month] = date.split('-').map(Number);
@@ -52,6 +53,12 @@ export function parseWeight(value: string): number | null {
 
 export function progressReducer(state: ProgressState, action: ProgressAction): ProgressState {
   if (action.type === 'select-period') return { ...state, period: action.period };
+  if (action.type === 'record-workout') {
+    // El id de la sesión actúa como clave idempotente: repetir el envío no duplica el historial.
+    const { record } = action;
+    if (!isDateKey(record.date) || state.workouts.some((item) => item.id === record.id)) return state;
+    return { ...state, workouts: [...state.workouts, record] };
+  }
   const kg = parseWeight(action.value);
   if (kg === null || !isDateKey(action.date)) return state;
   return { ...state, weights: [...state.weights.filter((record) => record.date !== action.date), { date: action.date, kg }] };

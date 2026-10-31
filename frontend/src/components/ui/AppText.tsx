@@ -27,6 +27,6 @@ const styles = StyleSheet.create({
 const tones = StyleSheet.create({
   default: { color: colors.ink },
   muted: { color: colors.muted },
-  brand: { color: colors.brand },
+  brand: { color: colors.brandText },
   white: { color: colors.white },
 });

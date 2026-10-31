@@ -6,6 +6,8 @@
   "workspaces": ["frontend", "backend", "packages/contracts"],
   "engines": { "node": ">=22.16.0" },
   "scripts": {
+    "start": "npm run start --workspace @strongerfit/frontend",
+    "android": "npm run android --workspace @strongerfit/frontend",
     "dev:frontend": "npm run start --workspace @strongerfit/frontend",
     "dev:backend": "npm run dev --workspace @strongerfit/backend",
     "dev:web": "npm run web --workspace @strongerfit/frontend",

@@ -1,5 +1,5 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Screen } from '../../components/Screen';
 import { AppButton } from '../../components/ui/AppButton';
@@ -11,13 +11,21 @@ import { ExerciseDetails } from './components/ExerciseDetails';
 import { RestTimer } from './components/RestTimer';
 import { SessionControls } from './components/SessionControls';
 import { SessionDialog } from './components/SessionDialog';
-import { activeSet, sessionSummary, type SessionTemplate } from './domain/session';
-import { formatDuration, formatWeight } from './format';
+import { currentTimeLabel, todayDateKey } from '../../shared/calendar';
+import { activeSet, sessionRecord, sessionSummary, type SessionTemplate } from './domain/session';
+import { TrainingSummaryScreen } from './TrainingSummaryScreen';
 import { useTrainingSession } from './useTrainingSession';
 
-type Props = { template: SessionTemplate | null; onExit: () => void };
+type SessionRecord = NonNullable<ReturnType<typeof sessionRecord>>;
+type Props = {
+  template: SessionTemplate | null;
+  onExit: () => void;
+  onViewHistory: () => void;
+  onRecord: (record: SessionRecord) => void;
+};
 
-export function TrainingScreen({ template, onExit }: Props) {
+export function TrainingScreen({ template, ...actions }: Props) {
+  const { onExit } = actions;
   if (!template) return (
     <Screen title="Tu entrenamiento" safeBottom>
       <Card>
@@ -27,11 +35,12 @@ export function TrainingScreen({ template, onExit }: Props) {
       </Card>
     </Screen>
   );
-  return <TrainingSession template={template} onExit={onExit} />;
+  return <TrainingSession template={template} {...actions} />;
 }
 
-function TrainingSession({ template, onExit }: { template: SessionTemplate; onExit: () => void }) {
+function TrainingSession({ template, onExit, onViewHistory, onRecord }: Props & { template: SessionTemplate }) {
   const { state, exercise, elapsedSeconds, restSeconds, send } = useTrainingSession(template);
+  const [sessionId] = useState(() => `session-${Date.now()}`);
   const [dialog, setDialog] = useState<'details' | 'finish' | 'next' | null>(null);
   const paused = state.status === 'paused';
   const next = state.exercises[state.exerciseIndex + 1];
@@ -42,17 +51,23 @@ function TrainingSession({ template, onExit }: { template: SessionTemplate; onEx
     else send({ type: 'next-exercise' });
   }
 
+  const recorded = state.status === 'finished' && summary.completedSets > 0;
+
+  useEffect(() => {
+    // El id de la sesión evita duplicados si el efecto se repite.
+    const record = sessionRecord(state, { id: sessionId, date: todayDateKey(), time: currentTimeLabel() });
+    if (record) onRecord(record);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.status]);
+
   if (state.status === 'finished') return (
-    <Screen title="Sesión finalizada" safeBottom>
-      <Card>
-        <AppText variant="heading">{state.title}</AppText>
-        <AppText>{summary.completedSets} de {summary.totalSets} series completadas</AppText>
-        <AppText>{formatWeight(summary.volumeKg)} kg de volumen registrado</AppText>
-        <AppText>Tiempo: {formatDuration(elapsedSeconds)}</AppText>
-        <AppText tone="muted">Esta fue una sesión de ejemplo. Los cambios de la vista previa no se guardan.</AppText>
-        <AppButton label="Volver a Inicio" onPress={onExit} />
-      </Card>
-    </Screen>
+    <TrainingSummaryScreen
+      state={state}
+      elapsedSeconds={elapsedSeconds}
+      recorded={recorded}
+      onGoHome={onExit}
+      onViewHistory={onViewHistory}
+    />
   );
 
   return (
@@ -83,7 +98,7 @@ function TrainingSession({ template, onExit }: { template: SessionTemplate; onEx
             <AppButton label="Seguir en este ejercicio" variant="secondary" onPress={() => setDialog(null)} />
           </> : <>
             <AppText>Completaste {summary.completedSets} de {summary.totalSets} series. Al finalizar se detendrán los temporizadores.</AppText>
-            <AppText tone="muted">Los datos de esta vista previa no se guardan.</AppText>
+            <AppText tone="muted">La sesión se añadirá al historial de Progreso solo mientras la app esté abierta; aún no se guarda en el dispositivo ni en la nube.</AppText>
             <AppButton label="Finalizar sesión de ejemplo" onPress={() => { send({ type: 'finish', now: Date.now() }); setDialog(null); }} />
             <AppButton label="Seguir entrenando" variant="secondary" onPress={() => setDialog(null)} />
           </>}

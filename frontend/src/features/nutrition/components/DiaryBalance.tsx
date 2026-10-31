@@ -4,7 +4,7 @@ import { Card } from '../../../components/ui/Card';
 import { ProgressBar } from '../../../components/ui/ProgressBar';
 import { colors, radius, spacing } from '../../../theme';
 import type { Nutrients } from '../domain/food-entry';
-import { formatGrams, formatKcal } from '../presentation';
+import { formatKcal } from '../presentation';
 
 const macros = [
   { key: 'protein', name: 'Proteínas', color: colors.brand },
@@ -41,7 +41,7 @@ export function DiaryBalance({ consumed, targets }: { consumed: Nutrients; targe
               <AppText variant="label" style={styles.macroName}>{name}</AppText>
               <View style={[styles.dot, { backgroundColor: color }]} />
             </View>
-            <AppText variant="strong">{formatGrams(consumed[key])}<AppText variant="caption" tone="muted">{targets ? ` / ${formatGrams(targets[key])} g` : ' g'}</AppText></AppText>
+            <AppText variant="strong">{formatKcal(consumed[key])}<AppText variant="caption" tone="muted">{targets ? ` /\u00A0${formatKcal(targets[key])}\u00A0g` : '\u00A0g'}</AppText></AppText>
             {targets && <ProgressBar value={consumed[key]} target={targets[key]} label={`${name} diarios en gramos`} color={color} />}
           </View>
         ))}

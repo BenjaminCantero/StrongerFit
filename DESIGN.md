@@ -81,3 +81,37 @@ los doce meses no caben. Los filtros, totales y registros de peso responden en m
 La exportación PDF se identifica como pendiente; no se simula la descarga ni se
 promete accesibilidad de un archivo que aún no se genera. Las fuentes, colores,
 encabezado, navegación y controles táctiles siguen el sistema compartido.
+
+## Perfil y resumen de entrenamiento — paso 6
+
+Perfil mantiene la composición del PDF con datos de un estado local en memoria
+(`features/profile`). La ficha personal y las restricciones se editan con validación
+(adultos de 18 a 100 años, rangos de altura, peso, días y minutos). La foto se elige
+con el selector del sistema y puede quitarse. «Exportar mis datos» genera un JSON con
+perfil, diario y progreso del dispositivo; en web se descarga. «Eliminar datos de este
+dispositivo» pide confirmación y vacía perfil, diario y progreso.
+
+Sin cuenta todavía: no hay botón de cerrar sesión ni de cambiar contraseña activo.
+El consentimiento de salud (Ley 19.628 y Ley 21.719) y el cuestionario de aptitud se
+muestran como pendientes; los documentos legales, como «Próximamente». La versión
+proviene de la configuración de Expo.
+
+Al finalizar una sesión con series completadas, esta se añade una sola vez al
+historial de Progreso (id de sesión como clave). El resumen lo indica sin prometer
+guardado ni sincronización, y «Ver en el historial de Progreso» abre esa pestaña.
+
+## Revisión de diseño — paso 7
+
+Revisión rápida según `webdesign-review` (accesibilidad, usabilidad, UX, UI,
+tipografía y color) con capturas a 360 px de todas las pantallas.
+
+- Contraste: el verde `#4A7C59` sobre tarjetas daba 3,9–4,1:1. El texto verde usa
+  ahora `brandText` `#3D6A4B` (≥ 5:1 sobre todas las superficies); botones, iconos
+  y barras conservan el verde del PDF.
+- Diario: macros redondeadas al gramo (SRS 8.5) y unidad unida al número.
+- Acompañamientos: una columna en teléfonos para no partir palabras.
+- Perfil y resumen: etiquetas en tipo oración en lugar de mayúsculas espaciadas;
+  «Pendiente» dentro de su fila; documentos por publicar resumidos en una línea.
+
+La app se inicia desde `frontend/` (o `npm start` en la raíz). `npx expo start` en
+la raíz falla con `Unable to resolve "../../App"` porque allí no hay app Expo.

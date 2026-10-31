@@ -79,4 +79,13 @@ describe('registro de peso temporal', () => {
     expect(progressSummary(state, state.period, today).latestWeight).toEqual({ date: today, kg: 71.1 });
     expect(state.weights[0]).toEqual(initial().weights[0]);
   });
+
+  it('añade una sesión finalizada al historial una sola vez, aunque se envíe de nuevo', () => {
+    const record = { id: 'session-1', date: today, time: '19:40', name: 'Rutina A', durationMinutes: 48, volumeKg: 1200, status: 'completed' as const };
+    let state = progressReducer(initial(), { type: 'record-workout', record });
+    state = progressReducer(state, { type: 'record-workout', record });
+    expect(state.workouts.filter((item) => item.id === 'session-1')).toHaveLength(1);
+    expect(progressSummary(state, '4w', today).history[0]).toEqual(record);
+    expect(progressReducer(state, { type: 'record-workout', record: { ...record, id: 'x', date: '2026-02-30' } })).toBe(state);
+  });
 });

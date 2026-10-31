@@ -27,7 +27,9 @@ npm run dev:frontend
 ```
 
 La API escucha en `http://localhost:8000`. Expo muestra las opciones para abrir
-Android. Para la vista web de desarrollo, usar `npm run dev:web`.
+Android. `npm start` en la raíz hace lo mismo. No ejecutar `npx expo start` en la
+raíz: allí no hay app Expo y falla con `Unable to resolve "../../App"`; usar
+`cd frontend` antes de cualquier comando `npx expo`. Para la vista web de desarrollo, usar `npm run dev:web`.
 
 Para abrir la app en Expo Go desde otra red con internet, iniciar un túnel:
 

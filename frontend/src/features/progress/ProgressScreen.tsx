@@ -11,12 +11,13 @@ import { PeriodSelector } from './components/PeriodSelector';
 import { VolumeChart } from './components/VolumeChart';
 import { WeightCheckIn } from './components/WeightCheckIn';
 import { WorkoutHistory } from './components/WorkoutHistory';
-import type { ProgressData } from './domain/progress';
+import { progressSummary, type ProgressAction, type ProgressState } from './domain/progress';
 import { formatProgressDate } from './presentation';
-import { useProgress } from './useProgress';
 
-export function ProgressScreen({ initial, today, isPreview }: { initial: ProgressData; today: string; isPreview: boolean }) {
-  const { state, dispatch, summary } = useProgress(initial, today);
+type Props = { state: ProgressState; dispatch: (action: ProgressAction) => void; today: string; isPreview: boolean };
+
+export function ProgressScreen({ state, dispatch, today, isPreview }: Props) {
+  const summary = progressSummary(state, state.period, today);
   const [exportInfo, setExportInfo] = useState(false);
   return <Screen>
     <PeriodSelector selected={state.period} onSelect={(period) => { dispatch({ type: 'select-period', period }); setExportInfo(false); }} />
