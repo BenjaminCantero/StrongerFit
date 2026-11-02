@@ -31,6 +31,9 @@ export default function RootLayout() {
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="(tabs)" />
           <Stack.Screen name="welcome" />
+          <Stack.Screen name="account" options={{ headerShown: true, title: 'Cuenta',
+            header: ({ options }) => <AppHeader title={options.title ?? 'Cuenta'}
+              backLabel="Volver" onBack={() => router.canGoBack() ? router.back() : router.navigate('/welcome')} /> }} />
           <Stack.Screen name="onboarding" options={{ headerShown: true, title: 'Crear tu perfil',
             header: ({ options }) => <AppHeader title={options.title ?? 'Crear tu perfil'}
               backLabel="Volver a Bienvenida" onBack={() => router.dismissTo('/welcome')} /> }} />
@@ -49,6 +52,12 @@ export default function RootLayout() {
           <Stack.Screen name="nutrition-goals" options={{ headerShown: true, title: 'Metas nutricionales',
             header: ({ options }) => <AppHeader title={options.title ?? 'Metas nutricionales'}
               backLabel="Volver" onBack={() => router.back()} /> }} />
+          <Stack.Screen name="exercises/index" options={{ headerShown: true, title: 'Catálogo de ejercicios',
+            header: ({ options }) => <AppHeader title={options.title ?? 'Catálogo de ejercicios'}
+              backLabel="Volver" onBack={() => router.canGoBack() ? router.back() : router.navigate('/training')} /> }} />
+          <Stack.Screen name="exercises/[id]" options={{ headerShown: true, title: 'Ficha del ejercicio',
+            header: ({ options }) => <AppHeader title={options.title ?? 'Ficha del ejercicio'}
+              backLabel="Volver" onBack={() => router.canGoBack() ? router.back() : router.navigate('/exercises')} /> }} />
           <Stack.Screen name="dev-status" options={{ headerShown: true, title: 'Conexión de desarrollo' }} />
         </Stack>
       </QueryClientProvider>

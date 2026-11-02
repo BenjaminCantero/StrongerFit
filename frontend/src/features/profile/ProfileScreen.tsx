@@ -11,13 +11,17 @@ import { AppInfoCard } from './components/AppInfoCard';
 import { NutritionCard } from './components/NutritionCard';
 import { PersonalDataCard } from './components/PersonalDataCard';
 import { PrivacyCard } from './components/PrivacyCard';
-import { NutritionEditor, PersonalEditor } from './components/ProfileEditors';
+import { NutritionEditor, PersonalEditor, TrainingSetupEditor } from './components/ProfileEditors';
+import { FormField } from '../../components/ui/FormField';
+import { labels } from '../onboarding/domain/onboarding';
 import { ProfileHero } from './components/ProfileHero';
 import { profileAvatar } from './presentation';
 import type { ExportResult } from './device';
 import type { ProfileAction, ProfileData } from './domain/profile';
 
-type Dialog = 'personal' | 'nutrition' | 'photo' | 'delete' | null;
+type Dialog = 'personal' | 'nutrition' | 'training' | 'photo' | 'delete' | null;
+
+export type AccountState = { configured: boolean; email: string | null };
 
 type Props = {
   profile: ProfileData;
@@ -27,6 +31,11 @@ type Props = {
   onExport: () => Promise<ExportResult>;
   onDeleteLocalData: () => void;
   onGoals: () => void;
+  account: AccountState;
+  onSignIn: () => void;
+  onSignUp: () => void;
+  onSignOut: () => Promise<void>;
+  onDeleteAccount: (password: string) => Promise<{ ok: true } | { ok: false; message: string }>;
 };
 
 const exportNotice: Record<ExportResult, string> = {
@@ -43,11 +52,15 @@ function heroSummary(profile: ProfileData): string {
   return parts.length ? parts.join(' · ') : 'Completa tu ficha para preparar tu plan';
 }
 
-export function ProfileScreen({ profile, dispatch, isPreview, onPickPhoto, onExport, onDeleteLocalData, onGoals }: Props) {
+export function ProfileScreen({ profile, dispatch, isPreview, onPickPhoto, onExport, onDeleteLocalData, onGoals, account, onSignIn, onSignUp, onSignOut, onDeleteAccount }: Props) {
   const [dialog, setDialog] = useState<Dialog>(null);
   const [notice, setNotice] = useState('');
   const [exporting, setExporting] = useState(false);
-  const close = () => setDialog(null);
+  const [password, setPassword] = useState('');
+  const [deleteError, setDeleteError] = useState('');
+  const [deleting, setDeleting] = useState(false);
+  const close = () => { setDialog(null); setPassword(''); setDeleteError(''); };
+  const record = profile.onboarding;
   const done = (message: string) => { close(); setNotice(message); };
 
   const photo = profileAvatar(profile.photo);
@@ -70,6 +83,19 @@ export function ProfileScreen({ profile, dispatch, isPreview, onPickPhoto, onExp
     finally { setExporting(false); }
   }
 
+  // CU-08: con cuenta, se reautentica y se elimina en el servidor antes de borrar el dispositivo.
+  async function deleteData() {
+    if (account.email) {
+      if (!password) { setDeleteError('Ingresa tu contraseña para confirmar.'); return; }
+      setDeleting(true);
+      const result = await onDeleteAccount(password);
+      setDeleting(false);
+      if (!result.ok) { setDeleteError(result.message); return; }
+    }
+    onDeleteLocalData();
+    done(account.email ? 'Cuenta y datos de este dispositivo eliminados.' : 'Datos de este dispositivo eliminados.');
+  }
+
   return (
     <Screen>
       <PreviewNotice local={!isPreview}>
@@ -82,6 +108,19 @@ export function ProfileScreen({ profile, dispatch, isPreview, onPickPhoto, onExp
       {!!notice && <AppText accessibilityLiveRegion="polite" variant="caption" tone="brand">{notice}</AppText>}
 
       <PersonalDataCard profile={profile} onEdit={() => { setNotice(''); setDialog('personal'); }} />
+      {record && <View style={styles.account}>
+        <Ionicons name="barbell-outline" size={22} color={colors.brand} />
+        <View style={styles.accountText}>
+          <AppText variant="strong">Entrenamiento y lesiones</AppText>
+          <AppText variant="caption" tone="muted">
+            {labels.environment[record.environment]} · {record.equipment.map((item) => labels.equipment[item]).join(', ')}
+          </AppText>
+          <AppText variant="caption" tone="muted">
+            Zonas con lesión: {record.zones.length ? record.zones.map((zone) => labels.zones[zone]).join(', ') : 'ninguna'}
+          </AppText>
+          <AppButton label="Editar entorno y lesiones" icon="create-outline" variant="secondary" onPress={() => { setNotice(''); setDialog('training'); }} />
+        </View>
+      </View>}
       <NutritionCard exclusions={profile.exclusions} dietFocus={profile.dietFocus} target={profile.nutritionPlan?.result ?? null} onGoals={onGoals} onAdjust={() => { setNotice(''); setDialog('nutrition'); }} />
       <PrivacyCard exporting={exporting} consentDate={formatDay(profile.onboarding?.consent.acceptedAt)}
         healthDate={formatDay(profile.onboarding?.completedAt)} healthRisk={!!profile.onboarding?.healthFlags.length} onExport={exportData} onDelete={() => { setNotice(''); setDialog('delete'); }} />
@@ -91,9 +130,17 @@ export function ProfileScreen({ profile, dispatch, isPreview, onPickPhoto, onExp
         <Ionicons name="person-circle-outline" size={22} color={colors.muted} />
         <View style={styles.accountText}>
           <AppText variant="strong">Cuenta</AppText>
-          <AppText variant="caption" tone="muted">
-            El registro y el inicio de sesión llegarán en una próxima etapa. Por ahora no hay una sesión que cerrar.
-          </AppText>
+          {!account.configured ? <AppText variant="caption" tone="muted">
+            La cuenta en la nube no está disponible en esta versión. Tus datos se guardan solo en este dispositivo.
+          </AppText> : account.email ? <>
+            <AppText variant="caption" tone="muted">Sesión iniciada como {account.email}.</AppText>
+            <AppButton label="Cerrar sesión" icon="log-out-outline" variant="secondary"
+              onPress={() => onSignOut().then(() => setNotice('Sesión cerrada. Tus datos siguen en este dispositivo.'))} />
+          </> : <>
+            <AppText variant="caption" tone="muted">Crea una cuenta para recuperar tu acceso. Tus datos siguen guardados en este dispositivo.</AppText>
+            <AppButton label="Iniciar sesión" icon="log-in-outline" variant="secondary" onPress={onSignIn} />
+            <AppButton label="Crear cuenta" variant="ghost" onPress={onSignUp} />
+          </>}
         </View>
       </View>
 
@@ -107,6 +154,11 @@ export function ProfileScreen({ profile, dispatch, isPreview, onPickPhoto, onExp
           onSave={(values) => { dispatch({ type: 'update-nutrition', ...values }); done('Preferencias actualizadas en este dispositivo.'); }} />}
       </AppDialog>
 
+      <AppDialog title="Entorno y lesiones" visible={dialog === 'training'} onClose={close}>
+        {dialog === 'training' && <TrainingSetupEditor profile={profile} onCancel={close}
+          onSave={(values) => { dispatch({ type: 'update-training-setup', ...values }); done('Guardado. Regenera tu rutina en Entrenar para aplicar los cambios.'); }} />}
+      </AppDialog>
+
       <AppDialog title="Foto de perfil" visible={dialog === 'photo'} onClose={close}>
         <AppText tone="muted">La foto solo se muestra en este dispositivo y no se incluye en la exportación.</AppText>
         <AppButton label="Elegir otra foto" icon="images-outline" onPress={pickPhoto} />
@@ -115,7 +167,7 @@ export function ProfileScreen({ profile, dispatch, isPreview, onPickPhoto, onExp
         <AppButton label="Cancelar" variant="secondary" onPress={close} />
       </AppDialog>
 
-      <AppDialog title="¿Eliminar los datos de este dispositivo?" visible={dialog === 'delete'} onClose={close}>
+      <AppDialog title={account.email ? '¿Eliminar tu cuenta y tus datos?' : '¿Eliminar los datos de este dispositivo?'} visible={dialog === 'delete'} onClose={close}>
         <View style={styles.dangerIcon}>
           <Ionicons name="warning-outline" size={28} color={colors.error} />
         </View>
@@ -123,9 +175,13 @@ export function ProfileScreen({ profile, dispatch, isPreview, onPickPhoto, onExp
           Se borrarán el perfil, la foto elegida, el diario de alimentación y el historial de Progreso de esta app.
           Esta acción <AppText variant="strong">no se puede deshacer</AppText>. Si quieres conservar una copia, expórtala antes.
         </AppText>
-        <AppText variant="caption" tone="muted">Aún no existe una cuenta en la nube, así que no hay datos remotos que eliminar.</AppText>
-        <AppButton label="Sí, eliminar mis datos" variant="danger" icon="trash-outline"
-          onPress={() => { onDeleteLocalData(); done('Datos de este dispositivo eliminados.'); }} />
+        {account.email ? <>
+          <AppText variant="caption" tone="muted">También se eliminará tu cuenta {account.email}. Confirma tu identidad con tu contraseña.</AppText>
+          <FormField label="Contraseña" value={password} onChange={(value) => { setPassword(value); setDeleteError(''); }} error={deleteError}
+            secureTextEntry autoCapitalize="none" autoComplete="current-password" maxLength={72} />
+        </> : <AppText variant="caption" tone="muted">No tienes una sesión iniciada, así que no hay una cuenta que eliminar.</AppText>}
+        <AppButton label={deleting ? 'Eliminando…' : account.email ? 'Sí, eliminar mi cuenta y datos' : 'Sí, eliminar mis datos'} variant="danger" icon="trash-outline"
+          disabled={deleting} onPress={deleteData} />
         <AppButton label="Mantener mis datos" variant="secondary" onPress={close} />
       </AppDialog>
     </Screen>

@@ -1,5 +1,6 @@
 import { createRoute, OpenAPIHono } from '@hono/zod-openapi';
 import { HealthResponseSchema, IdentityResponseSchema, ProblemSchema } from '@strongerfit/contracts';
+import { createClient } from '@supabase/supabase-js';
 import { cors } from 'hono/cors';
 import { bodyLimit } from 'hono/body-limit';
 import { secureHeaders } from 'hono/secure-headers';
@@ -44,6 +45,29 @@ export function createApp(config: ApiConfig = {}) {
       503: { description: 'Auth no configurado', content: { 'application/problem+json': { schema: ProblemSchema } } },
     },
   }), (c) => c.json({ id: c.get('userId') }, 200));
+
+  // CU-08: elimina la cuenta del usuario autenticado. Aún no hay tablas propias; al crearlas,
+  // sus filas se borran en cascada desde auth.users.
+  app.openapi(createRoute({
+    method: 'delete', path: '/v1/me', tags: ['Identidad'],
+    summary: 'Eliminar la cuenta propia',
+    security: [{ bearerAuth: [] }],
+    responses: {
+      204: { description: 'Cuenta eliminada' },
+      401: { description: 'Sesión inválida', content: { 'application/problem+json': { schema: ProblemSchema } } },
+      503: { description: 'Eliminación no configurada', content: { 'application/problem+json': { schema: ProblemSchema } } },
+    },
+  }), async (c) => {
+    if (!config.supabaseUrl || !config.supabaseServiceRoleKey) {
+      return problem(c, 503, 'Servicio no disponible', 'La eliminación de cuentas aún no está configurada.');
+    }
+    const admin = createClient(config.supabaseUrl, config.supabaseServiceRoleKey, {
+      auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
+    });
+    const { error } = await admin.auth.admin.deleteUser(c.get('userId'));
+    if (error) return problem(c, 502, 'No se pudo eliminar la cuenta', 'Inténtalo de nuevo más tarde.');
+    return c.body(null, 204);
+  });
 
   app.openAPIRegistry.registerComponent('securitySchemes', 'bearerAuth', {
     type: 'http', scheme: 'bearer', bearerFormat: 'JWT',

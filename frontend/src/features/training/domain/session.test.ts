@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { sessionPreview } from '../data/session.preview';
-import { activeSet, createSession, currentExercise, elapsedMs, parseSetInput, restRemainingMs, sessionRecord, sessionReducer, sessionSummary,
+import { activeSet, createSession, currentExercise, elapsedMs, overloadSuggestions, parseSetInput, restRemainingMs, sessionRecord, sessionReducer, sessionSummary,
   type SessionAction } from './session';
 
 const initialTime = 1_000_000;
@@ -111,5 +111,38 @@ describe('registro histórico', () => {
       ...exercise, sets: exercise.sets.map((set) => ({ ...set, completed: false })) })) };
     const finished = sessionReducer(createSession(template, initialTime), { type: 'finish', now: initialTime });
     expect(sessionRecord(finished, meta)).toBeNull();
+  });
+});
+
+describe('calibración y sobrecarga (RF-32, RF-33)', () => {
+  const template = (sets: { reps: number; calibration?: boolean }[]) => ({
+    title: 'Prueba', elapsedSeconds: 0, initialRestSeconds: 0,
+    exercises: [{ id: 'bench-0', exerciseId: 'bench-press', name: 'Press de banca con barra', muscleGroup: 'Pecho', restSeconds: 90,
+      measure: 'weighted-reps' as const, repsMax: 12, loadStep: 2.5, technique: [], history: [],
+      sets: sets.map((set, index) => ({ id: index + 1, weightKg: 0, completed: false, ...set })) }],
+  });
+
+  it('estima las series pendientes una sola vez y las rotula (CA-26)', () => {
+    let state = createSession(template([{ reps: 8, calibration: true }, { reps: 8 }, { reps: 12 }]), 0);
+    state = sessionReducer(state, { type: 'complete-set', exerciseId: 'bench-0', setId: 1, weightKg: 40, reps: 8, reserve: 2, now: 1 });
+    const sets = currentExercise(state).sets;
+    expect(sets[0]).toMatchObject({ weightKg: 40, reps: 8, completed: true, calibration: true, reserve: 2 });
+    expect(sets.slice(1).map((set) => [set.weightKg, set.estimated])).toEqual([[42.5, true], [37.5, true]]);
+    // La carga editada al completar no se recalcula y deja de ser estimada.
+    state = sessionReducer(state, { type: 'complete-set', exerciseId: 'bench-0', setId: 2, weightKg: 41, reps: 8, now: 2 });
+    expect(currentExercise(state).sets[1]).toMatchObject({ weightKg: 41, completed: true });
+    expect(currentExercise(state).sets[1]!.estimated).toBeUndefined();
+    expect(currentExercise(state).sets[2]!.weightKg).toBe(37.5);
+  });
+
+  it('sugiere un escalón más solo si todas las series llegaron al máximo (CA-27)', () => {
+    const finish = (reps: number[]) => {
+      let state = createSession(template(reps.map(() => ({ reps: 12 }))), 0);
+      reps.forEach((value, index) => { state = sessionReducer(state, { type: 'complete-set', exerciseId: 'bench-0', setId: index + 1, weightKg: 40, reps: value, now: index + 1 }); });
+      return sessionReducer(state, { type: 'finish', now: 10 });
+    };
+    expect(overloadSuggestions(finish([12, 12, 12]), [])).toEqual([{ exerciseId: 'bench-press', name: 'Press de banca con barra', currentKg: 40, suggestedKg: 42.5, step: 2.5 }]);
+    expect(overloadSuggestions(finish([12, 12, 11]), [])).toEqual([]);
+    expect(overloadSuggestions(finish([12, 12, 12]), ['shoulder'])).toEqual([]);
   });
 });

@@ -1,4 +1,4 @@
-import { exerciseById, swapOptions, validateExercise, type Equipment, type PlannedExercise } from '@strongerfit/training-engine';
+import { exerciseById, swapOptions, validateExercise, type Equipment, type PlannedExercise, type Zone } from '@strongerfit/training-engine';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { AppButton } from '../../../components/ui/AppButton';
@@ -7,26 +7,27 @@ import { ChoiceChips } from '../../../components/ui/ChoiceChips';
 import { FormField } from '../../../components/ui/FormField';
 import { colors, spacing } from '../../../theme';
 
-type Props = { item: PlannedExercise; equipment: Equipment[]; onSave: (item: PlannedExercise) => void; onCancel: () => void };
+type Props = { item: PlannedExercise; equipment: Equipment[]; zones: Zone[]; onSave: (item: PlannedExercise) => void; onCancel: () => void };
 
-export function PlanExerciseEditor({ item, equipment, onSave, onCancel }: Props) {
+export function PlanExerciseEditor({ item, equipment, zones, onSave, onCancel }: Props) {
   const [exerciseId, setExerciseId] = useState(item.exerciseId);
   const [form, setForm] = useState({ sets: String(item.sets), repsMin: String(item.repsMin), repsMax: String(item.repsMax), rest: String(item.restSeconds) });
   const [error, setError] = useState('');
-  const swaps = swapOptions(item, equipment);
+  // Los sustitutos más cercanos de la lista ordenada, con tu equipo y sin zonas contraindicadas.
+  const swaps = swapOptions(item, equipment, zones).slice(0, 8);
   const options = Object.fromEntries([exerciseById(item.exerciseId)!, ...swaps].map((exercise) => [exercise.id, exercise.name]));
   const field = (name: keyof typeof form) => ({ value: form[name], onChange: (value: string) => { setForm((current) => ({ ...current, [name]: value })); setError(''); } });
 
   function save() {
     const next = { exerciseId, sets: Number(form.sets), repsMin: Number(form.repsMin), repsMax: Number(form.repsMax), restSeconds: Number(form.rest) };
-    const problem = Object.values(form).some((value) => !/^\d+$/.test(value.trim())) ? 'Usa solo números enteros.' : validateExercise(next, equipment);
+    const problem = Object.values(form).some((value) => !/^\d+$/.test(value.trim())) ? 'Usa solo números enteros.' : validateExercise(next, equipment, zones);
     if (problem) setError(problem);
     else onSave(next);
   }
 
   return <>
     {swaps.length > 0
-      ? <ChoiceChips label="Ejercicio (mismo patrón y tu equipamiento)" options={options} value={exerciseId} onChange={setExerciseId} />
+      ? <ChoiceChips label="Ejercicio (mismo patrón, tu equipo y sin zonas con lesión)" options={options} value={exerciseId} onChange={setExerciseId} />
       : <AppText tone="muted">No hay alternativas con tu equipamiento para este movimiento.</AppText>}
     <View style={styles.row}>
       <View style={styles.cell}><FormField label="Series" {...field('sets')} keyboardType="number-pad" maxLength={1} /></View>

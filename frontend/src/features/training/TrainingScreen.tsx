@@ -13,7 +13,9 @@ import { RestTimer } from './components/RestTimer';
 import { SessionControls } from './components/SessionControls';
 import { SessionDialog } from './components/SessionDialog';
 import { currentTimeLabel, todayDateKey } from '../../shared/calendar';
-import { activeSet, sessionLogs, sessionRecord, sessionSummary, type SessionState, type SessionTemplate } from './domain/session';
+import type { Zone } from '@strongerfit/training-engine';
+import { activeSet, overloadSuggestions, sessionLogs, sessionRecord, sessionSummary, type SessionState, type SessionTemplate } from './domain/session';
+import type { OverloadDecision } from './components/OverloadSuggestions';
 import { TrainingSummaryScreen } from './TrainingSummaryScreen';
 import { newRecords } from '../progress/domain/records';
 import type { WorkoutRecord } from '../progress/domain/progress';
@@ -31,6 +33,8 @@ type Props = {
   onViewHistory: () => void;
   onRecord: (record: SessionRecord) => void;
   previous?: WorkoutRecord[];
+  zones?: Zone[];
+  onLoadDecision?: (decision: OverloadDecision) => void;
 };
 
 export function TrainingScreen({ template, ...actions }: Props) {
@@ -47,7 +51,7 @@ export function TrainingScreen({ template, ...actions }: Props) {
   return <TrainingSession template={template} {...actions} />;
 }
 
-function TrainingSession({ template, sample = false, restored, onPersist, onExit, onViewHistory, onRecord, previous }: Props & { template: SessionTemplate }) {
+function TrainingSession({ template, sample = false, restored, onPersist, onExit, onViewHistory, onRecord, previous, zones = [], onLoadDecision }: Props & { template: SessionTemplate }) {
   // Historial previo a esta sesión: los récords se comparan contra él, no contra la sesión recién registrada.
   const [before] = useState(() => previous ?? []);
   const { state, exercise, elapsedSeconds, restSeconds, send } = useTrainingSession(template, restored?.state);
@@ -94,6 +98,8 @@ function TrainingSession({ template, sample = false, restored, onPersist, onExit
       recorded={recorded}
       records={newRecords(before, sessionLogs(state)).map((record) => ({
         ...record, name: state.exercises.find((item) => item.exerciseId === record.exerciseId)?.name ?? record.exerciseId }))}
+      suggestions={overloadSuggestions(state, zones)}
+      onLoadDecision={onLoadDecision}
       onGoHome={onExit}
       onViewHistory={onViewHistory}
     />
@@ -106,7 +112,7 @@ function TrainingSession({ template, sample = false, restored, onPersist, onExit
         onPause={togglePause} onFinish={() => setDialog('finish')} />
       <ExerciseCard key={exercise.id} exercise={exercise} paused={paused} onDetails={() => setDialog('details')}
         onAddSet={() => send({ type: 'add-set' })}
-        onComplete={(setId, weightKg, reps) => send({ type: 'complete-set', exerciseId: exercise.id, setId, weightKg, reps, now: Date.now() })} />
+        onComplete={(setId, weightKg, reps, reserve) => send({ type: 'complete-set', exerciseId: exercise.id, setId, weightKg, reps, reserve, now: Date.now() })} />
       <ExerciseTimer exercise={exercise} paused={paused} run={timerRun} setRun={setTimerRun} />
       <RestTimer seconds={restSeconds} durationSeconds={state.rest.durationMs / 1000} paused={paused}
         onAdd={() => send({ type: 'add-rest', now: Date.now() })} onSkip={() => send({ type: 'skip-rest' })} />

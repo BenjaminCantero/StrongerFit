@@ -48,6 +48,7 @@ export function OnboardingScreen({ today, dispatch, onDone, onExit }: Props) {
   const summary = [
     { label: 'Objetivo principal', value: draft.goal ? labels.goal[draft.goal] : '—' },
     { label: 'Disponibilidad', value: `${draft.days || '—'} días por semana · ${draft.minutes || '—'} min por sesión` },
+    { label: 'Entorno', value: draft.environment ? labels.environment[draft.environment] : '—' },
     { label: 'Objetivo de peso', value: pace ? `${draft.weight} → ${draft.targetWeight} kg en ${pace.weeks} semanas` : 'Sin definir' },
     { label: 'Exclusiones', value: draft.exclusions.trim() || 'Ninguna' },
   ];

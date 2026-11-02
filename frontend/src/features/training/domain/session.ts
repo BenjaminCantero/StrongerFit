@@ -1,3 +1,4 @@
+import { contraindicated, estimateLoad, exerciseById, overloadSuggestion, type Measure, type Zone } from '@strongerfit/training-engine';
 import type { TimerSpec } from './timers';
 
 export type PerformedSet = {
@@ -5,6 +6,11 @@ export type PerformedSet = {
   weightKg: number;
   reps: number;
   completed: boolean;
+  // Serie de calibración: la persona elige la carga y declara las repeticiones en reserva (RF-32).
+  calibration?: boolean;
+  reserve?: number;
+  // Carga estimada desde la calibración; se rotula como tal hasta que la persona la confirma.
+  estimated?: boolean;
 };
 
 export type SessionExercise = {
@@ -15,6 +21,9 @@ export type SessionExercise = {
   name: string;
   muscleGroup: string;
   restSeconds: number;
+  measure?: Measure;
+  repsMax?: number;
+  loadStep?: number;
   technique: string[];
   history: { label: string; weightKg: number; reps: number; sets: number }[];
   sets: PerformedSet[];
@@ -39,7 +48,7 @@ export type SessionState = {
 
 export type SessionAction =
   | { type: 'toggle-pause'; now: number }
-  | { type: 'complete-set'; exerciseId: string; setId: number; weightKg: number; reps: number; now: number }
+  | { type: 'complete-set'; exerciseId: string; setId: number; weightKg: number; reps: number; reserve?: number; now: number }
   | { type: 'add-set' }
   | { type: 'add-rest'; now: number }
   | { type: 'skip-rest' }
@@ -134,10 +143,19 @@ export function sessionReducer(state: SessionState, action: SessionAction): Sess
       const set = activeSet(exercise);
       if (state.status !== 'active' || action.exerciseId !== exercise.id || set?.id !== action.setId
         || !Number.isFinite(action.weightKg) || action.weightKg < 0 || !Number.isSafeInteger(action.reps) || action.reps < 1) return state;
+      // Tras la calibración se estiman una sola vez las series pendientes (BR-22, BR-23).
+      const calibration = set.calibration && action.weightKg > 0
+        ? { weightKg: action.weightKg, reps: action.reps, reserve: action.reserve ?? 0 } : null;
       return { ...state,
         exercises: state.exercises.map((item, index) => index === state.exerciseIndex ? {
-          ...item, sets: item.sets.map((row) => row.id === action.setId
-            ? { ...row, weightKg: action.weightKg, reps: action.reps, completed: true } : row),
+          ...item, sets: item.sets.map((row) => {
+            if (row.id === action.setId) {
+              const { estimated: _estimated, ...done } = row;
+              return { ...done, weightKg: action.weightKg, reps: action.reps, completed: true, ...(row.calibration ? { reserve: action.reserve ?? 0 } : {}) };
+            }
+            return calibration && !row.completed
+              ? { ...row, weightKg: estimateLoad(calibration, row.reps, item.loadStep ?? 2.5), estimated: true } : row;
+          }),
         } : item),
         rest: { endsAtMs: action.now + exercise.restSeconds * 1000, pausedRemainingMs: 0, durationMs: exercise.restSeconds * 1000 },
       };
@@ -147,7 +165,7 @@ export function sessionReducer(state: SessionState, action: SessionAction): Sess
       const last = exercise.sets[exercise.sets.length - 1]!;
       const nextId = Math.max(...exercise.sets.map((set) => set.id)) + 1;
       return { ...state, exercises: state.exercises.map((item, index) => index === state.exerciseIndex
-        ? { ...item, sets: [...item.sets, { ...last, id: nextId, completed: false }] } : item) };
+        ? { ...item, sets: [...item.sets, { id: nextId, weightKg: last.weightKg, reps: last.reps, completed: false, ...(last.estimated ? { estimated: true } : {}) }] } : item) };
     }
     case 'add-rest': {
       const remaining = restRemainingMs(state, action.now);
@@ -164,4 +182,18 @@ export function sessionReducer(state: SessionState, action: SessionAction): Sess
     case 'finish':
       return { ...state, status: 'finished', elapsedMs: elapsedMs(state, action.now), runningSinceMs: null, rest: emptyRest() };
   }
+}
+
+// Sugerencias de sobrecarga al terminar (RF-33, BR-24): solo ejercicios con carga, con todas sus series
+// completadas en el máximo del rango y sin zona con lesión declarada.
+export function overloadSuggestions(state: SessionState, zones: Zone[]) {
+  return state.exercises.flatMap((exercise) => {
+    const catalogExercise = exercise.exerciseId ? exerciseById(exercise.exerciseId) : undefined;
+    if (!catalogExercise || exercise.measure !== 'weighted-reps' || !exercise.repsMax || contraindicated(catalogExercise, zones)) return [];
+    if (exercise.sets.some((set) => !set.completed)) return [];
+    const step = exercise.loadStep ?? 2.5;
+    const suggestedKg = overloadSuggestion(exercise.sets, exercise.repsMax, step);
+    if (suggestedKg === null) return [];
+    return [{ exerciseId: catalogExercise.id, name: exercise.name, currentKg: Math.min(...exercise.sets.map((set) => set.weightKg)), suggestedKg, step }];
+  });
 }

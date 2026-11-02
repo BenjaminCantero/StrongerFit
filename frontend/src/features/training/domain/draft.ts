@@ -2,9 +2,14 @@ import { z } from 'zod';
 import type { SessionState } from './session';
 
 // Borrador de la sesión en curso (RNF-06). Lo que no valida se descarta (RNF-13).
-const setSchema = z.object({ id: z.number().int(), weightKg: z.number().min(0), reps: z.number().int().min(0), completed: z.boolean() });
+const setSchema = z.object({
+  id: z.number().int(), weightKg: z.number().min(0), reps: z.number().int().min(0), completed: z.boolean(),
+  calibration: z.boolean().optional(), reserve: z.number().int().min(0).max(5).optional(), estimated: z.boolean().optional(),
+});
 const exerciseSchema = z.object({
   id: z.string(), exerciseId: z.string().optional(), name: z.string(), muscleGroup: z.string(), restSeconds: z.number().min(0),
+  measure: z.enum(['weighted-reps', 'bodyweight-reps', 'duration']).optional(), repsMax: z.number().int().positive().optional(),
+  loadStep: z.number().positive().optional(),
   technique: z.array(z.string()), history: z.array(z.object({ label: z.string(), weightKg: z.number(), reps: z.number(), sets: z.number() })),
   sets: z.array(setSchema).min(1),
   timer: z.object({ kind: z.literal('hold'), seconds: z.number().positive() }).optional(),

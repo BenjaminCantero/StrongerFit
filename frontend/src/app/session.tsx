@@ -1,3 +1,4 @@
+import { LOAD_RULE_VERSION } from '@strongerfit/training-engine';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, View } from 'react-native';
@@ -15,7 +16,7 @@ import { colors } from '../theme';
 export default function SessionRoute() {
   const router = useRouter();
   const { day, preview, resume } = useLocalSearchParams<{ day?: string; preview?: string; resume?: string }>();
-  const { profile } = useProfile();
+  const { profile, dispatch } = useProfile();
   const [draft, setDraft] = useState<SessionDraft | null | undefined>(undefined);
   const requested: SessionDraft['source'] = __DEV__ && preview === 'sample' ? { kind: 'sample' } : { kind: 'plan', day: Number(day) || 0 };
 
@@ -41,9 +42,17 @@ export default function SessionRoute() {
   const sample = source.kind === 'sample';
   const planDay = source.kind === 'plan' ? profile.trainingPlan?.days[source.day] : undefined;
   // La sesión de ejemplo con historial solo existe en desarrollo.
-  const template = sample ? (__DEV__ ? sessionPreview : null) : planDay ? sessionFromDay(planDay, progressStore.getState().workouts, todayDateKey()) : null;
+  const template = sample ? (__DEV__ ? sessionPreview : null)
+    : planDay ? sessionFromDay(planDay, progressStore.getState().workouts, todayDateKey(), profile.nextLoads) : null;
   return <TrainingScreen template={template} sample={sample} onPersist={persist} previous={progressStore.getState().workouts}
     restored={draft ? { sessionId: draft.sessionId, state: draft.state } : undefined}
     onExit={() => router.navigate('/')} onViewHistory={() => router.navigate('/progress')}
-    onRecord={(record) => progressStore.getState().dispatch({ type: 'record-workout', record })} />;
+    zones={profile.onboarding?.zones ?? []}
+    onLoadDecision={sample ? undefined : (decision) => dispatch({ type: 'record-load-decision',
+      decision: { ...decision, at: new Date().toISOString(), ruleVersion: LOAD_RULE_VERSION } })}
+    onRecord={(record) => {
+      progressStore.getState().dispatch({ type: 'record-workout', record });
+      // La carga aceptada ya quedó en el historial; desde aquí manda el historial (BR-22).
+      dispatch({ type: 'consume-next-loads', exerciseIds: record.exercises.map((item) => item.exerciseId) });
+    }} />;
 }

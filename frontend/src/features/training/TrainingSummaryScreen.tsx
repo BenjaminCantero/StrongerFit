@@ -8,6 +8,7 @@ import { Card } from '../../components/ui/Card';
 import { colors, layout, radius, spacing } from '../../theme';
 import type { SessionState } from './domain/session';
 import { formatDuration, formatWeight } from './format';
+import { OverloadSuggestions, type OverloadDecision, type OverloadSuggestion } from './components/OverloadSuggestions';
 
 // Icon per muscle group keyword
 function exerciseIcon(muscleGroup: string): string {
@@ -25,11 +26,13 @@ type Props = {
   elapsedSeconds: number;
   recorded: boolean;
   records: { exerciseId: string; name: string; top: { weightKg: number; reps: number }; before: { weightKg: number; reps: number } }[];
+  suggestions?: OverloadSuggestion[];
+  onLoadDecision?: (decision: OverloadDecision) => void;
   onGoHome: () => void;
   onViewHistory: () => void;
 };
 
-export function TrainingSummaryScreen({ state, elapsedSeconds, recorded, records, onGoHome, onViewHistory }: Props) {
+export function TrainingSummaryScreen({ state, elapsedSeconds, recorded, records, suggestions = [], onLoadDecision, onGoHome, onViewHistory }: Props) {
   const allSets = state.exercises.flatMap((ex) => ex.sets);
   const completedSets = allSets.filter((s) => s.completed);
   const totalVolumeKg = completedSets.reduce((sum, s) => sum + s.weightKg * s.reps, 0);
@@ -103,6 +106,8 @@ export function TrainingSummaryScreen({ state, elapsedSeconds, recorded, records
               ))}
             </View>
           )}
+
+          {onLoadDecision && <OverloadSuggestions suggestions={suggestions} onDecide={onLoadDecision} />}
 
           {/* ── Movement summary ── */}
           {exercisesDone.length > 0 && (

@@ -4,14 +4,15 @@ import { useState } from 'react';
 import { StyleSheet, TextInput, View, useWindowDimensions } from 'react-native';
 import { AppText } from '../../../components/ui/AppText';
 import { colors, fontFamily, layout, radius, spacing } from '../../../theme';
+import { DEFAULT_RESERVE, MAX_RESERVE } from '@strongerfit/training-engine';
 import { parseSetInput, type PerformedSet } from '../domain/session';
 
-function NumericField({ label, value, onChange, step, minimum, disabled }: {
-  label: string; value: string; onChange: (value: string) => void; step: number; minimum: number; disabled: boolean;
+function NumericField({ label, value, onChange, step, minimum, maximum = Infinity, disabled }: {
+  label: string; value: string; onChange: (value: string) => void; step: number; minimum: number; maximum?: number; disabled: boolean;
 }) {
   function adjust(delta: number) {
     const parsed = Number(value.replace(',', '.'));
-    const next = Math.max(minimum, Math.round(((Number.isFinite(parsed) ? parsed : minimum) + delta) * 100) / 100);
+    const next = Math.min(maximum, Math.max(minimum, Math.round(((Number.isFinite(parsed) ? parsed : minimum) + delta) * 100) / 100));
     onChange(String(next).replace('.', ','));
   }
   return (
@@ -31,37 +32,56 @@ function NumericField({ label, value, onChange, step, minimum, disabled }: {
   );
 }
 
-export function SetEditor({ set, disabled, onComplete }: {
-  set: PerformedSet; disabled: boolean; onComplete: (weightKg: number, reps: number) => void;
+// weighted: solo los ejercicios con carga muestran el campo de kg (BR-22).
+export function SetEditor({ set, weighted, step, disabled, onComplete }: {
+  set: PerformedSet; weighted: boolean; step: number; disabled: boolean; onComplete: (weightKg: number, reps: number, reserve?: number) => void;
 }) {
   const [weight, setWeight] = useState(String(set.weightKg).replace('.', ','));
   const [reps, setReps] = useState(String(set.reps));
+  const [reserve, setReserve] = useState(String(DEFAULT_RESERVE));
+  const calibration = weighted && !!set.calibration;
   const [error, setError] = useState<string | null>(null);
   const { width, fontScale } = useWindowDimensions();
   const compact = width < 480 || fontScale > 1.15;
 
   function complete() {
-    const parsed = parseSetInput(weight, reps);
+    const parsed = parseSetInput(weighted ? weight : '0', reps);
     if (!parsed) {
-      setError('Ingresa una carga de 0 kg o más y repeticiones enteras mayores que 0.');
+      setError(weighted ? 'Ingresa una carga de 0 kg o más y repeticiones enteras mayores que 0.' : 'Ingresa repeticiones enteras mayores que 0.');
+      return;
+    }
+    const left = Number(reserve);
+    if (calibration && (parsed.weightKg <= 0 || !Number.isInteger(left) || left < 0 || left > MAX_RESERVE)) {
+      setError(`Para calibrar, elige una carga mayor que 0 kg y entre 0 y ${MAX_RESERVE} repeticiones en reserva.`);
       return;
     }
     setError(null);
-    onComplete(parsed.weightKg, parsed.reps);
+    onComplete(parsed.weightKg, parsed.reps, calibration ? left : undefined);
   }
 
   return (
     <View style={styles.container}>
-      <AppText variant="label" tone="brand">Actual · Serie {set.id}</AppText>
+      <AppText variant="label" tone="brand">
+        Actual · Serie {set.id}{calibration ? ' · Calibración' : set.estimated ? ' · Carga estimada' : ''}
+      </AppText>
+      {calibration && <AppText variant="caption" tone="muted">
+        Primera vez con este ejercicio: elige una carga que puedas mover con buena técnica y anota cuántas repeticiones te sobraron.
+        Con eso estimamos las siguientes series.
+      </AppText>}
+      {set.estimated && !calibration && <AppText variant="caption" tone="muted">Estimada desde tu calibración. Ajústala si no te acomoda.</AppText>}
       <View style={[styles.row, compact && styles.compact]}>
-        <View style={compact && styles.fieldRow}>
+        {weighted && <View style={compact && styles.fieldRow}>
           {compact && <AppText variant="label" style={styles.fieldLabel}>Carga (kg)</AppText>}
-          <NumericField label="Carga en kg" value={weight} onChange={setWeight} step={1.25} minimum={0} disabled={disabled} />
-        </View>
+          <NumericField label="Carga en kg" value={weight} onChange={setWeight} step={step} minimum={0} disabled={disabled} />
+        </View>}
         <View style={compact && styles.fieldRow}>
           {compact && <AppText variant="label" style={styles.fieldLabel}>Reps</AppText>}
           <NumericField label="Repeticiones" value={reps} onChange={setReps} step={1} minimum={1} disabled={disabled} />
         </View>
+        {calibration && <View style={compact && styles.fieldRow}>
+          {compact && <AppText variant="label" style={styles.fieldLabel}>En reserva</AppText>}
+          <NumericField label="Repeticiones en reserva" value={reserve} onChange={setReserve} step={1} minimum={0} maximum={MAX_RESERVE} disabled={disabled} />
+        </View>}
         <AppPressable accessibilityRole="button" accessibilityLabel={`Completar serie ${set.id}`}
           accessibilityState={{ disabled }} disabled={disabled} onPress={complete}
           style={({ pressed }) => [styles.complete, compact && styles.wide, (pressed || disabled) && styles.pressed]}>

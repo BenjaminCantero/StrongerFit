@@ -2,12 +2,12 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { HealthResponseSchema, IdentityResponseSchema } from '@strongerfit/contracts';
 import { createApp } from '../src/app';
 
-const { getUser } = vi.hoisted(() => ({ getUser: vi.fn() }));
+const { getUser, deleteUser } = vi.hoisted(() => ({ getUser: vi.fn(), deleteUser: vi.fn() }));
 vi.mock('@supabase/supabase-js', () => ({
-  createClient: () => ({ auth: { getUser } }),
+  createClient: () => ({ auth: { getUser, admin: { deleteUser } } }),
 }));
 
-beforeEach(() => getUser.mockReset());
+beforeEach(() => { getUser.mockReset(); deleteUser.mockReset(); });
 
 describe('API inicial', () => {
   it('sirve health con el contrato compartido sin depender de Supabase', async () => {
@@ -56,6 +56,24 @@ describe('API inicial', () => {
     const body = await response.json();
     expect(IdentityResponseSchema.parse(body)).toEqual({ id });
     expect(body).not.toHaveProperty('email');
+  });
+
+  it('elimina solo la cuenta del token validado (CU-08)', async () => {
+    const id = 'dca740c0-b831-4e58-9009-a83cec248109';
+    getUser.mockResolvedValue({ data: { user: { id } }, error: null });
+    deleteUser.mockResolvedValue({ data: {}, error: null });
+    const config = { supabaseUrl: 'https://example.supabase.co', supabaseAnonKey: 'public-key', supabaseServiceRoleKey: 'service-key' };
+    const response = await createApp(config).request('/v1/me', { method: 'DELETE', headers: { Authorization: 'Bearer valid-token' } });
+    expect(response.status).toBe(204);
+    expect(deleteUser).toHaveBeenCalledWith(id);
+  });
+
+  it('no elimina sin token ni sin clave de servicio', async () => {
+    expect((await createApp().request('/v1/me', { method: 'DELETE' })).status).toBe(401);
+    getUser.mockResolvedValue({ data: { user: { id: 'dca740c0-b831-4e58-9009-a83cec248109' } }, error: null });
+    const app = createApp({ supabaseUrl: 'https://example.supabase.co', supabaseAnonKey: 'public-key' });
+    expect((await app.request('/v1/me', { method: 'DELETE', headers: { Authorization: 'Bearer valid-token' } })).status).toBe(503);
+    expect(deleteUser).not.toHaveBeenCalled();
   });
 
   it('limita el tamaño del cuerpo y entrega errores problem+json', async () => {

@@ -11,9 +11,11 @@ import { SetEditor } from './SetEditor';
 
 export function ExerciseCard({ exercise, paused, onDetails, onComplete, onAddSet }: {
   exercise: SessionExercise; paused: boolean; onDetails: () => void;
-  onComplete: (setId: number, weight: number, reps: number) => void; onAddSet: () => void;
+  onComplete: (setId: number, weight: number, reps: number, reserve?: number) => void; onAddSet: () => void;
 }) {
   const current = activeSet(exercise);
+  // Ejercicios de borradores antiguos sin medición se tratan como con carga.
+  const weighted = (exercise.measure ?? 'weighted-reps') === 'weighted-reps';
   const last = exercise.history[0];
 
   return (
@@ -34,22 +36,29 @@ export function ExerciseCard({ exercise, paused, onDetails, onComplete, onAddSet
       <AppPressable accessibilityRole="button" onPress={onDetails} style={styles.history}>
         <Ionicons name="time-outline" size={16} color={colors.gold} />
         <AppText variant="caption" tone="muted" style={styles.historyText}>
-          {last ? `La vez anterior: ${formatWeight(last.weightKg)} kg × ${last.reps} reps (${last.label.toLowerCase()})` : 'Primera vez con este ejercicio'}
+          {last ? weighted ? `La vez anterior: ${formatWeight(last.weightKg)} kg × ${last.reps} reps (${last.label.toLowerCase()})`
+            : `La vez anterior: ${last.reps} reps (${last.label.toLowerCase()})` : 'Primera vez con este ejercicio'}
         </AppText>
         <AppText variant="label" tone="brand">Técnica</AppText>
       </AppPressable>
       <View style={styles.sets}>
         <View style={styles.row}>
           <AppText variant="label" tone="muted" style={styles.setColumn}>Serie</AppText>
-          <AppText variant="label" tone="muted" style={styles.valueColumn}>Carga (kg)</AppText>
+          <AppText variant="label" tone="muted" style={styles.valueColumn}>{weighted ? 'Carga (kg)' : 'Carga'}</AppText>
           <AppText variant="label" tone="muted" style={styles.valueColumn}>Reps</AppText>
           <AppText variant="label" tone="muted" style={styles.statusColumn}>Estado</AppText>
         </View>
         {exercise.sets.map((set) => set.id === current?.id
-          ? <SetEditor key={set.id} set={set} disabled={paused} onComplete={(weight, reps) => onComplete(set.id, weight, reps)} />
+          ? <SetEditor key={`${set.id}-${set.weightKg}`} set={set} weighted={weighted} step={exercise.loadStep ?? 2.5} disabled={paused}
+            onComplete={(weight, reps, reserve) => onComplete(set.id, weight, reps, reserve)} />
           : <View key={set.id} style={[styles.row, styles.set, !set.completed && styles.pending]}>
             <AppText variant="header" tone="muted" style={styles.setColumn}>{set.id}</AppText>
-            <AppText variant="strong" style={styles.valueColumn}>{formatWeight(set.weightKg)}</AppText>
+            <View style={styles.valueColumn}>
+              <AppText variant="strong" style={styles.center}>{weighted ? formatWeight(set.weightKg) : 'Sin carga'}</AppText>
+              {weighted && (set.estimated || set.calibration) && <AppText variant="caption" tone="muted" style={styles.center}>
+                {set.calibration ? 'calibración' : 'estimada'}
+              </AppText>}
+            </View>
             <AppText variant="strong" style={styles.valueColumn}>{set.reps}</AppText>
             <View style={styles.statusColumn} accessible accessibilityLabel={`Serie ${set.id}: ${set.completed ? 'completada' : 'pendiente'}`}>
               <View style={[styles.status, set.completed && styles.completed]}>
@@ -81,6 +90,7 @@ const styles = StyleSheet.create({
   pending: { backgroundColor: colors.surfaceLow },
   setColumn: { width: 40, textAlign: 'center' },
   valueColumn: { flex: 1, textAlign: 'center' },
+  center: { textAlign: 'center' },
   statusColumn: { width: 55, alignItems: 'center', textAlign: 'center' },
   status: { width: 36, height: 36, borderRadius: radius.pill, backgroundColor: colors.surfaceHigh, alignItems: 'center', justifyContent: 'center' },
   completed: { backgroundColor: colors.brand },

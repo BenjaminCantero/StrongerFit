@@ -1,5 +1,5 @@
 import type { MealPlan, NutritionTargets } from '@strongerfit/nutrition-engine';
-import type { Plan, PlannedExercise } from '@strongerfit/training-engine';
+import { environmentLabels, type Environment, type Equipment, type Plan, type PlannedExercise, type Zone } from '@strongerfit/training-engine';
 import type { OnboardingRecord } from '../../onboarding/domain/onboarding';
 
 // Meta guardada con sus parámetros y versión de reglas (RF-19, RNF-08).
@@ -23,13 +23,22 @@ export type ProfileData = {
   nutritionPlan: NutritionPlan | null;
   trainingPlan: (Plan & { createdAt: string }) | null;
   mealPlan: SavedMealPlan | null;
+  // Carga aceptada para la próxima sesión de cada ejercicio (BR-22).
+  nextLoads: Record<string, number>;
+  loadDecisions: LoadDecision[];
 };
 
 export type SavedMealPlan = MealPlan & { createdAt: string };
 
+// Decisión sobre una sugerencia de sobrecarga, con la versión de reglas (CU-14).
+export type LoadDecision = {
+  exerciseId: string; suggestedKg: number; appliedKg: number | null; decision: 'applied' | 'modified' | 'ignored' | 'undone';
+  at: string; ruleVersion: string;
+};
+
 export type PersonalField = 'name' | 'age' | 'height' | 'weight' | 'goal' | 'days' | 'minutes' | 'equipment';
 export type PersonalForm = Record<PersonalField, string>;
-export type PersonalValues = Omit<ProfileData, 'photo' | 'exclusions' | 'dietFocus' | 'onboarding' | 'nutritionPlan' | 'trainingPlan' | 'mealPlan'>;
+export type PersonalValues = Omit<ProfileData, 'photo' | 'exclusions' | 'dietFocus' | 'onboarding' | 'nutritionPlan' | 'trainingPlan' | 'mealPlan' | 'nextLoads' | 'loadDecisions'>;
 export type FormErrors<Field extends string> = Partial<Record<Field, string>>;
 
 export type NutritionField = 'exclusions' | 'dietFocus';
@@ -43,6 +52,9 @@ export type ProfileAction =
   | { type: 'set-training-plan'; plan: Plan & { createdAt: string } }
   | { type: 'set-meal-plan'; plan: SavedMealPlan | null }
   | { type: 'update-plan-exercise'; day: number; index: number; exercise: PlannedExercise }
+  | { type: 'update-training-setup'; environment: Environment; equipment: Equipment[]; zones: Zone[] }
+  | { type: 'record-load-decision'; decision: LoadDecision }
+  | { type: 'consume-next-loads'; exerciseIds: string[] }
   | { type: 'complete-onboarding'; values: PersonalValues; exclusions: string[]; dietFocus: string; onboarding: OnboardingRecord }
   | { type: 'reset' };
 
@@ -62,6 +74,7 @@ const MAX_EXCLUSION_LENGTH = 40;
 export const createEmptyProfile = (): ProfileData => ({
   name: '', photo: null, ageYears: null, heightCm: null, weightKg: null, goal: '',
   daysPerWeek: null, sessionMinutes: null, equipment: '', exclusions: [], dietFocus: '', onboarding: null, nutritionPlan: null, trainingPlan: null, mealPlan: null,
+  nextLoads: {}, loadDecisions: [],
 });
 
 export function isProfileEmpty(profile: ProfileData): boolean {
@@ -155,6 +168,20 @@ export function profileReducer(state: ProfileData, action: ProfileAction): Profi
       return { ...state, trainingPlan: { ...plan, days: plan.days.map((day, dayIndex) => dayIndex !== action.day ? day
         : { ...day, exercises: day.exercises.map((item, index) => index === action.index ? action.exercise : item) }) } };
     }
+    case 'update-training-setup': {
+      if (!state.onboarding) return state;
+      const { environment, equipment, zones } = action;
+      return { ...state, equipment: environmentLabels[environment], onboarding: { ...state.onboarding, environment, equipment, zones } };
+    }
+    case 'record-load-decision': {
+      const { decision } = action;
+      const nextLoads = { ...state.nextLoads };
+      if (decision.appliedKg !== null) nextLoads[decision.exerciseId] = decision.appliedKg;
+      else if (decision.decision === 'undone') delete nextLoads[decision.exerciseId];
+      return { ...state, nextLoads, loadDecisions: [...state.loadDecisions, decision] };
+    }
+    case 'consume-next-loads':
+      return { ...state, nextLoads: Object.fromEntries(Object.entries(state.nextLoads).filter(([id]) => !action.exerciseIds.includes(id))) };
     case 'complete-onboarding':
       return { ...state, ...action.values, exclusions: action.exclusions, dietFocus: action.dietFocus, onboarding: action.onboarding };
     case 'reset': return createEmptyProfile();

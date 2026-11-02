@@ -1,10 +1,16 @@
+import { Redirect } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { SleepScreen } from '../features/sleep/SleepScreen';
 import { localNow } from '../features/sleep/domain/sleep';
 import { useSleep } from '../features/sleep/useSleep';
 import { todayDateKey } from '../shared/calendar';
+import { features } from '../shared/features';
 
 export default function SleepRoute() {
+  return features.sleep ? <SleepContent /> : <Redirect href="/" />;
+}
+
+function SleepContent() {
   const sleep = useSleep();
   const [now, setNow] = useState(() => new Date());
   // Refresca la duración en curso cada minuto.

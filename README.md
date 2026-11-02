@@ -86,7 +86,7 @@ SQLite tiene un punto de apertura preparado, sin tablas de dominio todavía.
 
 `/v1/me` devuelve 401 sin sesión, o 503 cuando se envía un token y Supabase aún no
 está configurado. Los errores usan `application/problem+json`. Para habilitarlo,
-completar `SUPABASE_URL` y `SUPABASE_ANON_KEY` en `backend/.env`. Las variables
+completar `SUPABASE_URL` y `SUPABASE_ANON_KEY` en `backend/.env` (y `SUPABASE_SERVICE_ROLE_KEY`, solo en el servidor, para `DELETE /v1/me`). Las variables
 equivalentes `EXPO_PUBLIC_SUPABASE_*` preparan el cliente móvil para el futuro login.
 Nunca colocar claves `service_role` en el frontend.
 

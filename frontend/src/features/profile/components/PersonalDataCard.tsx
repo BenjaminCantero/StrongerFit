@@ -24,7 +24,7 @@ export function PersonalDataCard({ profile, onEdit }: { profile: ProfileData; on
   const details: { icon: ComponentProps<typeof Ionicons>['name']; label: string; value: string }[] = [
     { icon: 'flag-outline', label: 'Objetivo principal', value: profile.goal || missing },
     { icon: 'calendar-outline', label: 'Disponibilidad semanal', value: availability(profile) },
-    { icon: 'fitness-outline', label: 'Equipamiento disponible', value: profile.equipment || missing },
+    { icon: 'fitness-outline', label: 'Entorno de entrenamiento', value: profile.equipment || missing },
   ];
 
   return (

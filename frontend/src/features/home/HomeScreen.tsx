@@ -7,6 +7,7 @@ import { colors, radius, spacing } from '../../theme';
 import { NutritionSummary } from './components/NutritionSummary';
 import { ResumeSession, type PendingSession } from './components/ResumeSession';
 import { SleepSummary, type SleepOverview } from './components/SleepSummary';
+import { features } from '../../shared/features';
 import { WeeklyAdherence } from './components/WeeklyAdherence';
 import { WeightGoal } from './components/WeightGoal';
 import { WorkoutSummary } from './components/WorkoutSummary';
@@ -53,7 +54,7 @@ export function HomeScreen({ overview, today, pending, isPreview, onTrainingPres
         : <WorkoutSummary workout={overview.workout} onPress={onTrainingPress} />}
       <NutritionSummary nutrition={overview.nutrition} onPress={onNutritionPress} />
       {overview.weight && <WeightGoal weight={overview.weight} onPress={onWeightPress} />}
-      <SleepSummary sleep={sleep} onPress={onSleep} />
+      {features.sleep && <SleepSummary sleep={sleep} onPress={onSleep} />}
       <WeeklyAdherence adherence={overview.adherence} today={today} onHistory={onHistory} />
     </Screen>
   );

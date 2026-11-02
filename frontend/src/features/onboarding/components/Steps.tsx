@@ -6,7 +6,9 @@ import { FormField } from '../../../components/ui/FormField';
 import { colors, radius, spacing } from '../../../theme';
 import { formatProgressDate } from '../../progress/presentation';
 import { shiftDate } from '../../../shared/calendar';
-import { athleteDays, hasHealthRisk, labels, paceSummary, toggle, type Draft, type DraftField, type Equipment, type HealthFlag } from '../domain/onboarding';
+import {
+  environmentDraft, hasHealthRisk, labels, optionalEquipment, paceSummary, toggle, trainingDays, type Draft, type DraftField, type Environment, type Equipment, type HealthFlag, type Zone,
+} from '../domain/onboarding';
 import { ChoiceChips } from '../../../components/ui/ChoiceChips';
 import { CheckRow } from './CheckRow';
 
@@ -41,25 +43,31 @@ export function BasicsStep({ draft, errors, set }: StepProps) {
   </>;
 }
 
+const environmentHints: Record<Environment, string> = {
+  none: 'Solo peso corporal.',
+  calisthenics: 'Peso corporal y bandas elásticas.',
+  'small-gym': 'Mancuernas, barra, banco y bandas.',
+  'commercial-gym': 'Todo lo anterior y máquinas.',
+};
+
 export function TrainingStep({ draft, errors, set }: StepProps) {
-  const range = athleteDays[draft.athleteProfile];
+  const optional = draft.environment ? optionalEquipment(draft.environment) : [];
   return <>
     <ChoiceChips label="Objetivo principal" options={labels.goal} value={draft.goal} onChange={(v) => set('goal', v)} error={errors.goal} />
     <ChoiceChips label="Nivel de experiencia" options={labels.level} value={draft.level} onChange={(v) => set('level', v)} error={errors.level} />
-    <ChoiceChips label="Perfil de deportista" options={labels.athleteProfile} value={draft.athleteProfile} onChange={(v) => set('athleteProfile', v)} />
-    <AppText variant="caption" tone="muted">
-      {draft.athleteProfile === 'general'
-        ? 'General: 2 a 5 días, 2 a 4 series de 8 a 12 repeticiones y sesiones de 30 a 60 min.'
-        : 'Fuerza e hipertrofia: 3 a 6 días, 3 a 4 series y bloques de 4 semanas con una de descarga.'}
-    </AppText>
+    <ChoiceChips label="¿Dónde entrenas?" options={labels.environment} value={draft.environment} error={errors.environment}
+      onChange={(v) => { const next = environmentDraft(v); set('environment', next.environment); set('equipment', next.equipment); }} />
+    {draft.environment && <AppText variant="caption" tone="muted">{environmentHints[draft.environment]}</AppText>}
+    {optional.length > 0 && <ChoiceChips<Equipment> multiple label="Desmarca lo que no tengas"
+      options={Object.fromEntries(optional.map((item) => [item, labels.equipment[item]])) as Record<Equipment, string>}
+      value={draft.equipment} onChange={(v) => set('equipment', toggle(draft.equipment, v))} />}
     {row(<>
       <View style={styles.cell}><FormField label="Días por semana" value={draft.days} onChange={(v) => set('days', v)} error={errors.days}
-        keyboardType="number-pad" maxLength={1} placeholder={`${range.min} a ${range.max}`} /></View>
+        keyboardType="number-pad" maxLength={1} placeholder={`${trainingDays.min} a ${trainingDays.max}`} /></View>
       <View style={styles.cell}><FormField label="Por sesión" unit="min" value={draft.minutes} onChange={(v) => set('minutes', v)} error={errors.minutes}
         keyboardType="number-pad" maxLength={3} /></View>
     </>)}
-    <ChoiceChips<Equipment> multiple label="Equipamiento disponible" options={labels.equipment} value={draft.equipment}
-      onChange={(v) => set('equipment', toggle(draft.equipment, v))} error={errors.equipment} />
+    <Note icon="information-circle-outline">Tu rutina sale de una plantilla propia para tu entorno, nivel y frecuencia (3 a 5 días). Si eliges otra cantidad, usamos la más cercana y te avisamos.</Note>
   </>;
 }
 
@@ -121,6 +129,11 @@ export function HealthStep({ draft, errors, set, summary }: StepProps & { summar
       {healthOptions.map((option) => <CheckRow key={option.id} title={option.title} description={option.description}
         checked={draft.healthFlags.includes(option.id)}
         onToggle={() => { set('healthFlags', toggle(draft.healthFlags, option.id)); set('noHealthFlags', false); }} />)}
+      {draft.healthFlags.includes('injury') && <View style={styles.zones}>
+        <ChoiceChips<Zone> multiple label="¿En qué zonas?" options={labels.zones} value={draft.zones}
+          onChange={(v) => set('zones', toggle(draft.zones, v))} error={errors.zones} />
+        <AppText variant="caption" tone="muted">Quitaremos de tu rutina los ejercicios contraindicados para esas zonas, sin reemplazarlos. La lista es provisional y no reemplaza una evaluación profesional.</AppText>
+      </View>}
       <CheckRow title="Ninguna aplica" checked={draft.noHealthFlags}
         onToggle={() => { set('noHealthFlags', !draft.noHealthFlags); set('healthFlags', []); }} />
       {!!errors.healthFlags && <AppText accessibilityRole="alert" variant="caption" style={styles.error}>{errors.healthFlags}</AppText>}
@@ -147,6 +160,7 @@ const styles = StyleSheet.create({
   row: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.md },
   cell: { flex: 1, minWidth: 130 },
   group: { gap: spacing.md },
+  zones: { gap: spacing.sm, padding: spacing.md, borderRadius: radius.md, backgroundColor: colors.surfaceLow },
   note: { flexDirection: 'row', alignItems: 'flex-start', gap: spacing.sm, padding: spacing.md, borderRadius: radius.md, backgroundColor: colors.surfaceLow },
   warning: { backgroundColor: colors.sand },
   noteText: { flex: 1 },

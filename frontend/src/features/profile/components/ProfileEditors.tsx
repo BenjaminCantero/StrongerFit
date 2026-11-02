@@ -6,6 +6,8 @@ import { colors, spacing } from '../../../theme';
 import { limits, nutritionForm, parseNutritionForm, parsePersonalForm, personalForm, type FormErrors, type NutritionField,
   type PersonalField, type PersonalValues, type ProfileData } from '../domain/profile';
 import { FormField } from '../../../components/ui/FormField';
+import { ChoiceChips } from '../../../components/ui/ChoiceChips';
+import { labels, optionalEquipment, toggle, type Environment, type Equipment, type Zone } from '../../onboarding/domain/onboarding';
 
 const personalLabels: Record<PersonalField, string> = {
   name: 'nombre', age: 'edad', height: 'altura', weight: 'peso', goal: 'objetivo', days: 'días por semana',
@@ -40,7 +42,6 @@ export function PersonalEditor({ profile, onSave, onCancel }: EditorProps<Person
       <View style={styles.cell}><FormField label="Días por semana" {...field('days')} keyboardType="number-pad" maxLength={1} /></View>
       <View style={styles.cell}><FormField label="Por sesión" unit="min" {...field('minutes')} keyboardType="number-pad" maxLength={3} /></View>
     </View>
-    <FormField label="Equipamiento disponible" {...field('equipment')} maxLength={120} multiline placeholder="Ej: mancuernas y banco plano" />
     {Object.values(errors).some(Boolean) && <AppText accessibilityRole="alert" variant="caption" style={styles.error}>
       Revisa: {(Object.keys(errors) as PersonalField[]).filter((key) => errors[key]).map((key) => personalLabels[key]).join(', ')}.
     </AppText>}
@@ -76,3 +77,30 @@ const styles = StyleSheet.create({
   cell: { flex: 1, minWidth: 130 },
   error: { color: colors.error },
 });
+
+type TrainingSetup = { environment: Environment; equipment: Equipment[]; zones: Zone[] };
+
+// RF-30, RF-31: entorno, equipo disponible dentro del entorno y zonas con lesión.
+export function TrainingSetupEditor({ profile, onSave, onCancel }: EditorProps<TrainingSetup>) {
+  const record = profile.onboarding;
+  const [environment, setEnvironment] = useState<Environment>(record?.environment ?? 'none');
+  const [equipment, setEquipment] = useState<Equipment[]>(() => (record?.equipment ?? []).filter((item) => item !== 'bodyweight'));
+  const [zones, setZones] = useState<Zone[]>(record?.zones ?? []);
+  const optional: Equipment[] = optionalEquipment(environment);
+  return <>
+    <ChoiceChips<Environment> label="¿Dónde entrenas?" options={labels.environment} value={environment}
+      onChange={(value) => { setEnvironment(value); setEquipment(optionalEquipment(value)); }} />
+    {optional.length > 0 && <ChoiceChips<Equipment> multiple label="Desmarca lo que no tengas"
+      options={Object.fromEntries(optional.map((item) => [item, labels.equipment[item]])) as Record<Equipment, string>}
+      value={equipment} onChange={(value) => setEquipment((current) => toggle(current, value))} />}
+    <ChoiceChips<Zone> multiple label="Zonas con lesión o molestia" options={labels.zones} value={zones}
+      onChange={(value) => setZones((current) => toggle(current, value))} />
+    <AppText variant="caption" tone="muted">
+      Los ejercicios contraindicados para esas zonas se quitan de la rutina sin reemplazo. La lista es provisional y no reemplaza una evaluación profesional.
+      Los cambios se aplican al regenerar la rutina; tu historial no cambia.
+    </AppText>
+    <AppButton label="Guardar cambios" icon="checkmark-outline"
+      onPress={() => onSave({ environment, equipment: ['bodyweight', ...equipment.filter((item) => optional.includes(item))], zones })} />
+    <AppButton label="Cancelar" variant="secondary" onPress={onCancel} />
+  </>;
+}
