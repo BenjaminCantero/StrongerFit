@@ -1,7 +1,7 @@
 import { AppPressable } from '../../../components/ui/AppPressable';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRef, type ComponentProps } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View, type ScrollViewInstance } from 'react-native';
 import { AppText } from '../../../components/ui/AppText';
 import { colors, layout, radius, spacing } from '../../../theme';
 import type { MealId } from '../domain/food-entry';
@@ -13,7 +13,7 @@ const meals: { id: MealId; icon: ComponentProps<typeof Ionicons>['name'] }[] = [
 ];
 
 export function MealSelector({ selected, onSelect }: { selected: MealId; onSelect: (meal: MealId) => void }) {
-  const scroll = useRef<ScrollView>(null);
+  const scroll = useRef<ScrollViewInstance>(null);
   const positions = useRef<Partial<Record<MealId, { x: number; width: number }>>>({});
   const viewport = useRef(0);
   const offset = useRef(0);

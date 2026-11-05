@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View, type ScrollViewInstance } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AppButton } from '../../components/ui/AppButton';
 import { AppText } from '../../components/ui/AppText';
@@ -23,7 +23,7 @@ export function OnboardingScreen({ today, dispatch, onDone, onExit }: Props) {
   const [draft, setDraft] = useState<Draft>(createDraft);
   const [index, setIndex] = useState(0);
   const [errors, setErrors] = useState<Partial<Record<DraftField, string>>>({});
-  const scroll = useRef<ScrollView>(null);
+  const scroll = useRef<ScrollViewInstance>(null);
   const step = steps[index]!;
   const last = index === steps.length - 1;
 

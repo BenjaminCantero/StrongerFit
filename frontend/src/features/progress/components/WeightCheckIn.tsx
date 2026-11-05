@@ -1,6 +1,6 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRef, useState } from 'react';
-import { Keyboard, StyleSheet, TextInput, View } from 'react-native';
+import { Keyboard, StyleSheet, TextInput, View, type TextInputInstance } from 'react-native';
 import { AppButton } from '../../../components/ui/AppButton';
 import { AppPressable } from '../../../components/ui/AppPressable';
 import { AppText } from '../../../components/ui/AppText';
@@ -46,7 +46,7 @@ export function WeightCheckIn({ record, weights, allWeights, goal, today, onSave
   const [value, setValue] = useState('');
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
-  const input = useRef<TextInput>(null);
+  const input = useRef<TextInputInstance>(null);
   const change = weights.length > 1 ? Math.round((weights.at(-1)!.kg - weights[0]!.kg) * 10) / 10 : null;
 
   function close() { setEditing(false); setError(''); Keyboard.dismiss(); }

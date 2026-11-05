@@ -49,7 +49,7 @@ export default function TabLayout() {
             fontSize: 11, lineHeight: 15, textAlign: 'center', alignSelf: 'stretch', marginHorizontal: -5 }}>
             {compact && name === 'nutrition' ? 'Comidas' : compact && name === 'training' ? 'Entreno' : title}
           </AppText>,
-          tabBarIcon: ({ color }) => <Ionicons name={icon} color={color} size={23} />,
+          tabBarIcon: ({ color }) => <Ionicons name={icon} color={color as string} size={23} />,
         }} />
       ))}
     </Tabs>
