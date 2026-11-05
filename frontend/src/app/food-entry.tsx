@@ -2,9 +2,11 @@ import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { Screen } from '../components/Screen';
 import { AppButton } from '../components/ui/AppButton';
 import { AppText } from '../components/ui/AppText';
+import { EntryAdjustScreen } from '../features/nutrition/EntryAdjustScreen';
 import { FoodRegistrationScreen } from '../features/nutrition/FoodRegistrationScreen';
 import { foodsPreview } from '../features/nutrition/data/foods.preview';
 import { isDateKey } from '../features/nutrition/domain/diary';
+import { isExternalEntry } from '../features/nutrition/domain/entry-adjust';
 import { isMealId, type FoodEntry } from '../features/nutrition/domain/food-entry';
 import { useNutritionDiary } from '../features/nutrition/useNutritionDiary';
 
@@ -29,9 +31,16 @@ export default function FoodEntryRoute() {
     exit();
   }
 
+  const foods = __DEV__ && params.preview !== 'empty' ? foodsPreview : [];
+  // Código de barras o foto: no están en el catálogo, se ajustan gramos y comida.
+  if (existing && isExternalEntry(existing, foods)) return <>
+    <Stack.Screen options={{ title: 'Editar registro' }} />
+    <EntryAdjustScreen entry={existing} onExit={exit} onSave={save} />
+  </>;
+
   return <>
     <Stack.Screen options={{ title: existing ? 'Editar registro' : 'Registro de alimento' }} />
-    <FoodRegistrationScreen foods={__DEV__ && params.preview !== 'empty' ? foodsPreview : []}
+    <FoodRegistrationScreen foods={foods}
       initial={{ meal: isMealId(params.meal) ? params.meal : 'lunch', entry: existing }} onExit={exit} onSave={save} />
   </>;
 }

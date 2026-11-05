@@ -20,10 +20,10 @@ type Props = {
   date: string; entries: DiaryEntry[]; targets: Nutrients | null; isPreview: boolean;
   onMoveDate: (direction: number) => void; onToday: () => void;
   onAdd: (meal: MealId) => void; onEdit: (entry: DiaryEntry) => void; onDelete: (meal: MealId) => void;
-  onAdjustGoals: () => void; onMealPlan: () => void; onPhoto: () => void; mealPlanSummary: string | null;
+  onAdjustGoals: () => void; onMealPlan: () => void; onPhoto: () => void; onBarcode: () => void; mealPlanSummary: string | null;
 };
 
-export function NutritionScreen({ date, entries, targets, isPreview, onMoveDate, onToday, onAdd, onEdit, onDelete, onAdjustGoals, onMealPlan, onPhoto, mealPlanSummary }: Props) {
+export function NutritionScreen({ date, entries, targets, isPreview, onMoveDate, onToday, onAdd, onEdit, onDelete, onAdjustGoals, onMealPlan, onPhoto, onBarcode, mealPlanSummary }: Props) {
   const [deleting, setDeleting] = useState<MealId | null>(null);
   const [notice, setNotice] = useState('');
   const consumed = diaryTotals(entries);
@@ -47,15 +47,20 @@ export function NutritionScreen({ date, entries, targets, isPreview, onMoveDate,
         </View>
         <Ionicons name="chevron-forward" size={20} color={colors.muted} />
       </AppPressable>
-      <AppPressable accessibilityRole="button" accessibilityLabel="Registrar comida con una foto" onPress={onPhoto}
-        style={({ pressed }) => [styles.plan, pressed && styles.pressed]}>
-        <View style={styles.planIcon}><Ionicons name="camera-outline" size={22} color={colors.brand} /></View>
-        <View style={styles.planText}>
-          <AppText variant="header">Registrar con foto</AppText>
-          <AppText variant="caption" tone="muted">Fotografía tu plato y estima sus calorías</AppText>
-        </View>
-        <Ionicons name="chevron-forward" size={20} color={colors.muted} />
-      </AppPressable>
+      <View style={styles.quick}>
+        <AppPressable accessibilityRole="button" accessibilityLabel="Escanear código de barras de un producto" onPress={onBarcode}
+          style={({ pressed }) => [styles.tile, pressed && styles.pressed]}>
+          <View style={styles.planIcon}><Ionicons name="barcode-outline" size={22} color={colors.brand} /></View>
+          <AppText variant="header">Código de barras</AppText>
+          <AppText variant="caption" tone="muted">Productos envasados</AppText>
+        </AppPressable>
+        <AppPressable accessibilityRole="button" accessibilityLabel="Registrar comida con una foto" onPress={onPhoto}
+          style={({ pressed }) => [styles.tile, pressed && styles.pressed]}>
+          <View style={styles.planIcon}><Ionicons name="camera-outline" size={22} color={colors.brand} /></View>
+          <AppText variant="header">Foto del plato</AppText>
+          <AppText variant="caption" tone="muted">Estimación de calorías</AppText>
+        </AppPressable>
+      </View>
       <DiaryBalance consumed={consumed} targets={targets} onAdjust={onAdjustGoals} />
       {!!notice && <AppText accessibilityLiveRegion="polite" variant="label" tone="brand">{notice}</AppText>}
       {meals.map((meal) => <DiaryMealCard key={`${date}-${meal}`} meal={meal} entries={entries.filter((entry) => entry.meal === meal)}
@@ -79,6 +84,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row', alignItems: 'center', gap: spacing.md },
   planIcon: { width: 40, height: 40, borderRadius: radius.sm, backgroundColor: colors.brandSoft, alignItems: 'center', justifyContent: 'center' },
   planText: { flex: 1, gap: spacing.xs },
+  quick: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.md },
+  tile: { flexGrow: 1, flexBasis: 140, backgroundColor: colors.surfaceLow, borderRadius: radius.md, padding: spacing.lg, gap: spacing.xs,
+    minHeight: layout.touchTarget },
   pressed: { opacity: 0.8 },
   deleteButton: { backgroundColor: colors.error },
 });

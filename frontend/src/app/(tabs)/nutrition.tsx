@@ -27,5 +27,6 @@ export default function NutritionRoute() {
     onToday={() => diary.dispatch({ type: 'select-date', date: todayDateKey() })}
     onAdjustGoals={() => router.push('/nutrition-goals')} onMealPlan={() => router.push('/meal-plan')}
     onPhoto={() => router.push({ pathname: '/food-photo', params: { date: diary.selectedDate } })}
+    onBarcode={() => router.push({ pathname: '/barcode', params: { date: diary.selectedDate } })}
     mealPlanSummary={todayPlan ? `Guardada · Hoy ${formatKcal(todayPlan.totals.kcal)} kcal en 4 comidas` : null} />;
 }

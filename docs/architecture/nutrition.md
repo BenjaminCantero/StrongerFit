@@ -132,3 +132,29 @@ Pendiente para que funcione de verdad: un endpoint del backend que reciba la ima
 la envíe a un modelo de visión con salida estructurada (nombre, gramos estimados,
 confianza), asocie cada alimento al catálogo para obtener los valores por 100 g y
 devuelva `PhotoAnalysis`. La clave del proveedor vive solo en el backend.
+
+## Código de barras (Open Food Facts)
+
+`/barcode` lee EAN-13, EAN-8, UPC-A y UPC-E con `expo-camera` (incluido en Expo Go) y
+admite escribir el número a mano. `openfoodfacts.ts` consulta
+`world.openfoodfacts.org/api/v2/product/{código}` con los campos mínimos y 10 s de
+espera; en Android/iOS envía el User-Agent que pide Open Food Facts. La pantalla
+consulta con TanStack Query (clave `open-food-facts/product/{código}`, 24 h en caché,
+un reintento). La app llama directo a la API pública de lectura, sin claves; si se
+necesita caché compartida u offline (RF-07/17), se moverá al backend.
+
+`domain/barcode.ts` valida el dígito verificador, interpreta la respuesta (kcal desde
+kJ si falta) y exige nombre y los cuatro valores por 100 g dentro de rangos
+plausibles; si faltan, ofrece el registro manual en lugar de registrar ceros. La
+cantidad inicial es la porción declarada o 100 g. Los datos son ODbL y la pantalla
+muestra la atribución; no se guarda copia de la base.
+
+Verificado en navegador (Chromium sin interfaz) contra la API real: búsqueda manual
+de 3017620422003, cálculo por cantidad y registro en el diario. Falta probar la
+lectura con la cámara de un teléfono y la cobertura de productos chilenos.
+
+## Edición de registros externos
+
+Los registros de código de barras (`off:…`) y foto (`photo:…`) no están en el
+catálogo, así que «Editar» abre `EntryAdjustScreen`: gramos por ítem (±10 g, 1–2000 g)
+y comida; los nutrientes se reescalan desde lo guardado (`domain/entry-adjust.ts`).
