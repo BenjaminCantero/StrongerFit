@@ -16,6 +16,11 @@ const config: ExpoConfig = {
     'expo-secure-store',
     'expo-sqlite',
     'expo-notifications',
+    ['expo-image-picker', {
+      cameraPermission: 'StrongerFit usa la cámara para fotografiar tus comidas y estimar sus calorías.',
+      photosPermission: 'StrongerFit accede a tus fotos para elegir la imagen de una comida o de tu perfil.',
+      microphonePermission: false,
+    }],
     ['expo-build-properties', {
       android: { minSdkVersion: 29, usesCleartextTraffic: process.env.APP_VARIANT === 'development' },
     }],

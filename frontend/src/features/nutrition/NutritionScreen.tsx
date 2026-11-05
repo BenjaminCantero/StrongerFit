@@ -20,10 +20,10 @@ type Props = {
   date: string; entries: DiaryEntry[]; targets: Nutrients | null; isPreview: boolean;
   onMoveDate: (direction: number) => void; onToday: () => void;
   onAdd: (meal: MealId) => void; onEdit: (entry: DiaryEntry) => void; onDelete: (meal: MealId) => void;
-  onAdjustGoals: () => void; onMealPlan: () => void; mealPlanSummary: string | null;
+  onAdjustGoals: () => void; onMealPlan: () => void; onPhoto: () => void; mealPlanSummary: string | null;
 };
 
-export function NutritionScreen({ date, entries, targets, isPreview, onMoveDate, onToday, onAdd, onEdit, onDelete, onAdjustGoals, onMealPlan, mealPlanSummary }: Props) {
+export function NutritionScreen({ date, entries, targets, isPreview, onMoveDate, onToday, onAdd, onEdit, onDelete, onAdjustGoals, onMealPlan, onPhoto, mealPlanSummary }: Props) {
   const [deleting, setDeleting] = useState<MealId | null>(null);
   const [notice, setNotice] = useState('');
   const consumed = diaryTotals(entries);
@@ -44,6 +44,15 @@ export function NutritionScreen({ date, entries, targets, isPreview, onMoveDate,
         <View style={styles.planText}>
           <AppText variant="header">Minuta semanal</AppText>
           <AppText variant="caption" tone="muted">{mealPlanSummary ?? 'Genera una propuesta de comidas para la semana'}</AppText>
+        </View>
+        <Ionicons name="chevron-forward" size={20} color={colors.muted} />
+      </AppPressable>
+      <AppPressable accessibilityRole="button" accessibilityLabel="Registrar comida con una foto" onPress={onPhoto}
+        style={({ pressed }) => [styles.plan, pressed && styles.pressed]}>
+        <View style={styles.planIcon}><Ionicons name="camera-outline" size={22} color={colors.brand} /></View>
+        <View style={styles.planText}>
+          <AppText variant="header">Registrar con foto</AppText>
+          <AppText variant="caption" tone="muted">Fotografía tu plato y estima sus calorías</AppText>
         </View>
         <Ionicons name="chevron-forward" size={20} color={colors.muted} />
       </AppPressable>

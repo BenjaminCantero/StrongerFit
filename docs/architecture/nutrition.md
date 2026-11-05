@@ -112,3 +112,23 @@ alimentos del mismo rol, compatibles, con porción de energía similar y diferen
 kcal y proteína; en la minuta guardada elegir una opción confirma el cambio. Cada
 comida guardada puede registrarse en el diario de hoy. Hay pruebas que exigen al
 menos dos alternativas por casillero con las exclusiones comunes.
+
+## Registro por foto (interfaz)
+
+`/food-photo` permite tomar o elegir una foto, analizarla y revisar el resultado
+antes de registrarlo en el diario. Estados: inicio, foto lista, analizando, error y
+revisión. En revisión se ajustan los gramos (±10 g, entre 5 y 2000 g), se quitan
+alimentos y se elige la comida; los de confianza < 60 % se marcan para revisar.
+
+- `domain/photo-analysis.ts`: reductor puro, totales y conversión a `FoodEntry`.
+  Cada análisis lleva un `requestId`; las respuestas tardías de un análisis
+  cancelado o de una foto anterior se descartan.
+- `photo-analyzer.ts`: contrato `FoodPhotoAnalyzer`. Hoy solo existe la
+  simulación de desarrollo (siempre el mismo plato); producción muestra el estado
+  no disponible.
+- `photo-picker.ts`: cámara (pide permiso) o galería vía `expo-image-picker`.
+
+Pendiente para que funcione de verdad: un endpoint del backend que reciba la imagen,
+la envíe a un modelo de visión con salida estructurada (nombre, gramos estimados,
+confianza), asocie cada alimento al catálogo para obtener los valores por 100 g y
+devuelva `PhotoAnalysis`. La clave del proveedor vive solo en el backend.

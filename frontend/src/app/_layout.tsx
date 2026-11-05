@@ -40,6 +40,9 @@ export default function RootLayout() {
           <Stack.Screen name="food-entry" options={{ headerShown: true, title: 'Registro de alimento',
             header: ({ options }) => <AppHeader title={options.title ?? 'Registro de alimento'}
               backLabel="Volver a Alimentación" onBack={() => router.dismissTo('/nutrition')} /> }} />
+          <Stack.Screen name="food-photo" options={{ headerShown: true, title: 'Foto de comida',
+            header: ({ options }) => <AppHeader title={options.title ?? 'Foto de comida'}
+              backLabel="Volver a Alimentación" onBack={() => router.dismissTo('/nutrition')} /> }} />
           <Stack.Screen name="session" options={{ headerShown: true, title: 'Sesión de entrenamiento',
             header: ({ options }) => <AppHeader title={options.title ?? 'Sesión de entrenamiento'}
               backLabel="Volver" onBack={() => router.canGoBack() ? router.back() : router.navigate('/')} /> }} />
