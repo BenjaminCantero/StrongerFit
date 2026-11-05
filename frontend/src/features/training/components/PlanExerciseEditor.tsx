@@ -19,7 +19,9 @@ export function PlanExerciseEditor({ item, equipment, zones, onSave, onCancel }:
   const field = (name: keyof typeof form) => ({ value: form[name], onChange: (value: string) => { setForm((current) => ({ ...current, [name]: value })); setError(''); } });
 
   function save() {
-    const next = { exerciseId, sets: Number(form.sets), repsMin: Number(form.repsMin), repsMax: Number(form.repsMax), restSeconds: Number(form.rest) };
+    // La nota del programa describe al ejercicio original: se conserva solo si no se cambió.
+    const next = { exerciseId, sets: Number(form.sets), repsMin: Number(form.repsMin), repsMax: Number(form.repsMax), restSeconds: Number(form.rest),
+      ...(exerciseId === item.exerciseId && item.note ? { note: item.note } : {}) };
     const problem = Object.values(form).some((value) => !/^\d+$/.test(value.trim())) ? 'Usa solo números enteros.' : validateExercise(next, equipment, zones);
     if (problem) setError(problem);
     else onSave(next);

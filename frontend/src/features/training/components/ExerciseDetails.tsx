@@ -1,15 +1,17 @@
-import { Image, StyleSheet, View } from 'react-native';
+import { exerciseById } from '@strongerfit/training-engine';
+import { StyleSheet, View } from 'react-native';
 import { AppButton } from '../../../components/ui/AppButton';
 import { AppText } from '../../../components/ui/AppText';
 import { colors, radius, spacing } from '../../../theme';
 import type { SessionExercise } from '../domain/session';
 import { formatWeight } from '../format';
+import { MovementPictogram } from './MovementPictogram';
 
 export function ExerciseDetails({ exercise, onClose }: { exercise: SessionExercise; onClose: () => void }) {
+  const pattern = exercise.exerciseId ? exerciseById(exercise.exerciseId)?.pattern : undefined;
   return (
     <>
-      {exercise.id === 'dumbbell-press' && <Image source={require('../../../../assets/images/preview-exercise.jpg')}
-        accessibilityLabel="Imagen ilustrativa del ejercicio de la referencia de diseño" style={styles.image} />}
+      {pattern && <MovementPictogram pattern={pattern} size={120} style={styles.image} />}
       <View style={styles.section}>
         <AppText variant="strong">Puntos clave de ejecución</AppText>
         {exercise.technique.length ? <>
@@ -32,7 +34,7 @@ export function ExerciseDetails({ exercise, onClose }: { exercise: SessionExerci
 }
 
 const styles = StyleSheet.create({
-  image: { width: '100%', height: 180, borderRadius: radius.md },
+  image: { alignSelf: 'center' },
   section: { gap: spacing.sm },
   history: { padding: spacing.lg, backgroundColor: colors.surfaceLow, borderRadius: radius.md, gap: spacing.md },
   historyRow: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', gap: spacing.sm },

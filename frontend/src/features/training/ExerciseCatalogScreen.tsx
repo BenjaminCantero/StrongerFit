@@ -9,6 +9,7 @@ import { Screen } from '../../components/Screen';
 import { AppPressable } from '../../components/ui/AppPressable';
 import { AppText } from '../../components/ui/AppText';
 import { ChoiceChips } from '../../components/ui/ChoiceChips';
+import { MovementPictogram } from './components/MovementPictogram';
 import { colors, fontFamily, layout, radius, spacing } from '../../theme';
 
 const toggle = <T,>(current: T | null | undefined, value: T) => current === value ? null : value;
@@ -24,7 +25,7 @@ export function ExerciseCatalogScreen({ onOpen }: { onOpen: (exercise: Exercise)
   return <Screen>
     <View style={styles.heading}>
       <AppText variant="title" accessibilityRole="header">Catálogo de ejercicios</AppText>
-      <AppText variant="caption" tone="muted">{catalog.length} ejercicios propios, sin imágenes. Contenido pendiente de revisión profesional.</AppText>
+      <AppText variant="caption" tone="muted">{catalog.length} ejercicios propios con pictogramas del patrón de movimiento. Contenido pendiente de revisión profesional.</AppText>
     </View>
 
     <View style={styles.search}>
@@ -63,6 +64,7 @@ export function ExerciseCatalogScreen({ onOpen }: { onOpen: (exercise: Exercise)
       {results.length ? results.map((exercise) => <AppPressable key={exercise.id} accessibilityRole="button"
         accessibilityLabel={`${exercise.name}, ${exercise.muscleGroup}, ${difficultyLabels[exercise.difficulty]}`} accessibilityHint="Abrir ficha del ejercicio"
         onPress={() => onOpen(exercise)} style={({ pressed }) => [styles.row, pressed && styles.pressed]}>
+        <MovementPictogram pattern={exercise.pattern} />
         <View style={styles.rowText}>
           <AppText variant="strong">{exercise.name}</AppText>
           <AppText variant="caption" tone="muted">

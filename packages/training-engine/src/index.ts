@@ -1,3 +1,4 @@
+import { contraindicated, exerciseById, owns, substitutionCeiling } from './rules';
 import { catalog, CATALOG_VERSION, type Difficulty, type Equipment, type Exercise, type Zone } from './catalog';
 import {
   environmentEquipment, prescriptions, selectTemplate, TEMPLATE_VERSION, weekdays, type Environment, type TemplateLevel,
@@ -6,13 +7,15 @@ import {
 export * from './catalog';
 export * from './loads';
 export * from './templates';
+export * from './programs';
 export const RULE_VERSION = 'entrenamiento-0.2';
 
 export type Level = Difficulty;
 
 export type PlanInput = { days: number; minutes: number; environment: Environment; equipment: Equipment[]; level: Level; zones: Zone[] };
 // tempo: segundos de bajada, pausa y subida (tiempo bajo tensión, SRS 8.9).
-export type PlannedExercise = { exerciseId: string; sets: number; repsMin: number; repsMax: number; restSeconds: number; tempo?: [number, number, number] };
+// note: indicación del programa de origen (p. ej. esquema 5/3/1); se conserva al editar.
+export type PlannedExercise = { exerciseId: string; sets: number; repsMin: number; repsMax: number; restSeconds: number; tempo?: [number, number, number]; note?: string };
 export type PlanDay = { name: string; weekday: number; exercises: PlannedExercise[] };
 // Cambios respecto de la plantilla, con su motivo, para mostrarlos al usuario (SRS 8.12, paso 7).
 export type PlanChange = { day: number; exerciseId: string; action: 'substituted' | 'removed'; reason: 'equipment' | 'injury' | 'time'; replacementId?: string };
@@ -22,22 +25,13 @@ export type Plan = {
   input: PlanInput; days: PlanDay[]; changes: PlanChange[]; warnings: PlanWarning[];
 };
 
-export const exerciseById = (id: string) => catalog.find((exercise) => exercise.id === id);
-
-const owns = (equipment: Equipment[]) => {
-  const owned = new Set<Equipment>([...equipment, 'bodyweight']);
-  return (exercise: Exercise) => exercise.equipment.some((item) => owned.has(item));
-};
-export const contraindicated = (exercise: Exercise, zones: Zone[]) =>
-  exercise.contraindications !== 'none-validated' && exercise.contraindications.some((zone) => zones.includes(zone));
+export { contraindicated, exerciseById, substitutionCeiling } from './rules';
 
 // BR-03: solo ejercicios cuyo equipo está disponible. Peso corporal siempre lo está.
 export function available(equipment: Equipment[]) {
   return catalog.filter(owns(equipment));
 }
 
-// Techo de sustituciones: el máximo entre 1 y el 20 % de los ejercicios, hacia abajo (BR-25).
-export const substitutionCeiling = (count: number) => Math.max(1, Math.floor(count * 0.2));
 
 // Adapta un día de plantilla en el orden de SRS 8.12: equipo, techo, lesiones y revalidación.
 export function adaptDay(exerciseIds: string[], equipment: Equipment[], zones: Zone[]) {

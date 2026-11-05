@@ -101,3 +101,32 @@ serie supera la mejor anterior del ejercicio; la primera vez no cuenta como réc
 la comparación usa el historial previo a la sesión. Progreso incluye «Carga por
 ejercicio»: la serie más pesada de cada sesión del período, mejor serie, cambio y
 número de sesiones. Los ejercicios sin carga se omiten del gráfico.
+
+## Programas clásicos
+
+`packages/training-engine/src/programs.ts` contiene 10 programas (5/3/1 BBB, GZCLP,
+Empuje/Tirón/Pierna, Torso/Pierna, Starting Strength, StrongLifts 5×5, Madcow 5×5,
+PHUL, PHAT y Cuerpo completo) cuya estructura se adaptó de GymCoach (MIT; aviso en
+`THIRD_PARTY_NOTICES.md`). Usan solo ejercicios del catálogo propio; las
+aproximaciones (polea → máquina, dominadas → jalón, cargada → remo) se indican en
+`note`. nSuns se omite porque usa 8–9 series, fuera de `validateExercise`.
+
+`planFromProgram` aplica el programa al equipo y las lesiones del perfil: sustituye
+como máximo 1 de cada 5 ejercicios por día y, si hace falta más, declara el programa
+incompatible y lista lo que falta. Los contraindicados se quitan sin reemplazo.
+`/programs` lista los programas con filtros y separa los que no calzan con el equipo;
+`/programs/[id]` muestra días, ejercicios, ajustes y el botón para usarlo (con
+confirmación si ya hay plan). Las reglas de equipo, lesiones y techo de sustituciones
+viven en `rules.ts` y las usan tanto el generador como los programas.
+
+## Pictogramas
+
+`components/MovementPictogram.tsx` dibuja con `react-native-svg` una figura propia por
+patrón de movimiento (sentadilla, bisagra, zancada, empujes, tirones, core, brazos,
+pantorrillas). Se usan en el plan, la sesión, el catálogo, la ficha y los programas.
+No son fotos ni guía de técnica; el catálogo sigue sin imágenes de terceros.
+
+Pendiente: las reglas propias de cada programa (porcentajes de 5/3/1, etapas de
+GZCLP, rampa semanal de Madcow) solo están en las notas; la sugerencia de carga
+sigue usando la doble progresión. En 5/3/1 la serie principal y la BBB comparten
+historial porque se identifican por ejercicio.

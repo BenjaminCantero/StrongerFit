@@ -8,6 +8,8 @@ import { colors, layout, radius, spacing } from '../../../theme';
 import { activeSet, type SessionExercise } from '../domain/session';
 import { formatWeight } from '../format';
 import { SetEditor } from './SetEditor';
+import { exerciseById } from '@strongerfit/training-engine';
+import { MovementPictogram } from './MovementPictogram';
 
 export function ExerciseCard({ exercise, paused, onDetails, onComplete, onAddSet }: {
   exercise: SessionExercise; paused: boolean; onDetails: () => void;
@@ -17,10 +19,12 @@ export function ExerciseCard({ exercise, paused, onDetails, onComplete, onAddSet
   // Ejercicios de borradores antiguos sin medición se tratan como con carga.
   const weighted = (exercise.measure ?? 'weighted-reps') === 'weighted-reps';
   const last = exercise.history[0];
+  const pattern = exercise.exerciseId ? exerciseById(exercise.exerciseId)?.pattern : undefined;
 
   return (
     <Card tone="low" style={styles.card}>
       <View style={styles.top}>
+        {pattern && <MovementPictogram pattern={pattern} size={56} />}
         <View style={styles.heading}>
           <View style={styles.muscle}>
             <Ionicons name="barbell-outline" size={14} color={colors.muted} />

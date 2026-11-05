@@ -1,5 +1,5 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { environmentLabels, exerciseById, weekdayLabels, zoneLabels, type Plan, type PlanChange } from '@strongerfit/training-engine';
+import { environmentLabels, exerciseById, programById, weekdayLabels, zoneLabels, type Plan, type PlanChange } from '@strongerfit/training-engine';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Screen } from '../../components/Screen';
@@ -11,6 +11,7 @@ import { Card } from '../../components/ui/Card';
 import { colors, layout, radius, spacing } from '../../theme';
 import { labels } from '../onboarding/domain/onboarding';
 import type { ProfileAction, ProfileData } from '../profile/domain/profile';
+import { MovementPictogram } from './components/MovementPictogram';
 import { PlanExerciseEditor } from './components/PlanExerciseEditor';
 import type { SessionDraft } from './domain/draft';
 import { createPlan, estimatedMinutes } from './domain/plan';
@@ -38,10 +39,10 @@ function warningText(plan: Plan, warning: Plan['warnings'][number]) {
 
 type Props = {
   profile: ProfileData; dispatch: (action: ProfileAction) => void; onStart: (day: number) => void;
-  draft: SessionDraft | null; onResume: () => void; onDiscard: () => void; onCatalog: () => void;
+  draft: SessionDraft | null; onResume: () => void; onDiscard: () => void; onCatalog: () => void; onPrograms: () => void;
 };
 
-export function PlanScreen({ profile, dispatch, onStart, draft, onResume, onDiscard, onCatalog }: Props) {
+export function PlanScreen({ profile, dispatch, onStart, draft, onResume, onDiscard, onCatalog, onPrograms }: Props) {
   const plan = profile.trainingPlan;
   const [selected, setSelected] = useState(0);
   const [editing, setEditing] = useState<number | null>(null);
@@ -59,6 +60,7 @@ export function PlanScreen({ profile, dispatch, onStart, draft, onResume, onDisc
       <AppText variant="heading" accessibilityRole="header">Prepara tu rutina semanal</AppText>
       <AppText tone="muted">Usaremos tus días, minutos, equipamiento y perfil de deportista. Podrás editar cada ejercicio antes de entrenar.</AppText>
       <AppButton label="Generar mi rutina" icon="sparkles-outline" onPress={generate} />
+      <AppButton label="Elegir un programa clásico" icon="barbell-outline" variant="secondary" onPress={onPrograms} />
     </Card>
     <AppButton label="Ver catálogo de ejercicios" icon="library-outline" variant="secondary" onPress={onCatalog} />
   </Screen>;
@@ -66,13 +68,30 @@ export function PlanScreen({ profile, dispatch, onStart, draft, onResume, onDisc
   const day = plan.days[Math.min(selected, plan.days.length - 1)]!;
   const pending = draft && sessionSummary(draft.state);
   const dayChanges = plan.changes.filter((change) => change.day === Math.min(selected, plan.days.length - 1));
+  const program = programById(plan.templateId);
   return <Screen>
     <View style={styles.heading}>
-      <AppText variant="title" accessibilityRole="header">Tu plan semanal</AppText>
+      <AppText variant="title" accessibilityRole="header">{program ? program.name : 'Tu plan semanal'}</AppText>
       <AppText variant="caption" tone="muted">
-        {plan.days.length} días · {environmentLabels[plan.environment]} · {labels.level[plan.input.level]}
+        {program
+          ? `Programa clásico · ${program.perWeek} días por semana${program.perWeek > plan.days.length ? `, alternando ${plan.days.length} sesiones` : ''}`
+          : `${plan.days.length} días · ${environmentLabels[plan.environment]} · ${labels.level[plan.input.level]}`}
       </AppText>
     </View>
+
+    <AppPressable accessibilityRole="button" accessibilityLabel="Ver programas clásicos" accessibilityHint="5/3/1, GZCLP, Starting Strength y otros"
+      onPress={onPrograms} style={({ pressed }) => [styles.programs, pressed && styles.pressed]}>
+      <View style={styles.programsIcons}>
+        <MovementPictogram pattern="squat" size={36} tone="inverse" />
+        <MovementPictogram pattern="push-h" size={36} tone="inverse" />
+        <MovementPictogram pattern="hinge" size={36} tone="inverse" />
+      </View>
+      <View style={styles.dayTitle}>
+        <AppText variant="header" tone="white">{program ? 'Cambiar de programa' : 'Programas clásicos'}</AppText>
+        <AppText variant="caption" tone="white">5/3/1, GZCLP, Starting Strength y 7 más</AppText>
+      </View>
+      <Ionicons name="chevron-forward" size={20} color={colors.white} />
+    </AppPressable>
 
     {draft && pending && <Card style={styles.resume}>
       <View style={styles.resumeTop}>
@@ -110,18 +129,20 @@ export function PlanScreen({ profile, dispatch, onStart, draft, onResume, onDisc
         const exercise = exerciseById(item.exerciseId)!;
         return <AppPressable key={`${item.exerciseId}-${index}`} accessibilityRole="button" accessibilityHint="Editar ejercicio, series, repeticiones y descanso"
           onPress={() => setEditing(index)} style={({ pressed }) => [styles.exercise, pressed && styles.pressed]}>
+          <MovementPictogram pattern={exercise.pattern} />
           <View style={styles.exerciseText}>
             <AppText variant="caption" tone="muted">{exercise.muscleGroup}</AppText>
             <AppText variant="strong">{exercise.name}</AppText>
             <AppText variant="caption" tone="muted">
               {item.sets} series · {exercise.kind === 'isometric' ? `${item.repsMin}–${item.repsMax} s` : `${item.repsMin}–${item.repsMax} reps`} · {item.restSeconds} s de descanso
             </AppText>
+            {item.note && <AppText variant="caption" tone="brand">{item.note}</AppText>}
           </View>
           <Ionicons name="create-outline" size={20} color={colors.muted} />
         </AppPressable>;
       })}
       {dayChanges.length > 0 && <View style={styles.changes}>
-        <AppText variant="label">Cambios respecto de la plantilla</AppText>
+        <AppText variant="label">{program ? 'Ajustes a tu equipo y lesiones' : 'Cambios respecto de la plantilla'}</AppText>
         {dayChanges.map((change) => <AppText key={`${change.exerciseId}-${change.action}-${change.reason}`} variant="caption" tone="muted">• {changeText(change)}</AppText>)}
       </View>}
       <AppButton label="Iniciar entrenamiento" icon="play-outline" disabled={!day.exercises.length} onPress={() => onStart(selected)} />
@@ -129,12 +150,15 @@ export function PlanScreen({ profile, dispatch, onStart, draft, onResume, onDisc
 
     {!!notice && <AppText accessibilityLiveRegion="polite" variant="caption" tone="brand">{notice}</AppText>}
     <AppButton label="Ver catálogo de ejercicios" icon="library-outline" variant="secondary" onPress={onCatalog} />
-    <AppButton label="Regenerar rutina" icon="refresh-outline" variant="secondary" onPress={() => setConfirmRegenerate(true)} />
-    <AppText variant="caption" tone="muted">
+    <AppButton label={program ? 'Volver a una rutina generada' : 'Regenerar rutina'} icon="refresh-outline" variant="secondary" onPress={() => setConfirmRegenerate(true)} />
+    {program ? <AppText variant="caption" tone="muted">
+      {program.name} ({plan.templateVersion}), transcripción no oficial adaptada a tu equipo y {plan.input.zones.length ? `a tus zonas con lesión: ${plan.input.zones.map((zone) => zoneLabels[zone].toLowerCase()).join(', ')}` : 'sin zonas con lesión declaradas'}.
+      Series, repeticiones y descansos son de referencia y requieren revisión profesional.
+    </AppText> : <AppText variant="caption" tone="muted">
       Plantilla {plan.templateId} ({plan.templateVersion}) · reglas {plan.ruleVersion} · {plan.catalogVersion}. Usamos tu entorno, nivel, {plan.input.days} días,
       {' '}{plan.input.minutes} min por sesión y {plan.input.zones.length ? `zonas con lesión: ${plan.input.zones.map((zone) => zoneLabels[zone].toLowerCase()).join(', ')}` : 'ninguna zona con lesión'}.
       Series, repeticiones y descansos son de referencia y requieren revisión profesional.
-    </AppText>
+    </AppText>}
 
     <AppDialog title="Editar ejercicio" visible={editing !== null} onClose={() => setEditing(null)}>
       {editing !== null && day.exercises[editing] && <PlanExerciseEditor item={day.exercises[editing]} equipment={plan.input.equipment} zones={plan.input.zones}
@@ -172,5 +196,8 @@ const styles = StyleSheet.create({
   exercise: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, padding: spacing.md, borderRadius: radius.md, backgroundColor: colors.surfaceLow,
     minHeight: layout.touchTarget },
   exerciseText: { flex: 1, gap: 2 },
+  programs: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, padding: spacing.md, borderRadius: radius.md, backgroundColor: colors.brand,
+    minHeight: layout.touchTarget },
+  programsIcons: { flexDirection: 'row', gap: 4 },
   changes: { gap: spacing.xs, padding: spacing.md, borderRadius: radius.md, backgroundColor: colors.surfaceLow },
 });

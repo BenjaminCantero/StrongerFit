@@ -10,6 +10,7 @@ import { AppPressable } from '../../components/ui/AppPressable';
 import { AppText } from '../../components/ui/AppText';
 import { Card } from '../../components/ui/Card';
 import { colors, layout, radius, spacing } from '../../theme';
+import { MovementPictogram } from './components/MovementPictogram';
 
 function Fact({ label, value }: { label: string; value: string }) {
   return <View style={styles.fact}>
@@ -37,6 +38,7 @@ export function ExerciseDetailScreen({ exercise, onOpen, targets, blocked, onRep
   const zones = exercise.contraindications;
   const similar = exercise.substitutes.slice(0, 4).map((id) => catalog.find((item) => item.id === id)!);
   return <Screen>
+    <MovementPictogram pattern={exercise.pattern} size={132} style={styles.hero} />
     <View style={styles.heading}>
       <AppText variant="caption" tone="brand">{exercise.muscleGroup}</AppText>
       <AppText variant="title" accessibilityRole="header">{exercise.name}</AppText>
@@ -82,6 +84,7 @@ export function ExerciseDetailScreen({ exercise, onOpen, targets, blocked, onRep
       <AppText variant="header" accessibilityRole="header">Ejercicios del mismo patrón</AppText>
       {similar.map((item) => <AppPressable key={item.id} accessibilityRole="button" accessibilityHint="Abrir ficha del ejercicio"
         onPress={() => onOpen(item)} style={({ pressed }) => [styles.row, pressed && styles.pressed]}>
+        <MovementPictogram pattern={item.pattern} size={40} />
         <View style={styles.rowText}>
           <AppText variant="strong">{item.name}</AppText>
           <AppText variant="caption" tone="muted">{item.equipment.map((equipment) => equipmentLabels[equipment]).join(' o ')} · {difficultyLabels[item.difficulty]}</AppText>
@@ -98,6 +101,7 @@ export function ExerciseDetailScreen({ exercise, onOpen, targets, blocked, onRep
 
 const styles = StyleSheet.create({
   heading: { gap: spacing.xs },
+  hero: { alignSelf: 'flex-start' },
   facts: { flexDirection: 'row', flexWrap: 'wrap', rowGap: spacing.md },
   fact: { flexBasis: '50%', flexGrow: 1, gap: 2, paddingRight: spacing.sm },
   note: { flexDirection: 'row', alignItems: 'flex-start', gap: spacing.sm, padding: spacing.md, borderRadius: radius.md, backgroundColor: colors.sand },

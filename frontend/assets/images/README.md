@@ -4,10 +4,6 @@
 usuario. Se almacena localmente para que la vista previa no dependa de ese enlace
 externo. Solo se muestra en desarrollo y no representa una cuenta autenticada.
 
-`preview-exercise.jpg` proviene del HTML de sesión de entrenamiento aportado por el
-usuario y se usa como ilustración del prototipo. No constituye un catálogo de
-ejercicios revisado o una certificación de técnica.
-
 `preview-chicken.jpg`, `preview-avocado.jpg` y `preview-bread.jpg` son las imágenes
 del HTML de registro de alimento aportado por el usuario. Ilustran el catálogo de
 ejemplo y no implican verificación de nutrientes, procedencia o alérgenos.
