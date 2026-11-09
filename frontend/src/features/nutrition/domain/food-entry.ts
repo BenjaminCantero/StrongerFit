@@ -109,7 +109,7 @@ export function canConfirm(state: FoodEntryState): boolean {
   return state.lastEntry === null && state.draft.grams !== null && Number.isFinite(state.draft.grams) && state.draft.grams > 0;
 }
 
-export function searchFoods(foods: readonly Food[], query: string): Food[] {
+export function searchFoods<T extends Pick<Food, 'name'>>(foods: readonly T[], query: string): T[] {
   const normalize = (value: string) => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
   const words = normalize(query).trim().split(/\s+/).filter(Boolean);
   return foods.filter((food) => words.every((word) => normalize(food.name).includes(word)));

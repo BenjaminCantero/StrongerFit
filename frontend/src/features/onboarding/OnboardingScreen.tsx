@@ -51,6 +51,7 @@ export function OnboardingScreen({ today, dispatch, onDone, onExit }: Props) {
     { label: 'Entorno', value: draft.environment ? labels.environment[draft.environment] : '—' },
     { label: 'Objetivo de peso', value: pace ? `${draft.weight} → ${draft.targetWeight} kg en ${pace.weeks} semanas` : 'Sin definir' },
     { label: 'Exclusiones', value: draft.exclusions.trim() || 'Ninguna' },
+    { label: 'Comidas al día', value: String(draft.preferences.mealsPerDay) },
   ];
   const props = { draft, errors, set };
   const errorCount = Object.values(errors).filter(Boolean).length;

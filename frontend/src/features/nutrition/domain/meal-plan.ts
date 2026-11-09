@@ -1,4 +1,7 @@
-import { catalogSlot, dayTargets, generateMealPlan, type FoodRole, type FoodTag, type PlannedMeal } from '@strongerfit/nutrition-engine';
+import { catalogSlot, dayTargets, foodCatalog, generateMealPlan, isAllowed, resolveRestrictions, type CatalogFood, type FoodRole, type FoodTag,
+  type PlanNotice, type PlannedMeal, type PlanSlot } from '@strongerfit/nutrition-engine';
+import { formatKcal, formatMacro, planMealLabels } from '../presentation';
+import { searchFoods } from './food-entry';
 import type { OpenMealPlan, ProfileData } from '../../profile/domain/profile';
 import type { FoodEntry, Nutrients } from './food-entry';
 
@@ -48,3 +51,36 @@ export function mealEntry(meal: Pick<PlannedMeal, 'meal' | 'items' | 'nutrients'
 
 // Si el perfil declaró riesgo, la meta ya no tiene déficit (BR-19); se informa la derivación.
 export const hasHealthRisk = (profile: ProfileData) => !!profile.onboarding?.healthFlags.length;
+
+// Buscador de preferencias: solo alimentos verificados, que son los que la minuta usa. Los que
+// bloquean las exclusiones actuales se marcan: una exclusión siempre gana a una preferencia.
+export type PreferenceOption = { food: CatalogFood; excluded: boolean };
+export const PREFERENCE_RESULTS = 8;
+
+export function preferenceOptions(query: string, exclusions: string[], dietFocus: string, foods = foodCatalog): PreferenceOption[] {
+  if (!query.trim()) return [];
+  const restrictions = resolveRestrictions(exclusions, dietFocus, foods);
+  return searchFoods(foods.filter((food) => food.verified), query).slice(0, PREFERENCE_RESULTS)
+    .map((food) => ({ food, excluded: !isAllowed(food, restrictions) }));
+}
+
+// Textos de los avisos de la minuta (planNotices del motor).
+const mealsText = (meals: { day: number; meal: PlanSlot }[]) => {
+  const named = meals.slice(0, 3).map(({ day, meal }) => `${planMealLabels[meal].toLowerCase()} del ${weekDays[day]!.toLowerCase()}`);
+  return meals.length > 3 ? `${named.join(', ')} y ${meals.length - 3} más` : named.join(', ').replace(/, ([^,]*)$/, ' y $1');
+};
+
+export function noticeText(notice: PlanNotice): string {
+  switch (notice.kind) {
+    case 'protein-short':
+      return `Faltan ${formatKcal(notice.missing)} g de proteína para la meta de este día. Con tus restricciones no encontramos porciones razonables que la cubran; puedes cambiar un alimento por otro más proteico.`;
+    case 'disliked-used':
+      return `Usamos ${notice.name}, que marcaste como «no me gusta», en ${mealsText(notice.meals)}: tus exclusiones no dejan otra opción compatible para ese casillero.`;
+    case 'preferred-excluded':
+      return `${notice.name} está en tus preferidos, pero tus exclusiones lo bloquean. No lo incluimos.`;
+    case 'day-gap-reduced':
+      return notice.gap === 0
+        ? 'No pudimos dar más energía a los días de entrenamiento sin que los de descanso bajaran de tu piso de energía o del déficit máximo. Todos los días tienen la misma meta.'
+        : `La diferencia entre días de entrenamiento y descanso quedó en ${formatMacro(notice.gap * 100)} % (en vez de ${Math.round(notice.requestedGap * 100)} %) para que ningún día de descanso baje de tu piso de energía ni del déficit máximo.`;
+  }
+}

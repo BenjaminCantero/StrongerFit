@@ -121,7 +121,8 @@ export function ProfileScreen({ profile, dispatch, isPreview, onPickPhoto, onExp
           <AppButton label="Editar entorno y lesiones" icon="create-outline" variant="secondary" onPress={() => { setNotice(''); setDialog('training'); }} />
         </View>
       </View>}
-      <NutritionCard exclusions={profile.exclusions} dietFocus={profile.dietFocus} target={profile.nutritionPlan?.result ?? null} onGoals={onGoals} onAdjust={() => { setNotice(''); setDialog('nutrition'); }} />
+      <NutritionCard exclusions={profile.exclusions} dietFocus={profile.dietFocus} preferences={profile.mealPreferences}
+        trainingDayTargets={profile.trainingDayTargets} target={profile.nutritionPlan?.result ?? null} onGoals={onGoals} onAdjust={() => { setNotice(''); setDialog('nutrition'); }} />
       <PrivacyCard exporting={exporting} consentDate={formatDay(profile.onboarding?.consent.acceptedAt)}
         healthDate={formatDay(profile.onboarding?.completedAt)} healthRisk={!!profile.onboarding?.healthFlags.length} onExport={exportData} onDelete={() => { setNotice(''); setDialog('delete'); }} />
       <AppInfoCard />

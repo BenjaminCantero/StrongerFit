@@ -1,5 +1,6 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { applySwap, readMealPlan, swapOptions, withinTolerance, type PlanItem, type PlanSlot } from '@strongerfit/nutrition-engine';
+import { applySwap, planNotices, proteinWithinTolerance, readMealPlan, swapOptions, withinTolerance, type PlanItem,
+  type PlanSlot } from '@strongerfit/nutrition-engine';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Screen } from '../../components/Screen';
@@ -12,7 +13,7 @@ import { colors, layout, radius, spacing } from '../../theme';
 import type { OpenMealPlan, ProfileData, SavedMealPlan } from '../profile/domain/profile';
 import { PlannedMealCard } from './components/PlannedMealCard';
 import type { Nutrients } from './domain/food-entry';
-import { hasHealthRisk, proposeMealPlan, roleLabels, tagLabels, weekDays } from './domain/meal-plan';
+import { hasHealthRisk, noticeText, proposeMealPlan, roleLabels, tagLabels, weekDays } from './domain/meal-plan';
 import { formatKcal, planMealLabels } from './presentation';
 
 type Props = {
@@ -23,6 +24,13 @@ type Props = {
 type Blocked = { meal: PlanSlot; role: keyof typeof roleLabels }[];
 
 const signed = (value: number, unit: string) => `${value > 0 ? '+' : value < 0 ? '−' : '±'}${formatKcal(Math.abs(value))} ${unit}`;
+
+function Deviation({ label, value, ok }: { label: string; value: number; ok: boolean }) {
+  return <View style={[styles.badge, !ok && styles.badgeOut]} accessibilityLabel={`${label}: ${signed(Math.round(value * 100), 'por ciento')} de la meta del día`}>
+    <Ionicons name={ok ? 'checkmark-circle-outline' : 'alert-circle-outline'} size={14} color={ok ? colors.brandText : colors.gold} />
+    <AppText variant="label">{label} {signed(Math.round(value * 100), '%')}</AppText>
+  </View>;
+}
 
 export function MealPlanScreen({ profile, targets, todayIndex, onSave, onRegister, onGoals, onProfile }: Props) {
   const [proposal, setProposal] = useState<OpenMealPlan | null>(null);
@@ -57,6 +65,9 @@ export function MealPlanScreen({ profile, targets, todayIndex, onSave, onRegiste
 
   const restrictions = plan?.restrictions;
   const current = plan?.days[day];
+  const notices = plan ? planNotices(plan) : [];
+  const general = notices.filter((item) => item.kind !== 'protein-short');
+  const dayNotice = notices.find((item) => item.kind === 'protein-short' && item.day === day);
   const swap = plan && swapping ? swapOptions(plan, day, swapping.meal, swapping.index) : [];
   const swapped = current && swapping ? current.meals.find((meal) => meal.meal === swapping.meal)?.items[swapping.index] : undefined;
 
@@ -65,7 +76,8 @@ export function MealPlanScreen({ profile, targets, todayIndex, onSave, onRegiste
       <View style={styles.headerTop}>
         <View style={styles.headerText}>
           <AppText variant="heading" accessibilityRole="header">Minuta semanal</AppText>
-          <AppText variant="caption" tone="muted">Meta: {formatKcal(targets.kcal)} kcal · {formatKcal(targets.protein)} g proteína · tolerancia ±10 %</AppText>
+          <AppText variant="caption" tone="muted">Meta{plan?.dayTypes ? ' promedio' : ''}: {formatKcal(targets.kcal)} kcal · {formatKcal(targets.protein)} g proteína · tolerancia ±10 %</AppText>
+          {plan && <AppText variant="caption" tone="muted">{plan.days[0]!.meals.length} comidas al día{plan.dayTypes ? ' · más energía los días que entrenas' : ''}</AppText>}
         </View>
         <Ionicons name="calendar-outline" size={26} color={colors.brand} />
       </View>
@@ -77,7 +89,11 @@ export function MealPlanScreen({ profile, targets, todayIndex, onSave, onRegiste
         No reconocimos «{restrictions.unmatched.join('», «')}» en el catálogo. Revisa la minuta antes de seguirla.
       </AppText>}
       {hasHealthRisk(profile) && <AppText variant="caption" tone="muted">Según tu cuestionario, la meta no aplica déficit. Para un plan alimentario, consulta a un profesional de nutrición.</AppText>}
-      {!plan && !blocked && <AppText tone="muted">Combinamos alimentos y porciones del catálogo según tu meta, tus exclusiones y tu enfoque alimentario. Podrás cambiar cada alimento.</AppText>}
+      {!plan && !blocked && <AppText tone="muted">Combinamos alimentos y porciones del catálogo según tu meta de energía y proteína, tus exclusiones, tu enfoque alimentario y tus preferencias. Podrás cambiar cada alimento.</AppText>}
+      {general.map((item, index) => <View key={`${item.kind}-${index}`} style={styles.notice}>
+        <Ionicons name="information-circle-outline" size={18} color={colors.gold} />
+        <AppText variant="caption" style={styles.noticeText}>{noticeText(item)}</AppText>
+      </View>)}
       {proposal ? <View style={styles.actions}>
         <AppText variant="label" tone="brand">Propuesta sin guardar</AppText>
         <AppButton label="Guardar minuta" icon="checkmark-outline" onPress={() => { onSave(proposal); setProposal(null); setNotice('Minuta guardada.'); }} />
@@ -95,21 +111,26 @@ export function MealPlanScreen({ profile, targets, todayIndex, onSave, onRegiste
 
     {plan && current && <>
       <View role="tablist" style={styles.days}>
-        {weekDays.map((name, index) => <AppPressable key={name} role="tab" accessibilityLabel={`${name}${index === todayIndex ? ', hoy' : ''}`}
+        {weekDays.map((name, index) => <AppPressable key={name} role="tab" accessibilityLabel={`${name}${plan.days[index]?.type === 'training' ? ', entrenamiento' : ''}${index === todayIndex ? ', hoy' : ''}`}
           accessibilityState={{ selected: index === day }} aria-selected={index === day} onPress={() => setDay(index)}
           style={({ pressed }) => [styles.day, index === day && styles.daySelected, pressed && styles.pressed]}>
           <AppText variant="label" tone={index === day ? 'white' : 'muted'}>{name.slice(0, 2)}</AppText>
+          {plan.days[index]?.type === 'training' && <Ionicons name="barbell-outline" size={12} color={index === day ? colors.white : colors.brandText} />}
           {index === todayIndex && <View style={[styles.todayDot, index === day && styles.todayDotSelected]} />}
         </AppPressable>)}
       </View>
 
       <View style={styles.summary}>
         <View style={styles.summaryTop}>
-          <AppText variant="header">{weekDays[day]}</AppText>
-          <View style={[styles.badge, !withinTolerance(plan, current) && styles.badgeOut]}>
-            <Ionicons name={withinTolerance(plan, current) ? 'checkmark-circle-outline' : 'alert-circle-outline'} size={14}
-              color={withinTolerance(plan, current) ? colors.brandText : colors.gold} />
-            <AppText variant="label">{signed(Math.round(current.deviation * 100), '%')} de la meta</AppText>
+          <View style={styles.dayTitle}>
+            <AppText variant="header">{weekDays[day]}</AppText>
+            {current.type && <AppText variant="caption" tone="muted">
+              {current.type === 'training' ? 'Día de entrenamiento' : 'Día de descanso'} · meta {formatKcal(current.targets.kcal)} kcal
+            </AppText>}
+          </View>
+          <View style={styles.badges}>
+            <Deviation label="Energía" value={current.deviation} ok={withinTolerance(plan, current)} />
+            <Deviation label="Proteína" value={current.proteinDeviation} ok={proteinWithinTolerance(plan, current)} />
           </View>
         </View>
         <View style={styles.macros}>
@@ -117,9 +138,13 @@ export function MealPlanScreen({ profile, targets, todayIndex, onSave, onRegiste
             <View key={key} style={styles.macro}>
               <AppText variant="caption" tone="muted">{label}</AppText>
               <AppText variant="strong">{formatKcal(current.totals[key])}</AppText>
-              <AppText variant="caption" tone="muted">/ {formatKcal(plan.targets[key])} {unit}</AppText>
+              <AppText variant="caption" tone="muted">/ {formatKcal(current.targets[key])} {unit}</AppText>
             </View>)}
         </View>
+        {dayNotice && <View accessibilityRole="alert" style={styles.notice}>
+          <Ionicons name="alert-circle-outline" size={18} color={colors.gold} />
+          <AppText variant="caption" style={styles.noticeText}>{noticeText(dayNotice)}</AppText>
+        </View>}
       </View>
 
       {current.meals.map((meal) => <PlannedMealCard key={meal.meal} meal={meal} onSwap={(index) => setSwapping({ meal: meal.meal, index })}
@@ -128,13 +153,14 @@ export function MealPlanScreen({ profile, targets, todayIndex, onSave, onRegiste
     </>}
 
     <AppDialog title={swapped ? `Cambiar ${swapped.name}` : 'Cambiar alimento'} visible={!!swapping} onClose={() => setSwapping(null)}>
-      {swapped && <AppText variant="caption" tone="muted">Actual: {swapped.grams} g · {formatKcal(swapped.nutrients.kcal)} kcal. Opciones con energía similar que respetan tus restricciones.</AppText>}
-      {swap.length ? swap.map(({ item, diff }) => <AppPressable key={item.foodId} accessibilityRole="button" onPress={() => choose(item)}
-        accessibilityLabel={`${item.name}, ${item.grams} gramos, ${signed(diff.kcal, 'kilocalorías')}, ${signed(diff.protein, 'gramos de proteína')}`}
+      {swapped && <AppText variant="caption" tone="muted">Actual: {swapped.grams} g · {formatKcal(swapped.nutrients.kcal)} kcal · {formatKcal(swapped.nutrients.protein)} g prot. {swapped.role === 'protein' || swapped.role === 'dairy' ? 'Opciones con proteína similar' : 'Opciones con energía similar'} que respetan tus restricciones y preferencias.</AppText>}
+      {swap.length ? swap.map(({ item, diff, preferred, disliked }) => <AppPressable key={item.foodId} accessibilityRole="button" onPress={() => choose(item)}
+        accessibilityLabel={`${item.name}${preferred ? ', preferido' : ''}${disliked ? ', no te gusta' : ''}, ${item.grams} gramos, ${signed(diff.kcal, 'kilocalorías')}, ${signed(diff.protein, 'gramos de proteína')}`}
         style={({ pressed }) => [styles.option, pressed && styles.pressed]}>
         <View style={styles.optionText}>
           <AppText variant="label">{item.name}</AppText>
-          <AppText variant="caption" tone="muted">{item.grams} g · {formatKcal(item.nutrients.kcal)} kcal</AppText>
+          <AppText variant="caption" tone="muted">{item.grams} g · {formatKcal(item.nutrients.kcal)} kcal · {formatKcal(item.nutrients.protein)} g prot.</AppText>
+          {(preferred || disliked) && <AppText variant="caption" tone={preferred ? 'brand' : 'muted'}>{preferred ? 'Preferido' : 'No te gusta · no hay otra opción'}</AppText>}
         </View>
         <View style={styles.diff}>
           <AppText variant="caption">{signed(diff.kcal, 'kcal')}</AppText>
@@ -161,6 +187,10 @@ const styles = StyleSheet.create({
   todayDotSelected: { backgroundColor: colors.white },
   summary: { gap: spacing.md, padding: spacing.lg, borderRadius: radius.lg, backgroundColor: colors.white },
   summaryTop: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: spacing.sm },
+  dayTitle: { width: '100%', gap: 2 },
+  badges: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.xs },
+  notice: { flexDirection: 'row', alignItems: 'flex-start', gap: spacing.sm, padding: spacing.md, borderRadius: radius.sm, backgroundColor: colors.goldSoft },
+  noticeText: { flex: 1, color: colors.ink },
   badge: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs, paddingHorizontal: spacing.sm, paddingVertical: spacing.xs, borderRadius: radius.pill, backgroundColor: colors.brandSoft },
   badgeOut: { backgroundColor: colors.goldSoft },
   macros: { flexDirection: 'row', gap: spacing.sm },

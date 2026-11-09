@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { createProfilePreview } from '../../profile/data/profile.preview';
 import { profileReducer } from '../../profile/domain/profile';
 import { calculateGoals, defaultSettings, goalPerson } from './goals';
-import { mealEntry, proposeMealPlan, trainingDayOption, weekdayIndex } from './meal-plan';
+import { mealEntry, noticeText, preferenceOptions, proposeMealPlan, trainingDayOption, weekdayIndex } from './meal-plan';
 
 const targets = { kcal: 2100, protein: 130, carbs: 220, fat: 60 };
 
@@ -62,6 +62,24 @@ describe('minuta en la app', () => {
     expect(trainingDayOption({ ...profile, nutritionPlan: null })).toEqual({ available: false, reason: 'no-goals' });
     const withoutPlan = proposeMealPlan({ ...profile, trainingPlan: null, trainingDayTargets: true }, goal, new Date());
     expect(withoutPlan.ok && withoutPlan.plan.dayTypes).toBeNull();
+  });
+
+  it('el buscador de preferencias ofrece solo verificados y marca lo que bloquean las exclusiones', () => {
+    const options = preferenceOptions('pollo', [], '');
+    expect(options.length).toBeGreaterThan(0);
+    expect(options.every((option) => option.food.verified && !option.excluded)).toBe(true);
+    expect(preferenceOptions('pechuga de pollo', [], 'vegetariana').every((option) => option.excluded)).toBe(true);
+    expect(preferenceOptions('marraqueta', [], '')).toEqual([]);
+    expect(preferenceOptions('  ', [], '')).toEqual([]);
+  });
+
+  it('explica cada aviso con lo que falta y por qué', () => {
+    expect(noticeText({ kind: 'protein-short', day: 2, missing: 12.4 })).toMatch(/^Faltan 12 g de proteína/);
+    expect(noticeText({ kind: 'disliked-used', foodId: 'apple', name: 'Manzana', meals: [{ day: 0, meal: 'breakfast' }, { day: 1, meal: 'morning-snack' }] }))
+      .toBe('Usamos Manzana, que marcaste como «no me gusta», en desayuno del lunes y colación de media mañana del martes: tus exclusiones no dejan otra opción compatible para ese casillero.');
+    expect(noticeText({ kind: 'preferred-excluded', foodId: 'eggs', name: 'Huevo' })).toMatch(/tus exclusiones lo bloquean/);
+    expect(noticeText({ kind: 'day-gap-reduced', gap: 0.082, requestedGap: 0.1 })).toMatch(/quedó en 8,2 % \(en vez de 10 %\)/);
+    expect(noticeText({ kind: 'day-gap-reduced', gap: 0, requestedGap: 0.1 })).toMatch(/misma meta/);
   });
 
   it('usa lunes como primer día', () => {

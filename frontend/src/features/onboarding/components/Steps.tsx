@@ -11,6 +11,8 @@ import {
 } from '../domain/onboarding';
 import { ChoiceChips } from '../../../components/ui/ChoiceChips';
 import { CheckRow } from './CheckRow';
+import { MealPreferencesEditor } from '../../nutrition/components/MealPreferencesEditor';
+import { parseNutritionForm } from '../../profile/domain/profile';
 
 export type StepProps = {
   draft: Draft;
@@ -100,11 +102,14 @@ export function WeightStep({ draft, errors, set, today }: StepProps & { today: s
 }
 
 export function NutritionStep({ draft, errors, set }: StepProps) {
+  const parsed = parseNutritionForm({ exclusions: draft.exclusions, dietFocus: draft.dietFocus });
   return <>
     <FormField label="Alergias o alimentos excluidos" value={draft.exclusions} onChange={(v) => set('exclusions', v)} error={errors.exclusions}
       multiline placeholder="Ej: gluten, maní" hint="Separa cada exclusión con una coma." />
     <Note icon="warning-outline" tone="warning">Las exclusiones se aplican como restricción obligatoria. Revisa siempre el etiquetado: puede haber errores o contaminación cruzada.</Note>
     <FormField label="Enfoque dietario (opcional)" value={draft.dietFocus} onChange={(v) => set('dietFocus', v)} error={errors.dietFocus} maxLength={120} placeholder="Ej: mediterránea" />
+    <MealPreferencesEditor value={draft.preferences} onChange={(value) => set('preferences', value)}
+      exclusions={parsed.ok ? parsed.exclusions : []} dietFocus={draft.dietFocus} />
     <AppText variant="caption" tone="muted">Unidades: kilogramos, centímetros, gramos y kcal.</AppText>
   </>;
 }

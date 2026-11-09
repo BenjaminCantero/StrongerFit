@@ -8,6 +8,10 @@ import { limits, nutritionForm, parseNutritionForm, parsePersonalForm, personalF
 import { FormField } from '../../../components/ui/FormField';
 import { ChoiceChips } from '../../../components/ui/ChoiceChips';
 import { labels, optionalEquipment, toggle, type Environment, type Equipment, type Zone } from '../../onboarding/domain/onboarding';
+import { CheckRow } from '../../onboarding/components/CheckRow';
+import { MealPreferencesEditor } from '../../nutrition/components/MealPreferencesEditor';
+import { trainingDayOption, weekDays } from '../../nutrition/domain/meal-plan';
+import { TRAINING_REST_GAP, type MealPreferences } from '@strongerfit/nutrition-engine';
 
 const personalLabels: Record<PersonalField, string> = {
   name: 'nombre', age: 'edad', height: 'altura', weight: 'peso', goal: 'objetivo', days: 'días por semana',
@@ -50,8 +54,14 @@ export function PersonalEditor({ profile, onSave, onCancel }: EditorProps<Person
   </>;
 }
 
-export function NutritionEditor({ profile, onSave, onCancel }: EditorProps<{ exclusions: string[]; dietFocus: string }>) {
+export type NutritionValues = { exclusions: string[]; dietFocus: string; preferences: MealPreferences; trainingDayTargets: boolean };
+export const draftExclusions = (text: string) => text.split(/[,\n;]/).map((item) => item.trim()).filter(Boolean);
+
+export function NutritionEditor({ profile, onSave, onCancel }: EditorProps<NutritionValues>) {
   const [form, setForm] = useState(() => nutritionForm(profile));
+  const [preferences, setPreferences] = useState(profile.mealPreferences);
+  const [trainingDays, setTrainingDays] = useState(profile.trainingDayTargets);
+  const option = trainingDayOption(profile);
   const [errors, setErrors] = useState<FormErrors<NutritionField>>({});
   const field = (name: NutritionField) => ({
     value: form[name], error: errors[name],
@@ -59,7 +69,7 @@ export function NutritionEditor({ profile, onSave, onCancel }: EditorProps<{ exc
   });
   function save() {
     const result = parseNutritionForm(form);
-    if (result.ok) onSave({ exclusions: result.exclusions, dietFocus: result.dietFocus });
+    if (result.ok) onSave({ exclusions: result.exclusions, dietFocus: result.dietFocus, preferences, trainingDayTargets: option.available && trainingDays });
     else setErrors(result.errors);
   }
   return <>
@@ -67,6 +77,9 @@ export function NutritionEditor({ profile, onSave, onCancel }: EditorProps<{ exc
       hint="Separa cada exclusión con una coma." />
     <AppText variant="caption" tone="muted">Separa cada una con una coma. Revisa siempre el etiquetado: puede haber errores o contaminación cruzada.</AppText>
     <FormField label="Enfoque dietario" {...field('dietFocus')} maxLength={120} placeholder="Ej: mediterránea" />
+    <MealPreferencesEditor value={preferences} onChange={setPreferences} exclusions={draftExclusions(form.exclusions)} dietFocus={form.dietFocus} />
+    {option.available && <CheckRow title="Más energía los días que entrenas" checked={trainingDays} onToggle={() => setTrainingDays((value) => !value)}
+      description={`Tu rutina marca ${option.trainingDays.map((day) => weekDays[day]!.toLowerCase()).join(', ')}. Esos días reciben más carbohidratos y los de descanso menos, con una diferencia de ${Math.round(TRAINING_REST_GAP * 100)} % de tu meta; el promedio semanal no cambia. No estimamos lo que gastas al entrenar.`} />}
     <AppButton label="Guardar cambios" icon="checkmark-outline" onPress={save} />
     <AppButton label="Cancelar" variant="secondary" onPress={onCancel} />
   </>;

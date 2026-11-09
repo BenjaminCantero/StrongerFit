@@ -2,12 +2,15 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { StyleSheet, View } from 'react-native';
 import { AppPressable } from '../../../components/ui/AppPressable';
 import { AppText } from '../../../components/ui/AppText';
+import { foodCatalog, type MealPreferences } from '@strongerfit/nutrition-engine';
 import { colors, layout, radius, spacing } from '../../../theme';
+
+const names = (ids: string[]) => ids.map((id) => foodCatalog.find((food) => food.id === id)?.name ?? id).join(', ');
 
 type Target = { kcal: number; protein: number; carbs: number; fat: number } | null;
 
-export function NutritionCard({ exclusions, dietFocus, target, onAdjust, onGoals }: {
-  exclusions: string[]; dietFocus: string; target: Target; onAdjust: () => void; onGoals: () => void;
+export function NutritionCard({ exclusions, dietFocus, preferences, trainingDayTargets, target, onAdjust, onGoals }: {
+  exclusions: string[]; dietFocus: string; preferences: MealPreferences; trainingDayTargets: boolean; target: Target; onAdjust: () => void; onGoals: () => void;
 }) {
   return (
     <View style={styles.section}>
@@ -40,7 +43,14 @@ export function NutritionCard({ exclusions, dietFocus, target, onAdjust, onGoals
               <AppText variant="label" style={styles.chipText}>Sin {item}</AppText>
             </View>)}
           </View> : <AppText tone="muted">Sin exclusiones declaradas.</AppText>}
-          <AppText variant="caption" tone="muted">Se aplicarán como restricción a la minuta semanal cuando esté disponible.</AppText>
+          <AppText variant="caption" tone="muted">Se aplican como restricción obligatoria a la minuta semanal.</AppText>
+        </View>
+
+        <View style={styles.group}>
+          <AppText variant="label" tone="muted">Minuta</AppText>
+          <AppText>{preferences.mealsPerDay} comidas al día{trainingDayTargets ? ' · más energía los días que entrenas' : ''}</AppText>
+          <AppText variant="caption" tone="muted">Preferidos: {preferences.preferred.length ? names(preferences.preferred) : 'ninguno'}</AppText>
+          <AppText variant="caption" tone="muted">No te gustan: {preferences.disliked.length ? names(preferences.disliked) : 'ninguno'}</AppText>
         </View>
 
         <View style={styles.group}>
