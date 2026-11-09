@@ -1,5 +1,5 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { applySwap, readMealPlan, swapOptions, withinTolerance, type MealSlot, type PlanItem } from '@strongerfit/nutrition-engine';
+import { applySwap, readMealPlan, swapOptions, withinTolerance, type PlanItem, type PlanSlot } from '@strongerfit/nutrition-engine';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Screen } from '../../components/Screen';
@@ -13,14 +13,14 @@ import type { OpenMealPlan, ProfileData, SavedMealPlan } from '../profile/domain
 import { PlannedMealCard } from './components/PlannedMealCard';
 import type { Nutrients } from './domain/food-entry';
 import { hasHealthRisk, proposeMealPlan, roleLabels, tagLabels, weekDays } from './domain/meal-plan';
-import { formatKcal, mealLabels } from './presentation';
+import { formatKcal, planMealLabels } from './presentation';
 
 type Props = {
   profile: ProfileData; targets: Nutrients | null; todayIndex: number;
-  onSave: (plan: SavedMealPlan) => void; onRegister: (day: number, meal: MealSlot) => void;
+  onSave: (plan: SavedMealPlan) => void; onRegister: (day: number, meal: PlanSlot) => void;
   onGoals: () => void; onProfile: () => void;
 };
-type Blocked = { meal: MealSlot; role: keyof typeof roleLabels }[];
+type Blocked = { meal: PlanSlot; role: keyof typeof roleLabels }[];
 
 const signed = (value: number, unit: string) => `${value > 0 ? '+' : value < 0 ? '−' : '±'}${formatKcal(Math.abs(value))} ${unit}`;
 
@@ -28,7 +28,7 @@ export function MealPlanScreen({ profile, targets, todayIndex, onSave, onRegiste
   const [proposal, setProposal] = useState<OpenMealPlan | null>(null);
   const [blocked, setBlocked] = useState<Blocked | null>(null);
   const [day, setDay] = useState(todayIndex);
-  const [swapping, setSwapping] = useState<{ meal: MealSlot; index: number } | null>(null);
+  const [swapping, setSwapping] = useState<{ meal: PlanSlot; index: number } | null>(null);
   const [notice, setNotice] = useState('');
   const plan = proposal ?? (profile.mealPlan && readMealPlan(profile.mealPlan));
 
@@ -89,7 +89,7 @@ export function MealPlanScreen({ profile, targets, todayIndex, onSave, onRegiste
 
     {blocked && <Card style={styles.blocked}>
       <AppText variant="header">No pudimos armar la minuta</AppText>
-      <AppText tone="muted">Tus restricciones dejan sin opciones: {blocked.map((item) => `${roleLabels[item.role].toLowerCase()} en ${mealLabels[item.meal].toLowerCase()}`).join(', ')}. No ignoramos alergias ni exclusiones.</AppText>
+      <AppText tone="muted">Tus restricciones dejan sin opciones: {blocked.map((item) => `${roleLabels[item.role].toLowerCase()} en ${planMealLabels[item.meal].toLowerCase()}`).join(', ')}. No ignoramos alergias ni exclusiones.</AppText>
       <AppButton label="Revisar exclusiones" variant="secondary" onPress={onProfile} />
     </Card>}
 
@@ -123,7 +123,7 @@ export function MealPlanScreen({ profile, targets, todayIndex, onSave, onRegiste
       </View>
 
       {current.meals.map((meal) => <PlannedMealCard key={meal.meal} meal={meal} onSwap={(index) => setSwapping({ meal: meal.meal, index })}
-        onRegister={proposal ? undefined : () => { onRegister(day, meal.meal); setNotice(`${mealLabels[meal.meal]} agregado al diario de hoy.`); }} />)}
+        onRegister={proposal ? undefined : () => { onRegister(day, meal.meal); setNotice(`${planMealLabels[meal.meal]} agregado al diario de hoy.`); }} />)}
       <AppText variant="caption" tone="muted">Propuesta orientativa con valores de referencia aproximados. No reemplaza la indicación de un profesional de nutrición.</AppText>
     </>}
 

@@ -1,6 +1,6 @@
 import { generatePlan } from '@strongerfit/training-engine';
 import { CONSENT_VERSION } from '../../onboarding/domain/onboarding';
-import type { ProfileData } from '../domain/profile';
+import { createMealPreferences, type ProfileData } from '../domain/profile';
 
 // Fixture de diseño. Nunca se persiste ni se utiliza en el build de producción.
 export const createProfilePreview = (): ProfileData => ({
@@ -15,6 +15,7 @@ export const createProfilePreview = (): ProfileData => ({
   equipment: 'Gimnasio pequeño',
   exclusions: ['Gluten'],
   dietFocus: 'Mediterránea adaptada, con legumbres, palta y pescados',
+  mealPreferences: createMealPreferences(),
   onboarding: {
     sex: 'female', activity: 'moderate', level: 'intermediate', goal: 'muscle', environment: 'small-gym',
     equipment: ['bodyweight', 'dumbbells', 'barbell'], zones: [], healthFlags: [],

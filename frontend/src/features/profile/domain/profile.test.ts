@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { createProfilePreview } from '../data/profile.preview';
-import { buildLocalExport, createEmptyProfile, isProfileEmpty, nutritionForm, parseNutritionForm, parsePersonalForm,
-  personalForm, profileReducer } from './profile';
+import { buildLocalExport, createEmptyProfile, createMealPreferences, isProfileEmpty, MAX_FOOD_PREFERENCES, nutritionForm, parseNutritionForm, parsePersonalForm,
+  personalForm, profileReducer, toggleFoodPreference } from './profile';
 
 const form = () => personalForm(createProfilePreview());
 
@@ -23,6 +23,26 @@ describe('ficha personal', () => {
     expect(parsed.ok).toBe(false);
     expect(!parsed.ok && Object.keys(parsed.errors).sort()).toEqual(['age', 'days', 'height', 'minutes', 'name', 'weight']);
     expect(parsePersonalForm({ ...form(), age: '18', weight: '300' }).ok).toBe(true);
+  });
+});
+
+describe('preferencias de la minuta', () => {
+  it('parte con 4 comidas y sin preferencias, y se guardan junto a las exclusiones', () => {
+    expect(createEmptyProfile().mealPreferences).toEqual({ mealsPerDay: 4, preferred: [], disliked: [] });
+    const preferences = { mealsPerDay: 5 as const, preferred: ['salmon'], disliked: ['tuna'] };
+    const next = profileReducer(createProfilePreview(), { type: 'update-nutrition', exclusions: ['maní'], dietFocus: '', preferences });
+    expect(next).toMatchObject({ exclusions: ['maní'], mealPreferences: preferences });
+    expect(profileReducer(next, { type: 'update-nutrition', exclusions: [], dietFocus: '' }).mealPreferences).toBe(preferences);
+  });
+
+  it('un alimento no puede ser preferido y no deseado a la vez, y cada lista tiene un máximo', () => {
+    let preferences = toggleFoodPreference(createMealPreferences(), 'preferred', 'rice');
+    expect(preferences.preferred).toEqual(['rice']);
+    preferences = toggleFoodPreference(preferences, 'disliked', 'rice');
+    expect(preferences).toMatchObject({ preferred: [], disliked: ['rice'] });
+    expect(toggleFoodPreference(preferences, 'disliked', 'rice').disliked).toEqual([]);
+    const full = { ...preferences, preferred: Array.from({ length: MAX_FOOD_PREFERENCES }, (_, index) => `food-${index}`) };
+    expect(toggleFoodPreference(full, 'preferred', 'chicken')).toBe(full);
   });
 });
 

@@ -1,28 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import legacy from './fixtures/minuta-0.1.json';
 import { foodCatalog } from './foods';
-import { nutritionTargets, type TargetInput } from './index';
 import {
-  applySwap, generateMealPlan, portionLimits, proteinShortfall, proteinWithinTolerance, readMealPlan, swapOptions, withinTolerance,
-  type MealPlan, type MealPlanInput,
+  applySwap, portionLimits, proteinShortfall, proteinWithinTolerance, readMealPlan, swapOptions, withinTolerance,
 } from './meal-plan';
+import { generate, goal, items, man, woman } from './test-helpers';
 
-const base = { activity: 'moderate', fatShare: 0.25, healthRisk: false } as const;
-const man = { ...base, sex: 'male', ageYears: 30, weightKg: 80, heightCm: 180 } as const;
-const woman = { ...base, sex: 'female', ageYears: 28, weightKg: 62, heightCm: 163, activity: 'light' } as const;
 const directions = [['deficit', 0.15], ['maintenance', 0], ['surplus', 0.1]] as const;
-
-export const goal = (person: Omit<TargetInput, 'direction' | 'adjustment' | 'proteinPerKg'>, direction: TargetInput['direction'], adjustment: number, proteinPerKg = 1.6) => {
-  const { kcal, protein, carbs, fat } = nutritionTargets({ ...person, direction, adjustment, proteinPerKg });
-  return { kcal, protein, carbs, fat };
-};
-export const generate = (input: Partial<MealPlanInput> & Pick<MealPlanInput, 'targets'>): MealPlan => {
-  const result = generateMealPlan({ exclusions: [], dietFocus: '', ...input });
-  if (!result.ok) throw new Error(`sin minuta: ${JSON.stringify(result.blocked)}`);
-  return result.plan;
-};
 const byId = new Map(foodCatalog.map((food) => [food.id, food]));
-const items = (plan: MealPlan) => plan.days.flatMap((day) => day.meals.flatMap((meal) => meal.items));
 
 describe('porciones que cuadran proteína y energía', () => {
   for (const [name, person] of [['hombre 80 kg', man], ['mujer 62 kg', woman]] as const) {

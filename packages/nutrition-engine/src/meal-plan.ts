@@ -7,39 +7,73 @@ import { foodCatalog, FOOD_CATALOG_VERSION, type CatalogFood, type FoodRole, typ
 export const MEAL_PLAN_RULE_VERSION = 'minuta-0.2';
 // Versiones anteriores que readMealPlan sabe abrir.
 export const LEGACY_MEAL_PLAN_RULE_VERSIONS = ['minuta-0.1'] as const;
-export const mealSlots: MealSlot[] = ['breakfast', 'lunch', 'snack', 'dinner'];
-// Reparto de la energía diaria por comida (referencia inicial, BR-09).
-export const mealShares: Record<MealSlot, number> = { breakfast: 0.25, lunch: 0.35, snack: 0.12, dinner: 0.28 };
-// Reparto de la proteína: más pareja entre comidas principales y menor en la once.
-export const proteinShares: Record<MealSlot, number> = { breakfast: 0.2, lunch: 0.35, snack: 0.1, dinner: 0.35 };
 export const DEFAULT_TOLERANCE = 0.1;
 // Tolerancia de proteína diaria frente a la meta (±10 %, igual que la energía).
 export const PROTEIN_TOLERANCE = 0.1;
 // Límites de porción frente a la porción habitual y redondeo en gramos.
 export const portionLimits = { min: 0.5, max: 2.5, step: 5 } as const;
+// Veces que un mismo alimento puede aparecer en la semana antes de buscar otro (variedad).
+// Aplica también a los preferidos: con un solo favorito, aparece en días alternos.
+export const MAX_WEEKLY_REPEATS = 4;
 
-const templates: Record<MealSlot, FoodRole[]> = {
+// Comidas de la minuta. Las colaciones usan los alimentos que el catálogo marca para la once.
+export type PlanSlot = MealSlot | 'morning-snack' | 'evening-snack';
+export type MealsPerDay = 3 | 4 | 5 | 6;
+export const MEALS_PER_DAY: MealsPerDay[] = [3, 4, 5, 6];
+export const DEFAULT_MEALS_PER_DAY: MealsPerDay = 4;
+export const catalogSlot: Record<PlanSlot, MealSlot> = {
+  breakfast: 'breakfast', 'morning-snack': 'snack', lunch: 'lunch', snack: 'snack', dinner: 'dinner', 'evening-snack': 'snack',
+};
+// Reparto de energía y proteína por comida según cuántas veces come la persona (BR-09).
+// Cada columna suma 1. La proteína se reparte más pareja entre las comidas principales y
+// menos en colaciones. Valores provisionales, a la espera de revisión profesional.
+export type MealShare = { meal: PlanSlot; kcal: number; protein: number };
+export const mealLayouts: Record<MealsPerDay, MealShare[]> = {
+  3: [{ meal: 'breakfast', kcal: 0.3, protein: 0.25 }, { meal: 'lunch', kcal: 0.4, protein: 0.4 }, { meal: 'dinner', kcal: 0.3, protein: 0.35 }],
+  4: [{ meal: 'breakfast', kcal: 0.25, protein: 0.2 }, { meal: 'lunch', kcal: 0.35, protein: 0.35 }, { meal: 'snack', kcal: 0.12, protein: 0.1 },
+    { meal: 'dinner', kcal: 0.28, protein: 0.35 }],
+  5: [{ meal: 'breakfast', kcal: 0.22, protein: 0.2 }, { meal: 'morning-snack', kcal: 0.1, protein: 0.05 }, { meal: 'lunch', kcal: 0.3, protein: 0.33 },
+    { meal: 'snack', kcal: 0.12, protein: 0.1 }, { meal: 'dinner', kcal: 0.26, protein: 0.32 }],
+  6: [{ meal: 'breakfast', kcal: 0.2, protein: 0.18 }, { meal: 'morning-snack', kcal: 0.1, protein: 0.05 }, { meal: 'lunch', kcal: 0.27, protein: 0.3 },
+    { meal: 'snack', kcal: 0.12, protein: 0.1 }, { meal: 'dinner', kcal: 0.23, protein: 0.27 }, { meal: 'evening-snack', kcal: 0.08, protein: 0.1 }],
+};
+// Compatibilidad: las cuatro comidas de minuta-0.1 y su reparto.
+export const mealSlots: MealSlot[] = ['breakfast', 'lunch', 'snack', 'dinner'];
+export const mealShares = Object.fromEntries(mealLayouts[4].map(({ meal, kcal }) => [meal, kcal])) as Record<MealSlot, number>;
+export const proteinShares = Object.fromEntries(mealLayouts[4].map(({ meal, protein }) => [meal, protein])) as Record<MealSlot, number>;
+
+const templates: Record<PlanSlot, FoodRole[]> = {
   breakfast: ['carb', 'dairy', 'fruit'],
+  'morning-snack': ['fruit', 'fat'],
   lunch: ['protein', 'carb', 'veg', 'fat'],
   snack: ['dairy', 'fruit'],
   dinner: ['protein', 'veg', 'carb', 'fat'],
+  'evening-snack': ['dairy'],
 };
 // Si una dieta deja un rol sin opciones se intenta el siguiente; nunca se ignora una exclusión.
 const fallbacks: Partial<Record<FoodRole, FoodRole[]>> = { dairy: ['protein', 'fat'] };
 // Las comidas con más margen de porción se calculan al final y absorben lo que falte o sobre.
-const portionOrder: MealSlot[] = ['breakfast', 'snack', 'lunch', 'dinner'];
+const portionOrder: PlanSlot[] = ['breakfast', 'morning-snack', 'snack', 'evening-snack', 'lunch', 'dinner'];
+// Punto de partida de la rotación de cada comida, como fracción de la lista.
+const rotationOffset: Partial<Record<PlanSlot, number>> = { dinner: 1 / 2, 'evening-snack': 1 / 2, 'morning-snack': 1 / 3 };
+
+// Preferencias blandas de la persona. Los preferidos se usan antes que el resto de su rol; los
+// que no le gustan solo si no queda otra opción compatible. Nunca pasan por sobre una exclusión.
+export type MealPreferences = { mealsPerDay: MealsPerDay; preferred: string[]; disliked: string[] };
 
 export type Restrictions = { tags: FoodTag[]; names: string[]; unmatched: string[]; diet: 'vegan' | 'vegetarian' | null };
 export type PlanItem = { foodId: string; name: string; role: FoodRole; grams: number; nutrients: Nutrients };
-export type PlannedMeal = { meal: MealSlot; targetKcal: number; targetProtein: number; items: PlanItem[]; nutrients: Nutrients };
+export type PlannedMeal = { meal: PlanSlot; targetKcal: number; targetProtein: number; items: PlanItem[]; nutrients: Nutrients };
 // deviation: energía frente a la meta del día; proteinDeviation: proteína frente a la meta del día.
 export type PlannedDay = { index: number; targets: Nutrients; meals: PlannedMeal[]; totals: Nutrients; deviation: number; proteinDeviation: number };
 export type MealPlan = {
   ruleVersion: string; catalogVersion: string; targets: Nutrients; tolerance: number; proteinTolerance: number;
-  restrictions: Restrictions; days: PlannedDay[];
+  restrictions: Restrictions; preferences: MealPreferences; days: PlannedDay[];
 };
-export type MealPlanInput = { targets: Nutrients; exclusions: string[]; dietFocus: string; tolerance?: number; foods?: CatalogFood[] };
-export type MealPlanResult = { ok: true; plan: MealPlan } | { ok: false; blocked: { meal: MealSlot; role: FoodRole }[]; restrictions: Restrictions };
+export type MealPlanInput = {
+  targets: Nutrients; exclusions: string[]; dietFocus: string; preferences?: Partial<MealPreferences>; tolerance?: number; foods?: CatalogFood[];
+};
+export type MealPlanResult = { ok: true; plan: MealPlan } | { ok: false; blocked: { meal: PlanSlot; role: FoodRole }[]; restrictions: Restrictions };
 
 const normalize = (text: string) => text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
 const synonyms: [RegExp, FoodTag[]][] = [
@@ -90,12 +124,26 @@ export function addNutrients(list: Nutrients[]): Nutrients {
 
 const item = (food: CatalogFood, grams: number): PlanItem => ({ foodId: food.id, name: food.name, role: food.role, grams, nutrients: nutrientsFor(food, grams) });
 
-function candidates(foods: CatalogFood[], restrictions: Restrictions, meal: MealSlot, role: FoodRole) {
-  for (const option of [role, ...(fallbacks[role] ?? [])]) {
-    const list = foods.filter((food) => food.role === option && food.meals.includes(meal) && isAllowed(food, restrictions));
-    if (list.length) return list;
-  }
-  return [];
+// Preferencias canónicas: IDs del catálogo, sin duplicados y en orden estable. Un alimento
+// marcado en ambas listas cuenta como «no me gusta». Los preferidos no verificados se
+// descartan porque la generación automática nunca los usa.
+export function normalizePreferences(input: Partial<MealPreferences> = {}, foods = foodCatalog): MealPreferences {
+  const known = new Map(foods.map((food) => [food.id, food]));
+  const ids = (list: string[] | undefined, keep: (food: CatalogFood) => boolean) =>
+    [...new Set(list ?? [])].filter((id) => { const food = known.get(id); return !!food && keep(food); }).sort();
+  const disliked = ids(input.disliked, () => true);
+  const preferred = ids(input.preferred, (food) => food.verified && !disliked.includes(food.id));
+  const mealsPerDay = MEALS_PER_DAY.includes(input.mealsPerDay as MealsPerDay) ? input.mealsPerDay as MealsPerDay : DEFAULT_MEALS_PER_DAY;
+  return { mealsPerDay, preferred, disliked };
+}
+
+// Alimentos compatibles para un casillero. Si todos los del rol son de los que no le gustan,
+// se prueba el rol de respaldo antes de recurrir a ellos.
+function candidates(foods: CatalogFood[], restrictions: Restrictions, meal: PlanSlot, role: FoodRole, disliked: string[]) {
+  const lists = [role, ...(fallbacks[role] ?? [])]
+    .map((option) => foods.filter((food) => food.role === option && food.meals.includes(catalogSlot[meal]) && isAllowed(food, restrictions)))
+    .filter((list) => list.length);
+  return lists.find((list) => list.some((food) => !disliked.includes(food.id))) ?? lists[0] ?? [];
 }
 
 const isProteinRole = (role: FoodRole) => role === 'protein' || role === 'dairy';
@@ -148,12 +196,12 @@ function buildDay(index: number, meals: PlannedMeal[], targets: Nutrients): Plan
   return { index, targets, meals, totals, deviation: ratio(totals.kcal, targets.kcal), proteinDeviation: ratio(totals.protein, targets.protein) };
 }
 
-type Options = Map<MealSlot, Map<FoodRole, CatalogFood[]>>;
+type Options = Map<PlanSlot, Map<FoodRole, CatalogFood[]>>;
 
 // Orden de rotación: cada día y cada casillero parte en un punto distinto de la lista. La cena
 // parte desde la mitad para no repetir la proteína del almuerzo.
-function rotation(list: CatalogFood[], day: number, meal: MealSlot, slot: number) {
-  const start = day + slot + (meal === 'dinner' ? Math.ceil(list.length / 2) : 0);
+function rotation(list: CatalogFood[], day: number, meal: PlanSlot, slot: number) {
+  const start = day + slot + Math.ceil(list.length * (rotationOffset[meal] ?? 0));
   return (food: CatalogFood) => (list.indexOf(food) - start % list.length + list.length) % list.length;
 }
 
@@ -163,21 +211,32 @@ const compareKeys = (a: number[], b: number[]) => {
   return 0;
 };
 
-type DayState = { usedToday: Set<string> };
+// Estado de la semana para la variedad: veces que se usó cada alimento y qué se usó ayer y hoy.
+type WeekState = { counts: Map<string, number>; yesterday: Set<string>; today: Set<string>; preferences: MealPreferences };
 
 // Elige los alimentos de una comida y fija sus porciones. Primero las verduras, luego los
-// proteicos y al final carbohidratos, frutas y grasas. Cada casillero recorre su lista en
-// orden de rotación y prefiere el primer alimento con el que la comida llega a su meta
-// (proteína para los proteicos, energía para el resto); si ninguno llega, el que más se
-// acerque. Nunca se consideran alimentos fuera de las restricciones.
+// proteicos y al final carbohidratos, frutas y grasas. Para cada casillero se ordenan los
+// candidatos compatibles por, en este orden:
+//   1. que le guste (los que no le gustan solo si no hay otro),
+//   2. no repetirlo en el mismo día,
+//   3. que la comida llegue a su meta con él (proteína para los proteicos, energía para el resto),
+//   4. no superar el tope semanal de repeticiones,
+//   5. no repetirlo del día anterior,
+//   6. que sea preferido (y no haya llegado al tope),
+//   7. la rotación por día.
+// El tope gana a la preferencia y a la rotación; solo cede cuando ningún otro alimento
+// compatible permite que la comida llegue a su meta. Nunca se consideran alimentos fuera de
+// las restricciones.
 const ADEQUACY_MARGIN = DEFAULT_TOLERANCE / 2;
 const roleStage = (role: FoodRole) => role === 'veg' ? 0 : isProteinRole(role) ? 1 : 2;
 
-function planMeal(meal: MealSlot, day: number, options: Options, state: DayState, targetKcal: number, targetProtein: number) {
+function planMeal(meal: PlanSlot, day: number, options: Options, state: WeekState, targetKcal: number, targetProtein: number) {
   const roles = templates[meal];
+  const { preferred, disliked } = state.preferences;
   const chosen: (CatalogFood | undefined)[] = roles.map(() => undefined);
   const lists = roles.map((role) => options.get(meal)!.get(role)!);
   const order = roles.map((_, slot) => slot).sort((a, b) => roleStage(lists[a]![0]!.role) - roleStage(lists[b]![0]!.role) || a - b);
+  const capped = (food: CatalogFood) => (state.counts.get(food.id) ?? 0) >= MAX_WEEKLY_REPEATS;
   const placeholder = (slot: number) => {
     const rank = rotation(lists[slot]!, day, meal, slot);
     return [...lists[slot]!].sort((a, b) => rank(a) - rank(b))[0]!;
@@ -196,65 +255,92 @@ function planMeal(meal: MealSlot, day: number, options: Options, state: DayState
         : Math.ceil(Math.max(0, targetKcal * (1 - ADEQUACY_MARGIN) - reached.kcal) / 25);
     };
     chosen[slot] = list.filter((food) => !chosen.includes(food))
-      .map((food) => ({ food, key: [state.usedToday.has(food.id) ? 1 : 0, shortfall(food), rank(food)] }))
+      .map((food) => ({ food, key: [
+        disliked.includes(food.id) ? 1 : 0,
+        state.today.has(food.id) ? 1 : 0,
+        shortfall(food),
+        capped(food) ? 1 : 0,
+        state.yesterday.has(food.id) ? 1 : 0,
+        preferred.includes(food.id) && !capped(food) ? 0 : 1,
+        rank(food),
+      ] }))
       .sort((a, b) => compareKeys(a.key, b.key))[0]?.food;
   }
   const foods = chosen.filter((value): value is CatalogFood => !!value);
-  foods.forEach((food) => state.usedToday.add(food.id));
+  for (const food of foods) {
+    state.today.add(food.id);
+    state.counts.set(food.id, (state.counts.get(food.id) ?? 0) + 1);
+  }
   return portion(foods, targetKcal, targetProtein);
 }
 
 // Reparte la meta del día. Cada comida recibe su parte de lo que queda, de modo que lo que
 // una comida no alcanza (por límites de porción) lo completan las siguientes.
-function planDay(index: number, targets: Nutrients, options: Options): PlannedDay {
-  const planned = new Map<MealSlot, PlannedMeal>();
-  const state: DayState = { usedToday: new Set() };
+function planDay(index: number, targets: Nutrients, options: Options, state: WeekState): PlannedDay {
+  const layout = mealLayouts[state.preferences.mealsPerDay];
+  const share = (meal: PlanSlot) => layout.find((entry) => entry.meal === meal)!;
+  const order = portionOrder.filter((meal) => layout.some((entry) => entry.meal === meal));
+  const planned = new Map<PlanSlot, PlannedMeal>();
   let kcalLeft = targets.kcal;
   let proteinLeft = targets.protein;
-  portionOrder.forEach((meal, position) => {
-    const rest = portionOrder.slice(position);
-    const kcalShare = mealShares[meal] / rest.reduce((total, slot) => total + mealShares[slot], 0);
-    const proteinShare = proteinShares[meal] / rest.reduce((total, slot) => total + proteinShares[slot], 0);
+  order.forEach((meal, position) => {
+    const rest = order.slice(position);
+    const kcalShare = share(meal).kcal / rest.reduce((total, slot) => total + share(slot).kcal, 0);
+    const proteinShare = share(meal).protein / rest.reduce((total, slot) => total + share(slot).protein, 0);
     const items = planMeal(meal, index, options, state, kcalLeft * kcalShare, proteinLeft * proteinShare);
     const nutrients = addNutrients(items.map((entry) => entry.nutrients));
     kcalLeft -= nutrients.kcal;
     proteinLeft -= nutrients.protein;
-    planned.set(meal, { meal, targetKcal: Math.round(targets.kcal * mealShares[meal]), targetProtein: Math.round(targets.protein * proteinShares[meal]),
+    planned.set(meal, { meal, targetKcal: Math.round(targets.kcal * share(meal).kcal), targetProtein: Math.round(targets.protein * share(meal).protein),
       items, nutrients });
   });
-  return buildDay(index, mealSlots.map((meal) => planned.get(meal)!), targets);
+  state.yesterday = state.today;
+  state.today = new Set();
+  return buildDay(index, layout.map(({ meal }) => planned.get(meal)!), targets);
 }
 
-export function generateMealPlan({ targets, exclusions, dietFocus, tolerance = DEFAULT_TOLERANCE, foods = foodCatalog }: MealPlanInput): MealPlanResult {
+export function generateMealPlan({ targets, exclusions, dietFocus, preferences: requested, tolerance = DEFAULT_TOLERANCE, foods = foodCatalog }: MealPlanInput): MealPlanResult {
   const restrictions = resolveRestrictions(exclusions, dietFocus, foods);
-  const options: Options = new Map(mealSlots.map((meal) => [meal, new Map(templates[meal].map((role) => [role, candidates(foods, restrictions, meal, role)]))]));
-  const blocked = mealSlots.flatMap((meal) => templates[meal].filter((role) => !options.get(meal)!.get(role)!.length).map((role) => ({ meal, role })));
+  const preferences = normalizePreferences(requested, foods);
+  const meals = mealLayouts[preferences.mealsPerDay].map(({ meal }) => meal);
+  const options: Options = new Map(meals.map((meal) =>
+    [meal, new Map(templates[meal].map((role) => [role, candidates(foods, restrictions, meal, role, preferences.disliked)]))]));
+  const blocked = meals.flatMap((meal) => templates[meal].filter((role) => !options.get(meal)!.get(role)!.length).map((role) => ({ meal, role })));
   if (blocked.length) return { ok: false, blocked, restrictions };
-  const days = Array.from({ length: 7 }, (_, index) => planDay(index, targets, options));
+  const state: WeekState = { counts: new Map(), yesterday: new Set(), today: new Set(), preferences };
+  const days = Array.from({ length: 7 }, (_, index) => planDay(index, targets, options, state));
   return { ok: true, plan: { ruleVersion: MEAL_PLAN_RULE_VERSION, catalogVersion: FOOD_CATALOG_VERSION, targets, tolerance,
-    proteinTolerance: PROTEIN_TOLERANCE, restrictions, days } };
+    proteinTolerance: PROTEIN_TOLERANCE, restrictions, preferences, days } };
 }
 
 // Intercambio (RF-13): mismo rol y comida, respetando restricciones. Los alimentos proteicos
 // conservan la proteína del original; el resto, la energía. Las porciones respetan los límites.
-export function swapOptions(plan: MealPlan, day: number, meal: MealSlot, index: number, foods = foodCatalog) {
+// Los que no le gustan se ofrecen solo si no hay otra alternativa; los preferidos van primero.
+export type SwapOption = { item: PlanItem; diff: Nutrients; preferred: boolean; disliked: boolean };
+const SWAP_OPTIONS = 6;
+
+export function swapOptions(plan: MealPlan, day: number, meal: PlanSlot, index: number, foods = foodCatalog): SwapOption[] {
   const planned = plan.days[day]?.meals.find((entry) => entry.meal === meal);
   const current = planned?.items[index];
   if (!planned || !current) return [];
   const used = planned.items.map((entry) => entry.foodId);
+  const { preferred, disliked } = plan.preferences;
   const key: keyof Nutrients = isProteinRole(current.role) && current.nutrients.protein > 0 ? 'protein' : 'kcal';
-  return foods.filter((food) => food.role === current.role && food.meals.includes(meal) && !used.includes(food.id) && isAllowed(food, plan.restrictions))
+  const all = foods.filter((food) => food.role === current.role && food.meals.includes(catalogSlot[meal]) && !used.includes(food.id) && isAllowed(food, plan.restrictions))
     .map((food) => {
       const swapped = item(food, food.per100g[key] > 0 ? clampGrams(food, current.nutrients[key] / food.per100g[key] * 100) : food.servingGrams);
       const diff = { kcal: round1(swapped.nutrients.kcal - current.nutrients.kcal), protein: round1(swapped.nutrients.protein - current.nutrients.protein),
         carbs: round1(swapped.nutrients.carbs - current.nutrients.carbs), fat: round1(swapped.nutrients.fat - current.nutrients.fat) };
-      return { item: swapped, diff };
+      return { item: swapped, diff, preferred: preferred.includes(food.id), disliked: disliked.includes(food.id) };
     })
-    .sort((a, b) => Math.abs(a.diff.kcal) + Math.abs(a.diff.protein) * 4 - (Math.abs(b.diff.kcal) + Math.abs(b.diff.protein) * 4))
-    .slice(0, 6);
+    .sort((a, b) => Math.abs(a.diff.kcal) + Math.abs(a.diff.protein) * 4 - (Math.abs(b.diff.kcal) + Math.abs(b.diff.protein) * 4));
+  const liked = all.filter((option) => !option.disliked);
+  const pool = liked.length ? liked : all;
+  const favorites = pool.filter((option) => option.preferred).slice(0, 2);
+  return [...favorites, ...pool.filter((option) => !favorites.includes(option))].slice(0, SWAP_OPTIONS);
 }
 
-export function applySwap(plan: MealPlan, day: number, meal: MealSlot, index: number, replacement: PlanItem): MealPlan {
+export function applySwap(plan: MealPlan, day: number, meal: PlanSlot, index: number, replacement: PlanItem): MealPlan {
   const target = plan.days[day];
   if (!target) return plan;
   const meals = target.meals.map((entry) => {
@@ -270,23 +356,54 @@ export const proteinWithinTolerance = (plan: MealPlan, day: PlannedDay) => Math.
 // Gramos de proteína que faltan para entrar en la tolerancia del día; 0 si no falta.
 export const proteinShortfall = (day: PlannedDay) => Math.max(0, round1(day.targets.protein - day.totals.protein));
 
+// Avisos de la minuta, calculados desde su contenido para que sigan siendo ciertos tras un intercambio.
+export type PlanNotice =
+  | { kind: 'protein-short'; day: number; missing: number }
+  | { kind: 'disliked-used'; foodId: string; name: string; meals: { day: number; meal: PlanSlot }[] }
+  | { kind: 'preferred-excluded'; foodId: string; name: string };
+
+export function planNotices(plan: MealPlan, foods = foodCatalog): PlanNotice[] {
+  const notices: PlanNotice[] = [];
+  for (const day of plan.days) {
+    if (day.proteinDeviation < -plan.proteinTolerance) notices.push({ kind: 'protein-short', day: day.index, missing: proteinShortfall(day) });
+  }
+  const disliked = new Map<string, { name: string; meals: { day: number; meal: PlanSlot }[] }>();
+  for (const day of plan.days) for (const meal of day.meals) for (const entry of meal.items) {
+    if (!plan.preferences.disliked.includes(entry.foodId)) continue;
+    const found = disliked.get(entry.foodId) ?? { name: entry.name, meals: [] };
+    found.meals.push({ day: day.index, meal: meal.meal });
+    disliked.set(entry.foodId, found);
+  }
+  for (const [foodId, { name, meals }] of disliked) notices.push({ kind: 'disliked-used', foodId, name, meals });
+  for (const foodId of plan.preferences.preferred) {
+    const food = foods.find((value) => value.id === foodId);
+    if (food && !isAllowed(food, plan.restrictions)) notices.push({ kind: 'preferred-excluded', foodId, name: food.name });
+  }
+  return notices;
+}
+
 // Minutas guardadas con reglas anteriores (minuta-0.1): no tenían meta por día, proteína por
-// comida ni desviación de proteína. Se completan sin recalcular porciones ni alimentos, para
-// que se abran, se intercambien y se registren igual que antes. La versión de reglas se conserva.
+// comida, desviación de proteína ni preferencias. Se completan sin recalcular porciones ni
+// alimentos, para que se abran, se intercambien y se registren igual que antes. La versión de
+// reglas se conserva.
 type LegacyPlannedDay = Omit<PlannedDay, 'targets' | 'proteinDeviation'> & Partial<Pick<PlannedDay, 'targets' | 'proteinDeviation'>>;
 type LegacyPlannedMeal = Omit<PlannedMeal, 'targetProtein'> & Partial<Pick<PlannedMeal, 'targetProtein'>>;
-export type StoredMealPlan = Omit<MealPlan, 'days' | 'proteinTolerance'> & Partial<Pick<MealPlan, 'proteinTolerance'>> & {
+export type StoredMealPlan = Omit<MealPlan, 'days' | 'proteinTolerance' | 'preferences'> & Partial<Pick<MealPlan, 'proteinTolerance' | 'preferences'>> & {
   days: (Omit<LegacyPlannedDay, 'meals'> & { meals: LegacyPlannedMeal[] })[];
 };
 
 export function readMealPlan<Plan extends StoredMealPlan>(stored: Plan): Omit<Plan, keyof MealPlan> & MealPlan {
   const { targets } = stored;
+  const mealsPerDay = MEALS_PER_DAY.find((count) => count === stored.days[0]?.meals.length) ?? DEFAULT_MEALS_PER_DAY;
+  const layout = mealLayouts[mealsPerDay];
   return {
     ...stored,
     proteinTolerance: stored.proteinTolerance ?? PROTEIN_TOLERANCE,
+    preferences: stored.preferences ?? { mealsPerDay, preferred: [], disliked: [] },
     days: stored.days.map((day) => {
       const dayTargets = day.targets ?? targets;
-      const meals = day.meals.map((meal) => ({ ...meal, targetProtein: meal.targetProtein ?? Math.round(dayTargets.protein * (proteinShares[meal.meal] ?? 0)) }));
+      const meals = day.meals.map((meal) => ({ ...meal,
+        targetProtein: meal.targetProtein ?? Math.round(dayTargets.protein * (layout.find((entry) => entry.meal === meal.meal)?.protein ?? 0)) }));
       return { ...buildDay(day.index, meals, dayTargets), totals: day.totals, deviation: day.deviation,
         proteinDeviation: day.proteinDeviation ?? ratio(day.totals.protein, dayTargets.protein) };
     }),

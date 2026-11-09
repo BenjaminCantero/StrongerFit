@@ -25,6 +25,19 @@ describe('minuta en la app', () => {
     expect(entry.items.map((item) => item.foodId)).toEqual(meal.items.map((item) => item.foodId));
   });
 
+  it('usa las preferencias del perfil y registra las colaciones en la once', () => {
+    const profile = { ...createProfilePreview(), mealPreferences: { mealsPerDay: 6 as const, preferred: ['salmon'], disliked: ['tuna'] } };
+    const result = proposeMealPlan(profile, targets, new Date());
+    if (!result.ok) throw new Error('sin minuta');
+    expect(result.plan.preferences).toEqual(profile.mealPreferences);
+    const meals = result.plan.days[0]!.meals;
+    expect(meals.map((meal) => meal.meal)).toEqual(['breakfast', 'morning-snack', 'lunch', 'snack', 'dinner', 'evening-snack']);
+    expect(mealEntry(meals[1]!).meal).toBe('snack');
+    expect(mealEntry(meals[5]!).meal).toBe('snack');
+    expect(result.plan.days.some((day) => day.meals.some((meal) => meal.items.some((item) => item.foodId === 'salmon')))).toBe(true);
+    expect(result.plan.days.some((day) => day.meals.some((meal) => meal.items.some((item) => item.foodId === 'tuna')))).toBe(false);
+  });
+
   it('usa lunes como primer día', () => {
     expect(weekdayIndex('2026-11-02')).toBe(0);
     expect(weekdayIndex('2026-11-01')).toBe(6);

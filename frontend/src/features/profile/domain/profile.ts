@@ -1,4 +1,4 @@
-import type { MealPlan, NutritionTargets, StoredMealPlan } from '@strongerfit/nutrition-engine';
+import { DEFAULT_MEALS_PER_DAY, type MealPlan, type MealPreferences, type NutritionTargets, type StoredMealPlan } from '@strongerfit/nutrition-engine';
 import { environmentLabels, type Environment, type Equipment, type Plan, type PlannedExercise, type Zone } from '@strongerfit/training-engine';
 import type { OnboardingRecord } from '../../onboarding/domain/onboarding';
 
@@ -19,6 +19,8 @@ export type ProfileData = {
   equipment: string;
   exclusions: string[];
   dietFocus: string;
+  // Comidas al día y alimentos del catálogo que prefiere o no le gustan (preferencias blandas).
+  mealPreferences: MealPreferences;
   onboarding: OnboardingRecord | null;
   nutritionPlan: NutritionPlan | null;
   trainingPlan: (Plan & { createdAt: string }) | null;
@@ -41,7 +43,7 @@ export type LoadDecision = {
 
 export type PersonalField = 'name' | 'age' | 'height' | 'weight' | 'goal' | 'days' | 'minutes' | 'equipment';
 export type PersonalForm = Record<PersonalField, string>;
-export type PersonalValues = Omit<ProfileData, 'photo' | 'exclusions' | 'dietFocus' | 'onboarding' | 'nutritionPlan' | 'trainingPlan' | 'mealPlan' | 'nextLoads' | 'loadDecisions'>;
+export type PersonalValues = Omit<ProfileData, 'photo' | 'exclusions' | 'dietFocus' | 'mealPreferences' | 'onboarding' | 'nutritionPlan' | 'trainingPlan' | 'mealPlan' | 'nextLoads' | 'loadDecisions'>;
 export type FormErrors<Field extends string> = Partial<Record<Field, string>>;
 
 export type NutritionField = 'exclusions' | 'dietFocus';
@@ -49,7 +51,7 @@ export type NutritionForm = Record<NutritionField, string>;
 
 export type ProfileAction =
   | { type: 'update-personal'; values: PersonalValues }
-  | { type: 'update-nutrition'; exclusions: string[]; dietFocus: string }
+  | { type: 'update-nutrition'; exclusions: string[]; dietFocus: string; preferences?: MealPreferences }
   | { type: 'set-photo'; photo: ProfilePhoto }
   | { type: 'set-nutrition-plan'; plan: NutritionPlan }
   | { type: 'set-training-plan'; plan: Plan & { createdAt: string } }
@@ -58,7 +60,7 @@ export type ProfileAction =
   | { type: 'update-training-setup'; environment: Environment; equipment: Equipment[]; zones: Zone[] }
   | { type: 'record-load-decision'; decision: LoadDecision }
   | { type: 'consume-next-loads'; exerciseIds: string[] }
-  | { type: 'complete-onboarding'; values: PersonalValues; exclusions: string[]; dietFocus: string; onboarding: OnboardingRecord }
+  | { type: 'complete-onboarding'; values: PersonalValues; exclusions: string[]; dietFocus: string; preferences: MealPreferences; onboarding: OnboardingRecord }
   | { type: 'reset' };
 
 // Rangos de captura. El MVP beta se limita a personas adultas (RNF-18).
@@ -73,10 +75,13 @@ export const limits = {
 const MAX_TEXT = 120;
 const MAX_EXCLUSIONS = 10;
 const MAX_EXCLUSION_LENGTH = 40;
+export const MAX_FOOD_PREFERENCES = 20;
+
+export const createMealPreferences = (): MealPreferences => ({ mealsPerDay: DEFAULT_MEALS_PER_DAY, preferred: [], disliked: [] });
 
 export const createEmptyProfile = (): ProfileData => ({
   name: '', photo: null, ageYears: null, heightCm: null, weightKg: null, goal: '',
-  daysPerWeek: null, sessionMinutes: null, equipment: '', exclusions: [], dietFocus: '', onboarding: null, nutritionPlan: null, trainingPlan: null, mealPlan: null,
+  daysPerWeek: null, sessionMinutes: null, equipment: '', exclusions: [], dietFocus: '', mealPreferences: createMealPreferences(), onboarding: null, nutritionPlan: null, trainingPlan: null, mealPlan: null,
   nextLoads: {}, loadDecisions: [],
 });
 
@@ -157,10 +162,19 @@ export function parseNutritionForm(form: NutritionForm):
   return { ok: true, exclusions, dietFocus };
 }
 
+// Marca o desmarca un alimento como preferido o no deseado. Un alimento no puede estar en
+// ambas listas: marcarlo en una lo quita de la otra. Hay un máximo por lista.
+export function toggleFoodPreference(preferences: MealPreferences, list: 'preferred' | 'disliked', foodId: string): MealPreferences {
+  const other = list === 'preferred' ? 'disliked' : 'preferred';
+  if (preferences[list].includes(foodId)) return { ...preferences, [list]: preferences[list].filter((id) => id !== foodId) };
+  if (preferences[list].length >= MAX_FOOD_PREFERENCES) return preferences;
+  return { ...preferences, [list]: [...preferences[list], foodId], [other]: preferences[other].filter((id) => id !== foodId) };
+}
+
 export function profileReducer(state: ProfileData, action: ProfileAction): ProfileData {
   switch (action.type) {
     case 'update-personal': return { ...state, ...action.values };
-    case 'update-nutrition': return { ...state, exclusions: action.exclusions, dietFocus: action.dietFocus };
+    case 'update-nutrition': return { ...state, exclusions: action.exclusions, dietFocus: action.dietFocus, mealPreferences: action.preferences ?? state.mealPreferences };
     case 'set-photo': return { ...state, photo: action.photo };
     case 'set-nutrition-plan': return { ...state, nutritionPlan: action.plan };
     case 'set-training-plan': return { ...state, trainingPlan: action.plan };
@@ -186,7 +200,7 @@ export function profileReducer(state: ProfileData, action: ProfileAction): Profi
     case 'consume-next-loads':
       return { ...state, nextLoads: Object.fromEntries(Object.entries(state.nextLoads).filter(([id]) => !action.exerciseIds.includes(id))) };
     case 'complete-onboarding':
-      return { ...state, ...action.values, exclusions: action.exclusions, dietFocus: action.dietFocus, onboarding: action.onboarding };
+      return { ...state, ...action.values, exclusions: action.exclusions, dietFocus: action.dietFocus, mealPreferences: action.preferences, onboarding: action.onboarding };
     case 'reset': return createEmptyProfile();
   }
 }

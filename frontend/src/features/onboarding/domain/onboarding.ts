@@ -1,6 +1,7 @@
 import { environmentEquipment, environmentLabels, equipmentLabels, zoneLabels, type Environment, type Equipment, type Zone } from '@strongerfit/training-engine';
 import { shiftDate } from '../../../shared/calendar';
-import { parseNutritionForm, parsePersonalForm, type FormErrors, type PersonalValues } from '../../profile/domain/profile';
+import type { MealPreferences } from '@strongerfit/nutrition-engine';
+import { createMealPreferences, parseNutritionForm, parsePersonalForm, type FormErrors, type PersonalValues } from '../../profile/domain/profile';
 
 export type Sex = 'female' | 'male' | 'unspecified';
 export type ActivityLevel = 'sedentary' | 'light' | 'moderate' | 'high' | 'very-high';
@@ -40,7 +41,7 @@ export type Draft = {
   name: string; age: string; sex: Sex | null; height: string; weight: string; activity: ActivityLevel | null;
   goal: Goal | null; level: Level | null; environment: Environment | null; days: string; minutes: string; equipment: Equipment[]; zones: Zone[];
   setWeightGoal: boolean; targetWeight: string; weeks: string; paceConfirmed: boolean;
-  exclusions: string; dietFocus: string;
+  exclusions: string; dietFocus: string; preferences: MealPreferences;
   healthFlags: HealthFlag[]; noHealthFlags: boolean; disclaimerRead: boolean; consent: boolean;
 };
 
@@ -48,7 +49,7 @@ export const createDraft = (): Draft => ({
   name: '', age: '', sex: null, height: '', weight: '', activity: null,
   goal: null, level: null, environment: null, days: '', minutes: '', equipment: [], zones: [],
   setWeightGoal: true, targetWeight: '', weeks: '', paceConfirmed: false,
-  exclusions: '', dietFocus: '', healthFlags: [], noHealthFlags: false, disclaimerRead: false, consent: false,
+  exclusions: '', dietFocus: '', preferences: createMealPreferences(), healthFlags: [], noHealthFlags: false, disclaimerRead: false, consent: false,
 });
 
 // Al elegir un entorno se marca todo su equipo.
@@ -138,7 +139,7 @@ export function paceSummary(draft: Draft) {
 export const hasHealthRisk = (flags: HealthFlag[]) => flags.length > 0;
 
 export function completeOnboarding(draft: Draft, now: Date, today: string):
-  { ok: true; values: PersonalValues; exclusions: string[]; dietFocus: string; onboarding: OnboardingRecord } | { ok: false; step: Step } {
+  { ok: true; values: PersonalValues; exclusions: string[]; dietFocus: string; preferences: MealPreferences; onboarding: OnboardingRecord } | { ok: false; step: Step } {
   for (const step of steps) if (Object.keys(validateStep(step, draft)).length) return { ok: false, step };
   const base = personal(draft);
   const nutrition = parseNutritionForm({ exclusions: draft.exclusions, dietFocus: draft.dietFocus });
@@ -146,7 +147,7 @@ export function completeOnboarding(draft: Draft, now: Date, today: string):
   const goal = paceSummary(draft);
   const startKg = base.values.weightKg!;
   return {
-    ok: true, values: base.values, exclusions: nutrition.exclusions, dietFocus: nutrition.dietFocus,
+    ok: true, values: base.values, exclusions: nutrition.exclusions, dietFocus: nutrition.dietFocus, preferences: draft.preferences,
     onboarding: {
       sex: draft.sex!, activity: draft.activity!, level: draft.level!, goal: draft.goal!, environment: draft.environment!,
       equipment: ['bodyweight', ...draft.equipment.filter((item) => item !== 'bodyweight')],

@@ -6,14 +6,14 @@ import { AppPressable } from '../../../components/ui/AppPressable';
 import { AppText } from '../../../components/ui/AppText';
 import { Card } from '../../../components/ui/Card';
 import { colors, layout, radius, spacing } from '../../../theme';
-import { formatKcal, mealLabels } from '../presentation';
+import { formatKcal, planMealLabels } from '../presentation';
 
 export function PlannedMealCard({ meal, onSwap, onRegister }: {
   meal: PlannedMeal; onSwap: (index: number) => void; onRegister?: () => void;
 }) {
   return <Card tone="low" style={styles.card}>
     <View style={styles.top}>
-      <AppText variant="header" accessibilityRole="header" style={styles.title}>{mealLabels[meal.meal]}</AppText>
+      <AppText variant="header" accessibilityRole="header" style={styles.title}>{planMealLabels[meal.meal]}</AppText>
       <AppText variant="label" tone="brand">{formatKcal(meal.nutrients.kcal)} kcal</AppText>
     </View>
     <View style={styles.items}>

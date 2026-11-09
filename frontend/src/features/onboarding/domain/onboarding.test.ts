@@ -53,6 +53,7 @@ describe('onboarding', () => {
     expect(profile.onboarding).toMatchObject({ healthFlags: ['injury'], zones: ['knee', 'wrist'], environment: 'none', equipment: ['bodyweight'], completedAt: now.toISOString(),
       weightGoal: { startKg: 80, targetKg: 76, startDate: today, endDate: '2026-12-25' } });
     expect(profile.onboarding?.consent.acceptedAt).toBe(now.toISOString());
+    expect(profile.mealPreferences).toEqual({ mealsPerDay: 4, preferred: [], disliked: [] });
     expect(profile).not.toHaveProperty('ok');
   });
 });

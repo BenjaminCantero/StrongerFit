@@ -1,7 +1,12 @@
+import type { PlanSlot } from '@strongerfit/nutrition-engine';
 import type { MealId } from './domain/food-entry';
 
 export const mealLabels: Record<MealId, string> = {
   breakfast: 'Desayuno', lunch: 'Almuerzo', snack: 'Once / Merienda', dinner: 'Cena',
+};
+// Comidas de la minuta: las del diario más las colaciones.
+export const planMealLabels: Record<PlanSlot, string> = {
+  ...mealLabels, 'morning-snack': 'Colación de media mañana', 'evening-snack': 'Colación nocturna',
 };
 export const formatKcal = new Intl.NumberFormat('es-CL', { maximumFractionDigits: 0 }).format;
 export const formatGrams = new Intl.NumberFormat('es-CL', { maximumFractionDigits: 2 }).format;
