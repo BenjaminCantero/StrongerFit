@@ -11,7 +11,7 @@ features/nutrition/
 ├── domain/diary.ts             Fechas, snapshots, altas, edición, eliminación y balance
 ├── domain/food-entry.ts        Borrador, búsqueda, cantidades y nutrientes
 ├── domain/*.test.ts            Pruebas de dominio y estado compartido
-├── data/foods.preview.ts       Catálogo ilustrativo
+├── data/foods.preview.ts       Adaptador del catálogo importado
 ├── data/diary.preview.ts       Registros y metas ilustrativos de desarrollo
 ├── data/food-images.ts         Imágenes por ID, separadas del modelo
 ├── state/diary-store.ts        Adaptador Zustand, sin persistencia
@@ -44,8 +44,8 @@ Los componentes de presentación reciben datos y callbacks.
 - Eliminar todos los registros de una comida y fecha, con confirmación previa.
 - El acceso a minuta semanal presenta un estado vacío; el generador queda pendiente.
 
-Los totales del HTML no coincidían con sus alimentos. La implementación suma los
-valores del catálogo ilustrativo, en lugar de copiar esos totales inconsistentes.
+Los totales se calculan desde los alimentos seleccionados y sus cantidades; no se
+copian los totales del HTML de referencia.
 Las metas de desarrollo también se identifican como ejemplo.
 
 ## Formulario
@@ -65,13 +65,13 @@ Las del diario comparan lo consumido con las metas ilustrativas.
 ## Alcance y estados vacíos
 
 Los datos existen solo en memoria y se reinician al recargar o cerrar la app.
-No hay persistencia, sincronización, validación de alergias ni generación de minutas.
-El catálogo no se atribuye a INTA/MINSAL ni se declara verificado. Las imágenes del
-formulario provienen del HTML recibido y se empaquetan localmente.
+El diario no tiene persistencia ni sincronización. El motor de minutas aplica las
+restricciones curadas descritas abajo. Las imágenes del formulario provienen del
+HTML recibido y se empaquetan localmente.
 
-Producción presenta el diario vacío y sin metas; registrar muestra el catálogo no
-disponible hasta conectar datos reales. En desarrollo, `/nutrition?preview=empty`
-permite revisar ese recorrido. Los parámetros inválidos del formulario muestran un
+Producción presenta el diario vacío y sin metas, pero el registro manual dispone
+del catálogo local importado, incluidos los alimentos propios no verificados.
+En desarrollo, `preview=empty` permite revisar el estado sin catálogo. Los parámetros inválidos del formulario muestran un
 estado no disponible. La barra de pestañas permanece en el diario y se oculta en el
 formulario, cuyo encabezado regresa a Alimentación.
 
@@ -89,10 +89,97 @@ Capturas: [diario — paso 4](../design/step-04-nutrition-diary.png),
 
 ## Minuta semanal (RF-12, RF-13)
 
-`packages/nutrition-engine` incluye un catálogo de referencia (`foods.ts`, versión
-`alimentos-referencia-0.1`) con rol, comidas posibles y etiquetas de restricción por
-alimento. Sus valores por 100 g son aproximados y deben reemplazarse por una fuente
-importada con procedencia (RF-18); también alimenta el buscador de desarrollo.
+`packages/nutrition-engine/src/foods.ts` expone el catálogo generado
+`foods.generated.ts`, versión `usda-sr-2018-04-cl-1`: 251 alimentos, 237 importados de
+USDA FoodData Central SR Legacy 2018-04 y 14 propios no verificados. También alimenta
+el buscador. No hace llamadas USDA en tiempo real. Cada alimento conserva fuente,
+conjunto, versión, licencia, fecha de importación (2026-11-09) y, para USDA, `fdcId`.
+`verified` significa importado de la fuente identificada; no certifica alérgenos ni
+valida un producto comercial. `FoodSummary` presenta la fuente junto a los nutrientes.
+
+La curaduría versionada vive en `packages/nutrition-engine/data/food-mapping.json`:
+ID interno, fdcId, descripción original cotejada, nombre chileno con preparación,
+rol, comidas, etiquetas, porciones y acompañamientos. Los nutrientes no están en
+el mapeo: proceden exclusivamente del CSV oficial. Los 53 IDs anteriores se conservan;
+los snapshots ya registrados en el diario no se recalculan al cambiar el catálogo.
+Los datos propios mantienen exactamente sus nutrientes y porciones anteriores en
+`unverified-foods.json`. El generador y los intercambios exigen `verified === true`;
+el registro manual permite buscar y elegir los no verificados.
+
+### Regeneración controlada (RF-18, RNF-16, BR-07)
+
+Requiere Python 3 (biblioteca estándar, sin dependencias), curl y unzip. Desde la raíz:
+
+```sh
+curl --fail --location --output /tmp/FoodData_Central_sr_legacy_food_csv_2018-04.zip \
+  https://fdc.nal.usda.gov/fdc-datasets/FoodData_Central_sr_legacy_food_csv_2018-04.zip
+unzip /tmp/FoodData_Central_sr_legacy_food_csv_2018-04.zip -d /tmp/strongerfit-usda
+python3 scripts/import-foods.py /tmp/strongerfit-usda/FoodData_Central_sr_legacy_food_csv_2018-04
+python3 scripts/import-foods.py /tmp/strongerfit-usda/FoodData_Central_sr_legacy_food_csv_2018-04 --check
+npm run check
+```
+
+Descargas: [USDA FoodData Central](https://fdc.nal.usda.gov/download-datasets/).
+`usda-release.json` fija URL, SHA-256 del ZIP y de las tres tablas utilizadas, fecha
+explícita e IDs/unidades confirmados en `nutrient.csv`: energía 1008/KCAL,
+proteína 1003/G, carbohidratos por diferencia 1005/G y grasa 1004/G. 1062 es energía
+en kJ y no se importa. No se calculan nutrientes faltantes. Un valor ausente, negativo
+o no finito excluye el alimento y se registra en `import-report.json`; cero sí es
+válido. Un ID desconocido, descripción cambiada, duplicado o hash distinto aborta.
+Los archivos se generan en orden estable y UTF-8; ni el reloj ni el orden de los CSV
+alteran el resultado. Se versionan catálogo, mapeo, manifiesto e informe, nunca el ZIP
+ni las tablas crudas (ignoradas por Git).
+
+Para actualizar datos hay que revisar la nueva descarga oficial, sus unidades y
+variantes, actualizar el manifiesto explícitamente y subir `FOOD_CATALOG_VERSION`.
+Revisar el diff nutricional y ejecutar las pruebas antes de publicar. La reversión
+consiste en revertir los commits de esta migración; no modifica registros del diario.
+La suite incluye pruebas del importador con CSV sintéticos (no son datos del catálogo),
+procedencia, rangos, energía 4/4/9 con tolerancia de mayor entre 20 kcal y 20% por
+fibra/factores Atwater, IDs y exclusión de no verificados de generación/intercambio.
+
+Se inspeccionó además Foundation Foods **2026-10-29** en su
+[JSON oficial](https://fdc.nal.usda.gov/fdc-datasets/FoodData_Central_foundation_food_json_2026-10-29.zip):
+no agregó equivalentes fieles a los originales pendientes. No se importó ningún
+alimento Foundation; el script de esta versión acepta únicamente SR Legacy.
+El ZIP CSV Foundation de esa fecha carecía de `food.csv` y `food_nutrient.csv`, por
+lo que la búsqueda de equivalentes se hizo en el JSON, sin sustituir la fuente.
+
+### Alimentos propios y decisiones para revisión
+
+Los 14 no verificados son: marraqueta (`bread`), avena con leche sin lactosa (`oats`),
+posta negra cocida (`beef`), merluza al vapor (`hake`), camarones salteados (`shrimp`),
+tofu firme salteado (`tofu`), quesillo (`fresh-cheese`), leche semidescremada sin lactosa
+(`lactose-free-milk`), yogur natural sin lactosa (`lactose-free-yogurt`), hojuelas de
+quinoa (`quinoa-flakes`), ensalada de lechuga y tomate (`salad`), brócoli al vapor
+(`broccoli`), zapallo italiano salteado (`zucchini`) y espinaca salteada (`spinach`).
+No se equipararon mezclas, cortes chilenos, especies ni preparaciones distintas:
+por ejemplo, USDA hervido no verifica un salteado ni un alimento al vapor. Hay
+alternativas USDA con nombres y nuevos IDs que describen la preparación real.
+
+Revisar estas decisiones de curaduría antes de ampliar equivalencias:
+
+- Palta `avocado` usa 171705 (variedades comerciales), sin afirmar Hass; leche `milk`
+  usa 172205 (2% de grasa), explicitado en el nombre; `soy-yogurt` usa 167722 (yogur
+  de tofu), sin afirmar que sea sin azúcar. Son equivalencias genéricas, no marcas.
+- Los panes comerciales llevan preventivamente gluten, leche/lactosa, huevo, soya
+  y animal; las pastas de trigo incluyen huevo/animal por precaución. Esto limita
+  opciones, pero evita afirmar una receta libre de esos ingredientes.
+- Coco y aceite de coco llevan `frutos-secos` de forma conservadora; aceite de soya
+  mantiene `soya`. La avena mantiene `gluten`, sin presumir certificación.
+- `lacteo` incluye derivados sin lactosa; `lactosa` se conserva preventivamente en
+  los quesos. No se infiere ausencia de alérgenos a partir de nutrientes en cero.
+- Los nombres mejillón azul, sardina atlántica, salmón atlántico/coho y corte vacuno
+  “eye of round” identifican la variante USDA; no se presentan como chorito chileno,
+  posta negra u otra especie/corte local. Los `usdaDescription` permiten auditarlo.
+- El tipo de etiquetas preexistente no incluye sésamo ni lupino; esta importación no
+  amplía ese contrato. No se debe interpretar el catálogo como certificación de
+  ausencia de todos los posibles alérgenos o trazas de fabricación.
+
+Distribución: proteína 46, lácteos/alternativas 41, carbohidratos 44, verduras 45,
+frutas 36 y grasas 39. Descartes por nutrientes incompletos entre los 237 candidatos:
+**ninguno**. Se mantiene la exigencia de al menos dos intercambios por casillero con
+las exclusiones comunes, y se añade cobertura vegana y vegana sin gluten/lácteos.
 
 `generateMealPlan` arma 7 días con desayuno, almuerzo, once y cena combinando
 alimentos y porciones (sin recetas). Reparte la meta diaria por comida, deja las
