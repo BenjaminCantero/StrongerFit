@@ -8,3 +8,9 @@ Energía al entero; macros al gramo. Cada resultado incluye `ruleVersion`.
 Sin sexo declarado se usa el promedio de las constantes (−78) y el piso mayor;
 es una decisión provisional hasta resolver SRS 11.1. Los valores son referencia
 inicial y requieren revisión profesional antes del lanzamiento público.
+
+La minuta semanal (`meal-plan.ts`, reglas `minuta-0.2`) reparte energía y proteína por
+comida según 3 a 6 comidas al día, usa preferencias blandas con un tope de 4 apariciones
+por semana y nunca relaja exclusiones. `dayTargets` (en `index.ts`) arma metas por día de
+entrenamiento y descanso con una diferencia fija de 10 %, respetando piso y límites cada
+día. Detalle y valores en `docs/architecture/nutrition.md`.

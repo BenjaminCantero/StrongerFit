@@ -42,7 +42,7 @@ Los componentes de presentación reciben datos y callbacks.
 - Añadir alimentos a una comida; editar un registro existente sin duplicarlo.
   Si una comida contiene varios registros, se elige cuál editar.
 - Eliminar todos los registros de una comida y fecha, con confirmación previa.
-- El acceso a minuta semanal presenta un estado vacío; el generador queda pendiente.
+- El acceso a minuta semanal abre el generador descrito más abajo.
 
 Los totales se calculan desde los alimentos seleccionados y sus cantidades; no se
 copian los totales del HTML de referencia.
@@ -181,11 +181,120 @@ frutas 36 y grasas 39. Descartes por nutrientes incompletos entre los 237 candid
 **ninguno**. Se mantiene la exigencia de al menos dos intercambios por casillero con
 las exclusiones comunes, y se añade cobertura vegana y vegana sin gluten/lácteos.
 
-`generateMealPlan` arma 7 días con desayuno, almuerzo, once y cena combinando
-alimentos y porciones (sin recetas). Reparte la meta diaria por comida, deja las
-verduras en su porción habitual, escala el resto y redondea a 5 g. Es determinista y
-guarda versión de reglas y catálogo (RF-19). Cada día informa su desviación frente a
-la meta con tolerancia ±10 % (BR-09).
+`generateMealPlan` arma 7 días combinando alimentos y porciones (sin recetas). Es
+determinista: mismo perfil y mismo catálogo producen la misma minuta. Cada minuta guarda
+`ruleVersion` (`minuta-0.2`) y `catalogVersion` (RF-19). Las reglas viven en
+`packages/nutrition-engine/src/meal-plan.ts`; la meta por tipo de día, en `index.ts`.
+Todos los valores siguientes son **provisionales**, como el resto del motor, y requieren
+revisión profesional antes del lanzamiento público.
+
+### Comidas al día
+
+La persona elige de 3 a 6 comidas (por defecto 4). Cada reparto suma 1 en energía y en
+proteína (`mealLayouts`):
+
+| Comidas | Desayuno | Colación mañana | Almuerzo | Once | Cena | Colación noche |
+|---|---|---|---|---|---|---|
+| 3 | 30 % / 25 % | — | 40 % / 40 % | — | 30 % / 35 % | — |
+| 4 | 25 % / 20 % | — | 35 % / 35 % | 12 % / 10 % | 28 % / 35 % | — |
+| 5 | 22 % / 20 % | 10 % / 5 % | 30 % / 33 % | 12 % / 10 % | 26 % / 32 % | — |
+| 6 | 20 % / 18 % | 10 % / 5 % | 27 % / 30 % | 12 % / 10 % | 23 % / 27 % | 8 % / 10 % |
+
+Energía / proteína. Con 4 comidas la energía es la de `minuta-0.1`. La proteína se reparte
+más pareja entre comidas principales y menos en colaciones. La colación de media mañana es
+fruta y grasa (frutos secos o semillas); la nocturna, un lácteo o alternativa. Ambas usan
+los alimentos que el catálogo marca para la once, y al registrarlas en el diario (que tiene
+cuatro comidas) quedan en «Once / Merienda».
+
+### Porciones: proteína y energía
+
+Cada comida recibe su parte de la meta de energía y de proteína. Dentro de la comida:
+
+1. Las verduras quedan en su porción habitual.
+2. Los proteicos y lácteos se fijan para acercarse a la proteína de la comida, sin dejar a
+   carbohidratos, frutas y grasas bajo su porción mínima (la energía tiene prioridad).
+3. Carbohidratos, frutas y grasas completan la energía.
+4. Si aun así falta energía porque esos alimentos llegaron a su máximo, los proteicos pueden
+   crecer hasta +10 % sobre la proteína de la comida, nunca más.
+
+Ninguna porción sale de 0,5× a 2,5× la porción habitual, redondeada a 5 g. Las comidas con
+poco margen (desayuno y colaciones) se calculan primero; almuerzo y cena reciben su parte
+de lo que queda y absorben lo que las anteriores no alcanzaron.
+
+Prioridad cuando no se puede todo: exclusiones, luego límites de porción, luego energía,
+luego proteína. Cada día informa `deviation` (energía) y `proteinDeviation` frente a su
+meta, con tolerancia ±10 % para ambas (BR-09). Si la proteína queda bajo la tolerancia, la
+minuta se genera igual y la pantalla dice cuántos gramos faltan.
+
+### Selección de alimentos
+
+Para cada casillero se ordenan los candidatos compatibles por, en este orden:
+
+1. Que le guste: los marcados «no me gusta» solo si no queda otra opción.
+2. No repetirlo en el mismo día.
+3. Que la comida llegue a su meta con él (proteína para proteicos y lácteos; energía para el resto).
+4. No superar el tope de **4 apariciones por semana** (`MAX_WEEKLY_REPEATS`).
+5. No repetirlo del día anterior.
+6. Que sea preferido y no haya llegado al tope.
+7. Rotación por día (la cena parte desde la mitad de la lista).
+
+Con un único favorito, este aparece en días alternos: como máximo 4 veces. El tope gana a
+la preferencia y a la rotación; solo cede si ningún otro alimento compatible permite que la
+comida llegue a su meta (la proteína está por encima de la variedad).
+
+### Preferencias
+
+Alimentos preferidos y no deseados se eligen del catálogo (solo verificados, hasta 20 por
+lista) en el onboarding y en Perfil → Nutrición y restricciones; no hay texto libre. Un
+alimento no puede estar en ambas listas. Si todos los alimentos de un rol no le gustan, se
+prueba el rol de respaldo (lácteo → proteína → grasa) antes de usarlos. La minuta avisa qué
+alimento no deseado usó, dónde y por qué.
+
+Las exclusiones (alergias, intolerancias, vegetariana, vegana) son duras: un alimento
+excluido nunca entra en la minuta, ni como preferido, ni como respaldo, ni en un
+intercambio. Si un preferido está excluido, gana la exclusión y la minuta lo avisa; el
+buscador lo marca como bloqueado y no permite marcarlo.
+
+### Meta por tipo de día (RF-21)
+
+Opción explícita en Perfil, desactivada por defecto y ofrecida solo si hay un plan de
+entrenamiento guardado (que indica los días) y una meta calculada (piso y gasto total).
+`TRAINING_REST_GAP` = **10 %** de la meta: es la diferencia entre un día de entrenamiento y
+uno de descanso, repartida para que el promedio semanal sea exactamente la meta. Con `t`
+días de entrenamiento, entrenar suma `10 % × (7 − t) / 7` y descansar resta `10 % × t / 7`
+(con 4 días: +4,3 % y −5,7 %). El redondeo al entero se compensa en los días de descanso.
+Proteína y grasa no cambian; la diferencia va en carbohidratos (4 kcal/g). No es una
+estimación del gasto de la sesión: el SRS prohíbe usar gasto de ejercicio estimado.
+
+Cada día por separado respeta el piso de energía (BR-16), el déficit máximo de 20 % del
+gasto total (BR-17), el superávit máximo de 15 % y, con riesgo declarado, la ausencia de
+déficit (BR-19). Si la diferencia los rompería, se reduce (truncada a milésimas) hasta que
+no ocurra, y la minuta lo informa. Una meta en el piso queda sin diferencia.
+
+### Minutas guardadas e intercambios
+
+`readMealPlan` abre minutas `minuta-0.1`: completa meta por día, proteína por comida,
+desviación de proteína y preferencias vacías sin recalcular alimentos ni porciones, y
+conserva su versión. Hay una minuta `minuta-0.1` real como fixture de prueba.
+
+«Cambiar» ofrece alimentos del mismo rol y comida, compatibles con las exclusiones. Los
+proteicos conservan la proteína del original; el resto, la energía. Los no deseados se
+ofrecen solo si no hay alternativa y van marcados; hasta dos preferidos van primero.
+
+Capturas a 390 px: [minuta con tipos de día](../design/step-06-meal-plan.png),
+[proteína que no alcanza](../design/step-06-meal-plan-protein-short.png),
+[editor de preferencias](../design/step-06-meal-preferences.png).
+
+### Dónde la proteína no alcanza
+
+Medido sobre el catálogo actual (hombre 80 kg y mujer 62 kg; 1,6, 1,8 y 2,0 g/kg; déficit
+15 y 20 %, mantención y superávit 10 %; 3 a 6 comidas; 384 combinaciones). La energía queda
+siempre en ±10 %. La proteína queda en tolerancia en todos los perfiles sin restricciones y
+vegetarianos, salvo mujer vegetariana con 2,0 g/kg, déficit 20 % y 5–6 comidas (3 de 7 días,
+hasta −17 %). Las faltas se concentran en dietas veganas: sin soya, faltan entre 11 % y 48 %
+según meta y comidas (p. ej. mujer 1,6 g/kg en déficit 15 % con 4 comidas: −22 %); con soya,
+solo con déficit alto y 5–6 comidas (hasta −28 % con 2,0 g/kg). Las colaciones de fruta y
+grasa diluyen la proteína; con 3–4 comidas el resultado es mejor.
 
 Las exclusiones del perfil se reconocen como alérgenos (gluten, lactosa, lácteos,
 frutos secos, maní, huevo, pescado, mariscos, soya) o como nombres de alimentos; lo
@@ -194,9 +303,8 @@ lactosa. Vegetariana y vegana se leen del enfoque alimentario. Un alimento exclu
 nunca entra en la minuta (BR-08, CA-05); si una restricción deja una comida sin
 opciones, se informa qué la bloquea en lugar de ignorarla (CU-05).
 
-La minuta se genera como propuesta y se guarda solo al aceptar. «Cambiar» ofrece
-alimentos del mismo rol, compatibles, con porción de energía similar y diferencias de
-kcal y proteína; en la minuta guardada elegir una opción confirma el cambio. Cada
+La minuta se genera como propuesta y se guarda solo al aceptar. En la minuta guardada
+elegir una opción de «Cambiar» confirma el cambio. Cada
 comida guardada puede registrarse en el diario de hoy. Hay pruebas que exigen al
 menos dos alternativas por casillero con las exclusiones comunes.
 
