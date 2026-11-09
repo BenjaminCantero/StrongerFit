@@ -16,7 +16,7 @@ describe('minuta semanal', () => {
     const first = plan();
     expect(first.days).toHaveLength(7);
     expect(first.days.every((day) => day.meals.map((meal) => meal.meal).join() === 'breakfast,lunch,snack,dinner')).toBe(true);
-    expect(first).toMatchObject({ ruleVersion: 'minuta-0.1', catalogVersion: 'usda-sr-2018-04-cl-1', tolerance: 0.1 });
+    expect(first).toMatchObject({ ruleVersion: 'minuta-0.2', catalogVersion: 'usda-sr-2018-04-cl-1', tolerance: 0.1 });
     expect(plan()).toEqual(first);
   });
 

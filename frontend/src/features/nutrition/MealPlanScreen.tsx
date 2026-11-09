@@ -1,5 +1,5 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { applySwap, swapOptions, withinTolerance, type MealSlot, type PlanItem } from '@strongerfit/nutrition-engine';
+import { applySwap, readMealPlan, swapOptions, withinTolerance, type MealSlot, type PlanItem } from '@strongerfit/nutrition-engine';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Screen } from '../../components/Screen';
@@ -9,7 +9,7 @@ import { AppPressable } from '../../components/ui/AppPressable';
 import { AppText } from '../../components/ui/AppText';
 import { Card } from '../../components/ui/Card';
 import { colors, layout, radius, spacing } from '../../theme';
-import type { ProfileData, SavedMealPlan } from '../profile/domain/profile';
+import type { OpenMealPlan, ProfileData, SavedMealPlan } from '../profile/domain/profile';
 import { PlannedMealCard } from './components/PlannedMealCard';
 import type { Nutrients } from './domain/food-entry';
 import { hasHealthRisk, proposeMealPlan, roleLabels, tagLabels, weekDays } from './domain/meal-plan';
@@ -25,12 +25,12 @@ type Blocked = { meal: MealSlot; role: keyof typeof roleLabels }[];
 const signed = (value: number, unit: string) => `${value > 0 ? '+' : value < 0 ? '−' : '±'}${formatKcal(Math.abs(value))} ${unit}`;
 
 export function MealPlanScreen({ profile, targets, todayIndex, onSave, onRegister, onGoals, onProfile }: Props) {
-  const [proposal, setProposal] = useState<SavedMealPlan | null>(null);
+  const [proposal, setProposal] = useState<OpenMealPlan | null>(null);
   const [blocked, setBlocked] = useState<Blocked | null>(null);
   const [day, setDay] = useState(todayIndex);
   const [swapping, setSwapping] = useState<{ meal: MealSlot; index: number } | null>(null);
   const [notice, setNotice] = useState('');
-  const plan = proposal ?? profile.mealPlan;
+  const plan = proposal ?? (profile.mealPlan && readMealPlan(profile.mealPlan));
 
   if (!targets) return <Screen>
     <Card tone="low">
@@ -48,7 +48,7 @@ export function MealPlanScreen({ profile, targets, todayIndex, onSave, onRegiste
 
   function choose(replacement: PlanItem) {
     if (!plan || !swapping) return;
-    const next = applySwap(plan, day, swapping.meal, swapping.index, replacement) as SavedMealPlan;
+    const next = { ...applySwap(plan, day, swapping.meal, swapping.index, replacement), createdAt: plan.createdAt };
     // En la minuta guardada, elegir una opción es la confirmación del intercambio.
     if (proposal) setProposal(next); else onSave(next);
     setNotice(`Cambiado por ${replacement.name}.`);

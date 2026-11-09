@@ -1,4 +1,4 @@
-import type { MealPlan, NutritionTargets } from '@strongerfit/nutrition-engine';
+import type { MealPlan, NutritionTargets, StoredMealPlan } from '@strongerfit/nutrition-engine';
 import { environmentLabels, type Environment, type Equipment, type Plan, type PlannedExercise, type Zone } from '@strongerfit/training-engine';
 import type { OnboardingRecord } from '../../onboarding/domain/onboarding';
 
@@ -28,7 +28,10 @@ export type ProfileData = {
   loadDecisions: LoadDecision[];
 };
 
-export type SavedMealPlan = MealPlan & { createdAt: string };
+// Puede venir de una versión anterior de reglas; se abre con readMealPlan.
+export type SavedMealPlan = StoredMealPlan & { createdAt: string };
+// Minuta con las reglas vigentes: la que se genera o la que readMealPlan abrió.
+export type OpenMealPlan = MealPlan & { createdAt: string };
 
 // Decisión sobre una sugerencia de sobrecarga, con la versión de reglas (CU-14).
 export type LoadDecision = {

@@ -1,5 +1,5 @@
 import { generateMealPlan, type FoodRole, type FoodTag, type PlannedMeal } from '@strongerfit/nutrition-engine';
-import type { ProfileData, SavedMealPlan } from '../../profile/domain/profile';
+import type { OpenMealPlan, ProfileData } from '../../profile/domain/profile';
 import type { FoodEntry, Nutrients } from './food-entry';
 
 export const weekDays = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
@@ -17,10 +17,10 @@ export const weekdayIndex = (date: string) => (new Date(`${date}T12:00:00Z`).get
 // Propuesta desde la meta vigente y las restricciones del perfil (CU-05). No se guarda hasta que la persona acepta.
 export function proposeMealPlan(profile: ProfileData, targets: Nutrients, now: Date) {
   const result = generateMealPlan({ targets, exclusions: profile.exclusions, dietFocus: profile.dietFocus });
-  return result.ok ? { ...result, plan: { ...result.plan, createdAt: now.toISOString() } as SavedMealPlan } : result;
+  return result.ok ? { ...result, plan: { ...result.plan, createdAt: now.toISOString() } as OpenMealPlan } : result;
 }
 
-export function mealEntry(meal: PlannedMeal): FoodEntry {
+export function mealEntry(meal: Pick<PlannedMeal, 'meal' | 'items' | 'nutrients'>): FoodEntry {
   return { id: 0, meal: meal.meal, nutrients: meal.nutrients,
     items: meal.items.map(({ foodId, name, grams, nutrients }) => ({ foodId, name, grams, nutrients })) };
 }
