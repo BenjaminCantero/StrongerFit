@@ -55,7 +55,7 @@ export function resolveRestrictions(exclusions: string[], dietFocus: string, foo
 }
 
 export const isAllowed = (food: CatalogFood, restrictions: Restrictions) =>
-  !food.tags.some((tag) => restrictions.tags.includes(tag)) && !restrictions.names.some((name) => normalize(food.name).includes(name));
+  food.verified === true && !food.tags.some((tag) => restrictions.tags.includes(tag)) && !restrictions.names.some((name) => normalize(food.name).includes(name));
 
 const round1 = (value: number) => Math.round(value * 10) / 10;
 const round5 = (grams: number) => Math.max(5, Math.round(grams / 5) * 5);

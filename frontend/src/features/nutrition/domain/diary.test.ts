@@ -12,7 +12,7 @@ describe('diario de alimentación', () => {
   it('calcula el balance desde los alimentos visibles, sin reutilizar el total del mockup', () => {
     const state = preview();
     const entries = entriesForDate(state);
-    expect(diaryTotals(entries).kcal).toBeCloseTo(891.5);
+    expect(diaryTotals(entries).kcal).toBeCloseTo(871.3);
     expect(diaryTotals(entries).kcal).toBeCloseTo(entries.flatMap((entry) => entry.items).reduce((total, item) => total + item.nutrients.kcal, 0));
     expect(entriesForDate(state, '2026-10-31')).toEqual([]);
     expect(createEmptyDiary(date).targets).toBeNull();
@@ -23,7 +23,7 @@ describe('diario de alimentación', () => {
     const entry = structuredClone(initial.entries[0]!);
     entry.nutrients.kcal = 99999;
     const added = diaryReducer(initial, { type: 'add', date: '2026-10-31', entry });
-    expect(added.entries.at(-1)).toMatchObject({ id: 3, date: '2026-10-31', nutrients: { kcal: expect.closeTo(420) } });
+    expect(added.entries.at(-1)).toMatchObject({ id: 3, date: '2026-10-31', nutrients: { kcal: expect.closeTo(420.8) } });
     entry.items[0]!.nutrients.kcal = 0;
     expect(added.entries.at(-1)!.items[0]!.nutrients.kcal).toBeCloseTo(290);
     expect(entriesForDate(added)).toHaveLength(2);
@@ -34,14 +34,14 @@ describe('diario de alimentación', () => {
     const initial = preview();
     let form = createFoodEntry(foodsPreview, { entry: initial.entries[1] });
     expect(form.draft).toMatchObject({ foodId: 'chicken', meal: 'lunch', grams: 150, sideIds: ['quinoa', 'avocado'] });
-    expect(draftTotals(form).kcal).toBeCloseTo(471.5);
+    expect(draftTotals(form).kcal).toBeCloseTo(450.5);
     form = foodEntryReducer(form, { type: 'set-quantity', value: '200' });
     form = foodEntryReducer(form, { type: 'select-meal', meal: 'dinner' });
     const entry = foodEntryReducer(form, { type: 'confirm' }).lastEntry!;
     const updated = diaryReducer(initial, { type: 'update', id: 2, entry });
     expect(updated.entries).toHaveLength(2);
     expect(updated.entries[1]).toMatchObject({ id: 2, date, meal: 'dinner' });
-    expect(diaryTotals(entriesForDate(updated)).kcal).toBeCloseTo(974);
+    expect(diaryTotals(entriesForDate(updated)).kcal).toBeCloseTo(946.8);
     expect(initial.entries[1]!.items[0]!.grams).toBe(150);
     expect(diaryReducer(initial, { type: 'update', id: 999, entry })).toBe(initial);
   });
@@ -52,7 +52,7 @@ describe('diario de alimentación', () => {
     state = diaryReducer(state, { type: 'add', date, entry: state.entries[1]! });
     state = diaryReducer(state, { type: 'delete-meal', date, meal: 'lunch' });
     expect(entriesForDate(state)).toHaveLength(1);
-    expect(diaryTotals(entriesForDate(state)).kcal).toBeCloseTo(420);
+    expect(diaryTotals(entriesForDate(state)).kcal).toBeCloseTo(420.8);
     expect(entriesForDate(state, '2026-10-31')).toHaveLength(1);
   });
 
@@ -74,7 +74,7 @@ describe('diario de alimentación', () => {
     store.getState().dispatch({ type: 'select-date', date: '2026-10-31' });
     expect(entriesForDate(store.getState())).toEqual([]);
     store.getState().dispatch({ type: 'add', date: '2026-10-31', entry: preview().entries[0]! });
-    expect(diaryTotals(entriesForDate(store.getState())).kcal).toBeCloseTo(420);
+    expect(diaryTotals(entriesForDate(store.getState())).kcal).toBeCloseTo(420.8);
     store.getState().dispatch({ type: 'select-date', date });
     expect(entriesForDate(store.getState())).toHaveLength(2);
     expect(updates).toBe(3);

@@ -8,10 +8,10 @@ const initial = () => createFoodEntry(foodsPreview);
 describe('cantidad y nutrientes', () => {
   it('escala la base por 100 g y conserva precisión antes del redondeo de presentación', () => {
     const nutrients = nutrientsForGrams(foodsPreview[0]!, 150);
-    expect(nutrients.kcal).toBe(247.5);
-    expect(nutrients.protein).toBe(46.5);
+    expect(nutrients.kcal).toBe(226.5);
+    expect(nutrients.protein).toBe(45.81);
     expect(nutrients.carbs).toBe(0);
-    expect(nutrients.fat).toBeCloseTo(5.4);
+    expect(nutrients.fat).toBeCloseTo(4.755);
   });
 
   it('convierte 150 g en 1,25 porciones de 120 g y calcula una porción completa', () => {
@@ -20,7 +20,7 @@ describe('cantidad y nutrientes', () => {
     expect(state.draft.grams).toBe(150);
     state = foodEntryReducer(state, { type: 'set-quantity', value: '1' });
     expect(state.draft.grams).toBe(120);
-    expect(draftTotals(state).kcal).toBe(198);
+    expect(draftTotals(state).kcal).toBe(181.2);
   });
 
   it('conserva gramos exactos tras alternar unidades con una fracción periódica', () => {
@@ -70,11 +70,11 @@ describe('selección y confirmación', () => {
   it('suma y quita acompañamientos sin duplicarlos ni cambiar la cantidad principal', () => {
     let state = foodEntryReducer(initial(), { type: 'toggle-side', foodId: 'avocado' });
     state = foodEntryReducer(state, { type: 'toggle-side', foodId: 'bread' });
-    expect(draftTotals(state).kcal).toBe(462.5);
-    expect(draftTotals(state).protein).toBe(52);
+    expect(draftTotals(state).kcal).toBe(441.5);
+    expect(draftTotals(state).protein).toBe(51.31);
     expect(state.draft.grams).toBe(150);
     state = foodEntryReducer(state, { type: 'toggle-side', foodId: 'avocado' });
-    expect(draftTotals(state).kcal).toBe(382.5);
+    expect(draftTotals(state).kcal).toBe(361.5);
     expect(foodEntryReducer(state, { type: 'toggle-side', foodId: 'chicken' })).toBe(state);
     expect(foodEntryReducer(state, { type: 'toggle-side', foodId: 'unknown' })).toBe(state);
   });
@@ -93,7 +93,7 @@ describe('selección y confirmación', () => {
     state = foodEntryReducer(state, { type: 'toggle-side', foodId: 'avocado' });
     state = foodEntryReducer(state, { type: 'confirm' });
     expect(state.entries).toHaveLength(1);
-    expect(state.lastEntry).toMatchObject({ id: 1, meal: 'snack', nutrients: { kcal: 327.5 } });
+    expect(state.lastEntry).toMatchObject({ id: 1, meal: 'snack', nutrients: { kcal: 306.5 } });
     expect(state.lastEntry?.items).toHaveLength(2);
     expect(foodEntryReducer(state, { type: 'confirm' })).toBe(state);
     expect(foodEntryReducer(state, { type: 'set-quantity', value: '300' })).toBe(state);
@@ -102,7 +102,7 @@ describe('selección y confirmación', () => {
     next = foodEntryReducer(next, { type: 'confirm' });
     expect(next.entries).toHaveLength(2);
     expect(next.entries[0]).toBe(state.entries[0]);
-    expect(next.entries[0]?.nutrients.kcal).toBe(327.5);
+    expect(next.entries[0]?.nutrients.kcal).toBe(306.5);
     expect(next.lastEntry?.id).toBe(2);
   });
 

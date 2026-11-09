@@ -16,7 +16,7 @@ describe('minuta semanal', () => {
     const first = plan();
     expect(first.days).toHaveLength(7);
     expect(first.days.every((day) => day.meals.map((meal) => meal.meal).join() === 'breakfast,lunch,snack,dinner')).toBe(true);
-    expect(first).toMatchObject({ ruleVersion: 'minuta-0.1', catalogVersion: 'alimentos-referencia-0.1', tolerance: 0.1 });
+    expect(first).toMatchObject({ ruleVersion: 'minuta-0.1', catalogVersion: 'usda-sr-2018-04-cl-1', tolerance: 0.1 });
     expect(plan()).toEqual(first);
   });
 
@@ -53,12 +53,12 @@ describe('minuta semanal', () => {
   it('informa qué bloquea la minuta cuando las restricciones no dejan opciones, sin ignorarlas', () => {
     const result = generateMealPlan({ targets, exclusions: ['soya', 'gluten'], dietFocus: 'vegana' });
     expect(result.ok).toBe(true);
-    const blocked = generateMealPlan({ targets, exclusions: ['plátano', 'manzana', 'naranja', 'frutillas', 'kiwi'], dietFocus: '' });
+    const blocked = generateMealPlan({ targets, exclusions: foodCatalog.filter((food) => food.role === 'fruit').map((food) => food.name), dietFocus: '' });
     expect(blocked).toMatchObject({ ok: false, blocked: [{ meal: 'breakfast', role: 'fruit' }, { meal: 'snack', role: 'fruit' }] });
   });
 
   it('deja al menos dos opciones por casillero con exclusiones comunes, para que siempre haya intercambio', () => {
-    for (const [exclusions, diet] of [[['gluten'], ''], [['lactosa'], ''], [['lácteos'], ''], [['huevo'], ''], [['frutos secos', 'maní'], ''], [[], 'vegetariana']] as const) {
+    for (const [exclusions, diet] of [[['gluten'], ''], [['lactosa'], ''], [['lácteos'], ''], [['huevo'], ''], [['frutos secos', 'maní'], ''], [[], 'vegetariana'], [[], 'vegana'], [['gluten', 'lácteos'], 'vegana']] as const) {
       const value = plan([...exclusions], diet);
       for (const meal of value.days[0]!.meals) meal.items.forEach((_, index) =>
         expect(swapOptions(value, 0, meal.meal, index).length, `${exclusions} ${diet} ${meal.meal} ${index}`).toBeGreaterThanOrEqual(2));
