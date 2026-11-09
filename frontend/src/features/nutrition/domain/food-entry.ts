@@ -1,3 +1,5 @@
+import type { FoodProvenance } from '@strongerfit/nutrition-engine';
+
 export type Nutrients = { kcal: number; protein: number; carbs: number; fat: number };
 export type MealId = 'breakfast' | 'lunch' | 'snack' | 'dinner';
 export type QuantityMode = 'grams' | 'portions';
@@ -8,6 +10,8 @@ export type Food = {
   servingGrams: number;
   defaultGrams: number;
   pairingIds: string[];
+  provenance?: FoodProvenance;
+  verified?: boolean;
 };
 export type FoodDraft = {
   foodId: string;

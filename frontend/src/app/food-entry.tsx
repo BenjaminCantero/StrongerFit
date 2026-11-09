@@ -31,7 +31,7 @@ export default function FoodEntryRoute() {
     exit();
   }
 
-  const foods = __DEV__ && params.preview !== 'empty' ? foodsPreview : [];
+  const foods = __DEV__ && params.preview === 'empty' ? [] : foodsPreview;
   // Código de barras o foto: no están en el catálogo, se ajustan gramos y comida.
   if (existing && isExternalEntry(existing, foods)) return <>
     <Stack.Screen options={{ title: 'Editar registro' }} />

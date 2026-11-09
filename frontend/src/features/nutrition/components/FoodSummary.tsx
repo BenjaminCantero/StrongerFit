@@ -16,14 +16,16 @@ export function FoodSummary({ food }: { food: Food }) {
           {foodImages[food.id] && <Image source={foodImages[food.id]} style={styles.photo} />}
         </View>
         <View style={styles.description}>
-          <AppText variant="label" tone="muted">Alimento de ejemplo</AppText>
+          <AppText variant="label" tone="muted">{food.verified ? 'Alimento del catálogo USDA' : 'Alimento no verificado'}</AppText>
           <AppText variant="header" accessibilityRole="header">{food.name}</AppText>
           <AppText variant="caption" tone="muted">Base: {formatKcal(food.per100g.kcal)} kcal / 100 g</AppText>
         </View>
       </View>
       <View style={styles.note}>
         <Ionicons name="information-circle-outline" size={16} color={colors.brand} />
-        <AppText variant="caption" tone="muted" style={styles.noteText}>Datos ilustrativos. Alérgenos y procedencia pendientes de verificar.</AppText>
+        <AppText variant="caption" tone="muted" style={styles.noteText}>{food.provenance?.source === 'USDA FoodData Central'
+          ? `Fuente: USDA FoodData Central · ${food.provenance.dataset} ${food.provenance.version} · FDC ${food.provenance.fdcId} · ${food.provenance.license}. Importado: ${food.provenance.importedAt}.`
+          : 'Fuente: catálogo propio de StrongerFit. Valores aproximados, no verificados. Disponible para registro manual; excluido de minutas automáticas.'}</AppText>
       </View>
     </Card>
   );
