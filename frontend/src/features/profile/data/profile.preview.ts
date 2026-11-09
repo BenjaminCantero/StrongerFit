@@ -16,6 +16,7 @@ export const createProfilePreview = (): ProfileData => ({
   exclusions: ['Gluten'],
   dietFocus: 'Mediterránea adaptada, con legumbres, palta y pescados',
   mealPreferences: createMealPreferences(),
+  trainingDayTargets: false,
   onboarding: {
     sex: 'female', activity: 'moderate', level: 'intermediate', goal: 'muscle', environment: 'small-gym',
     equipment: ['bodyweight', 'dumbbells', 'barbell'], zones: [], healthFlags: [],

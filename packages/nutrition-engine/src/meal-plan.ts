@@ -1,3 +1,4 @@
+import type { DayTargets, DayType } from './index';
 import { foodCatalog, FOOD_CATALOG_VERSION, type CatalogFood, type FoodRole, type FoodTag, type MealSlot, type Nutrients } from './foods';
 
 // Minuta semanal por combinación de alimentos (RF-12, SRS 10.2). Determinista: los mismos
@@ -65,13 +66,19 @@ export type Restrictions = { tags: FoodTag[]; names: string[]; unmatched: string
 export type PlanItem = { foodId: string; name: string; role: FoodRole; grams: number; nutrients: Nutrients };
 export type PlannedMeal = { meal: PlanSlot; targetKcal: number; targetProtein: number; items: PlanItem[]; nutrients: Nutrients };
 // deviation: energía frente a la meta del día; proteinDeviation: proteína frente a la meta del día.
-export type PlannedDay = { index: number; targets: Nutrients; meals: PlannedMeal[]; totals: Nutrients; deviation: number; proteinDeviation: number };
+// type: entrenamiento o descanso cuando la persona activó metas por tipo de día; si no, null.
+export type PlannedDay = { index: number; type: DayType | null; targets: Nutrients; meals: PlannedMeal[]; totals: Nutrients; deviation: number; proteinDeviation: number };
 export type MealPlan = {
   ruleVersion: string; catalogVersion: string; targets: Nutrients; tolerance: number; proteinTolerance: number;
-  restrictions: Restrictions; preferences: MealPreferences; days: PlannedDay[];
+  restrictions: Restrictions; preferences: MealPreferences;
+  // Diferencia aplicada entre días de entrenamiento y descanso; null si la opción está desactivada.
+  dayTypes: Omit<DayTargets, 'days'> | null;
+  days: PlannedDay[];
 };
 export type MealPlanInput = {
   targets: Nutrients; exclusions: string[]; dietFocus: string; preferences?: Partial<MealPreferences>; tolerance?: number; foods?: CatalogFood[];
+  // Metas por tipo de día (dayTargets del motor de metas). targets sigue siendo el promedio semanal.
+  dayTargets?: DayTargets | null;
 };
 export type MealPlanResult = { ok: true; plan: MealPlan } | { ok: false; blocked: { meal: PlanSlot; role: FoodRole }[]; restrictions: Restrictions };
 
@@ -191,9 +198,9 @@ function portion(foods: CatalogFood[], targetKcal: number, targetProtein: number
 
 const ratio = (actual: number, target: number) => target > 0 ? (actual - target) / target : 0;
 
-function buildDay(index: number, meals: PlannedMeal[], targets: Nutrients): PlannedDay {
+function buildDay(index: number, type: DayType | null, meals: PlannedMeal[], targets: Nutrients): PlannedDay {
   const totals = addNutrients(meals.map((meal) => meal.nutrients));
-  return { index, targets, meals, totals, deviation: ratio(totals.kcal, targets.kcal), proteinDeviation: ratio(totals.protein, targets.protein) };
+  return { index, type, targets, meals, totals, deviation: ratio(totals.kcal, targets.kcal), proteinDeviation: ratio(totals.protein, targets.protein) };
 }
 
 type Options = Map<PlanSlot, Map<FoodRole, CatalogFood[]>>;
@@ -276,7 +283,7 @@ function planMeal(meal: PlanSlot, day: number, options: Options, state: WeekStat
 
 // Reparte la meta del día. Cada comida recibe su parte de lo que queda, de modo que lo que
 // una comida no alcanza (por límites de porción) lo completan las siguientes.
-function planDay(index: number, targets: Nutrients, options: Options, state: WeekState): PlannedDay {
+function planDay(index: number, type: DayType | null, targets: Nutrients, options: Options, state: WeekState): PlannedDay {
   const layout = mealLayouts[state.preferences.mealsPerDay];
   const share = (meal: PlanSlot) => layout.find((entry) => entry.meal === meal)!;
   const order = portionOrder.filter((meal) => layout.some((entry) => entry.meal === meal));
@@ -296,10 +303,11 @@ function planDay(index: number, targets: Nutrients, options: Options, state: Wee
   });
   state.yesterday = state.today;
   state.today = new Set();
-  return buildDay(index, layout.map(({ meal }) => planned.get(meal)!), targets);
+  return buildDay(index, type, layout.map(({ meal }) => planned.get(meal)!), targets);
 }
 
-export function generateMealPlan({ targets, exclusions, dietFocus, preferences: requested, tolerance = DEFAULT_TOLERANCE, foods = foodCatalog }: MealPlanInput): MealPlanResult {
+export function generateMealPlan({ targets, exclusions, dietFocus, preferences: requested, tolerance = DEFAULT_TOLERANCE, foods = foodCatalog,
+  dayTargets = null }: MealPlanInput): MealPlanResult {
   const restrictions = resolveRestrictions(exclusions, dietFocus, foods);
   const preferences = normalizePreferences(requested, foods);
   const meals = mealLayouts[preferences.mealsPerDay].map(({ meal }) => meal);
@@ -308,9 +316,13 @@ export function generateMealPlan({ targets, exclusions, dietFocus, preferences: 
   const blocked = meals.flatMap((meal) => templates[meal].filter((role) => !options.get(meal)!.get(role)!.length).map((role) => ({ meal, role })));
   if (blocked.length) return { ok: false, blocked, restrictions };
   const state: WeekState = { counts: new Map(), yesterday: new Set(), today: new Set(), preferences };
-  const days = Array.from({ length: 7 }, (_, index) => planDay(index, targets, options, state));
+  const days = Array.from({ length: 7 }, (_, index) => {
+    const day = dayTargets?.days[index];
+    return planDay(index, day?.type ?? null, day?.targets ?? targets, options, state);
+  });
+  const dayTypes = dayTargets && { requestedGap: dayTargets.requestedGap, gap: dayTargets.gap, reduced: dayTargets.reduced };
   return { ok: true, plan: { ruleVersion: MEAL_PLAN_RULE_VERSION, catalogVersion: FOOD_CATALOG_VERSION, targets, tolerance,
-    proteinTolerance: PROTEIN_TOLERANCE, restrictions, preferences, days } };
+    proteinTolerance: PROTEIN_TOLERANCE, restrictions, preferences, dayTypes, days } };
 }
 
 // Intercambio (RF-13): mismo rol y comida, respetando restricciones. Los alimentos proteicos
@@ -348,7 +360,7 @@ export function applySwap(plan: MealPlan, day: number, meal: PlanSlot, index: nu
     const items = entry.items.map((current, position) => position === index ? replacement : current);
     return { ...entry, items, nutrients: addNutrients(items.map((value) => value.nutrients)) };
   });
-  return { ...plan, days: plan.days.map((value) => value.index === day ? buildDay(day, meals, target.targets) : value) };
+  return { ...plan, days: plan.days.map((value) => value.index === day ? buildDay(day, target.type, meals, target.targets) : value) };
 }
 
 export const withinTolerance = (plan: MealPlan, day: PlannedDay) => Math.abs(day.deviation) <= plan.tolerance;
@@ -360,10 +372,12 @@ export const proteinShortfall = (day: PlannedDay) => Math.max(0, round1(day.targ
 export type PlanNotice =
   | { kind: 'protein-short'; day: number; missing: number }
   | { kind: 'disliked-used'; foodId: string; name: string; meals: { day: number; meal: PlanSlot }[] }
-  | { kind: 'preferred-excluded'; foodId: string; name: string };
+  | { kind: 'preferred-excluded'; foodId: string; name: string }
+  | { kind: 'day-gap-reduced'; gap: number; requestedGap: number };
 
 export function planNotices(plan: MealPlan, foods = foodCatalog): PlanNotice[] {
   const notices: PlanNotice[] = [];
+  if (plan.dayTypes?.reduced) notices.push({ kind: 'day-gap-reduced', gap: plan.dayTypes.gap, requestedGap: plan.dayTypes.requestedGap });
   for (const day of plan.days) {
     if (day.proteinDeviation < -plan.proteinTolerance) notices.push({ kind: 'protein-short', day: day.index, missing: proteinShortfall(day) });
   }
@@ -383,12 +397,12 @@ export function planNotices(plan: MealPlan, foods = foodCatalog): PlanNotice[] {
 }
 
 // Minutas guardadas con reglas anteriores (minuta-0.1): no tenían meta por día, proteína por
-// comida, desviación de proteína ni preferencias. Se completan sin recalcular porciones ni
+// comida, desviación de proteína, preferencias ni tipo de día. Se completan sin recalcular porciones ni
 // alimentos, para que se abran, se intercambien y se registren igual que antes. La versión de
 // reglas se conserva.
-type LegacyPlannedDay = Omit<PlannedDay, 'targets' | 'proteinDeviation'> & Partial<Pick<PlannedDay, 'targets' | 'proteinDeviation'>>;
+type LegacyPlannedDay = Omit<PlannedDay, 'targets' | 'proteinDeviation' | 'type'> & Partial<Pick<PlannedDay, 'targets' | 'proteinDeviation' | 'type'>>;
 type LegacyPlannedMeal = Omit<PlannedMeal, 'targetProtein'> & Partial<Pick<PlannedMeal, 'targetProtein'>>;
-export type StoredMealPlan = Omit<MealPlan, 'days' | 'proteinTolerance' | 'preferences'> & Partial<Pick<MealPlan, 'proteinTolerance' | 'preferences'>> & {
+export type StoredMealPlan = Omit<MealPlan, 'days' | 'proteinTolerance' | 'preferences' | 'dayTypes'> & Partial<Pick<MealPlan, 'proteinTolerance' | 'preferences' | 'dayTypes'>> & {
   days: (Omit<LegacyPlannedDay, 'meals'> & { meals: LegacyPlannedMeal[] })[];
 };
 
@@ -400,11 +414,12 @@ export function readMealPlan<Plan extends StoredMealPlan>(stored: Plan): Omit<Pl
     ...stored,
     proteinTolerance: stored.proteinTolerance ?? PROTEIN_TOLERANCE,
     preferences: stored.preferences ?? { mealsPerDay, preferred: [], disliked: [] },
+    dayTypes: stored.dayTypes ?? null,
     days: stored.days.map((day) => {
       const dayTargets = day.targets ?? targets;
       const meals = day.meals.map((meal) => ({ ...meal,
         targetProtein: meal.targetProtein ?? Math.round(dayTargets.protein * (layout.find((entry) => entry.meal === meal.meal)?.protein ?? 0)) }));
-      return { ...buildDay(day.index, meals, dayTargets), totals: day.totals, deviation: day.deviation,
+      return { ...buildDay(day.index, day.type ?? null, meals, dayTargets), totals: day.totals, deviation: day.deviation,
         proteinDeviation: day.proteinDeviation ?? ratio(day.totals.protein, dayTargets.protein) };
     }),
   };

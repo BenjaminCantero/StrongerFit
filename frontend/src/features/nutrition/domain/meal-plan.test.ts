@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { createProfilePreview } from '../../profile/data/profile.preview';
 import { profileReducer } from '../../profile/domain/profile';
-import { mealEntry, proposeMealPlan, weekdayIndex } from './meal-plan';
+import { calculateGoals, defaultSettings, goalPerson } from './goals';
+import { mealEntry, proposeMealPlan, trainingDayOption, weekdayIndex } from './meal-plan';
 
 const targets = { kcal: 2100, protein: 130, carbs: 220, fat: 60 };
 
@@ -36,6 +37,31 @@ describe('minuta en la app', () => {
     expect(mealEntry(meals[5]!).meal).toBe('snack');
     expect(result.plan.days.some((day) => day.meals.some((meal) => meal.items.some((item) => item.foodId === 'salmon')))).toBe(true);
     expect(result.plan.days.some((day) => day.meals.some((meal) => meal.items.some((item) => item.foodId === 'tuna')))).toBe(false);
+  });
+
+  it('metas por tipo de día: desactivadas por defecto, solo con plan de entrenamiento y con el promedio de la meta', () => {
+    const preview = createProfilePreview();
+    const person = goalPerson(preview);
+    if (!person.ok) throw new Error('sin datos');
+    const settings = defaultSettings(preview);
+    const result = calculateGoals(person.person, settings);
+    const profile = { ...preview, nutritionPlan: { proteinPerKg: settings.proteinPerKg, fatShare: settings.fatShare, result, savedAt: '' } };
+    const goal = { kcal: result.kcal, protein: result.protein, carbs: result.carbs, fat: result.fat };
+    const off = proposeMealPlan(profile, goal, new Date());
+    expect(off.ok && off.plan.dayTypes).toBeNull();
+
+    const option = trainingDayOption(profile);
+    expect(option).toEqual({ available: true, trainingDays: [...new Set(profile.trainingPlan!.days.map((day) => day.weekday))].sort() });
+    const on = proposeMealPlan({ ...profile, trainingDayTargets: true }, goal, new Date());
+    if (!on.ok || !option.available) throw new Error('sin minuta');
+    expect(on.plan.days.map((day) => day.type)).toEqual(on.plan.days.map((day) => option.trainingDays.includes(day.index) ? 'training' : 'rest'));
+    expect(on.plan.days.reduce((total, day) => total + day.targets.kcal, 0)).toBe(goal.kcal * 7);
+    expect(on.plan.days.every((day) => day.targets.kcal >= result.floor)).toBe(true);
+
+    expect(trainingDayOption({ ...profile, trainingPlan: null })).toEqual({ available: false, reason: 'no-training-plan' });
+    expect(trainingDayOption({ ...profile, nutritionPlan: null })).toEqual({ available: false, reason: 'no-goals' });
+    const withoutPlan = proposeMealPlan({ ...profile, trainingPlan: null, trainingDayTargets: true }, goal, new Date());
+    expect(withoutPlan.ok && withoutPlan.plan.dayTypes).toBeNull();
   });
 
   it('usa lunes como primer día', () => {

@@ -1,3 +1,5 @@
+import type { Nutrients } from './foods';
+
 // Motor determinista de metas nutricionales (SRS 8.5). Valores de referencia
 // inicial, sujetos a revisión profesional antes del lanzamiento público.
 export const RULE_VERSION = 'nutricion-0.1';
@@ -66,6 +68,53 @@ export function nutritionTargets(input: TargetInput) {
 }
 
 export type NutritionTargets = ReturnType<typeof nutritionTargets>;
+
+// Meta distinta en días de entrenamiento y de descanso (RF-21, Deseable). Opción explícita,
+// desactivada por defecto. Los días de entrenamiento reciben más energía y los de descanso
+// menos, con un promedio semanal exactamente igual a la meta. La proteína y la grasa no
+// cambian; la diferencia va en carbohidratos. La diferencia es un porcentaje fijo de la meta,
+// no una estimación del gasto de la sesión (el SRS prohíbe usar gasto de ejercicio estimado).
+// Valor provisional, a la espera de revisión profesional.
+export const TRAINING_REST_GAP = 0.1;
+
+export type DayType = 'training' | 'rest';
+export type DayTarget = { type: DayType; targets: Nutrients };
+export type DayTargets = { requestedGap: number; gap: number; reduced: boolean; days: DayTarget[] };
+export type DayTargetsInput = {
+  targets: Nutrients; trainingDays: number[]; tdee: number; floor: number; noDeficit: boolean; requestedGap?: number;
+};
+
+// trainingDays: 0 = lunes. Cada día por separado respeta el piso de energía (BR-16), el
+// déficit máximo (BR-17) y, con riesgo declarado, la ausencia de déficit (BR-19); si la
+// diferencia pedida lo rompería, se reduce hasta que no ocurra.
+export function dayTargets({ targets, trainingDays, tdee, floor, noDeficit, requestedGap = TRAINING_REST_GAP }: DayTargetsInput): DayTargets {
+  const training = new Set(trainingDays.filter((day) => Number.isInteger(day) && day >= 0 && day < 7));
+  const count = training.size;
+  const rest = 7 - count;
+  const base = targets.kcal;
+  // Mismo redondeo que nutritionTargets, para que la meta máxima permitida siga siéndolo.
+  const lower = Math.max(floor, Math.round(noDeficit ? tdee : tdee * (1 - limits.deficit.max)));
+  const upper = Math.round(tdee * (1 + limits.surplus.max));
+  const limitsGap = count === 0 || rest === 0 || base <= 0 ? 0 : Math.min(
+    (1 - lower / base) * 7 / count, (upper / base - 1) * 7 / rest, targets.carbs * 4 * 7 / (base * count));
+  // Se trunca a milésimas para que el resultado sea estable y nunca supere los límites.
+  const gap = Math.max(0, Math.floor(Math.min(requestedGap, limitsGap) * 1000) / 1000);
+  let trainingKcal = Math.round(base * (1 + gap * rest / 7));
+  const split = () => {
+    const total = base * 7 - trainingKcal * count;
+    return { each: Math.floor(total / rest), extra: total - Math.floor(total / rest) * rest };
+  };
+  // El redondeo al entero no puede dejar un día de descanso bajo el mínimo.
+  while (rest > 0 && count > 0 && trainingKcal > base && split().each < Math.min(lower, base)) trainingKcal--;
+  const { each, extra } = rest > 0 ? split() : { each: base, extra: 0 };
+  let restSeen = 0;
+  const days = Array.from({ length: 7 }, (_, index): DayTarget => {
+    const type: DayType = training.has(index) ? 'training' : 'rest';
+    const kcal = count === 0 || rest === 0 ? base : type === 'training' ? trainingKcal : each + (restSeen++ < extra ? 1 : 0);
+    return { type, targets: { ...targets, kcal, carbs: Math.max(0, Math.round(targets.carbs + (kcal - base) / 4)) } };
+  });
+  return { requestedGap, gap, reduced: count > 0 && rest > 0 && gap < requestedGap, days };
+}
 
 export * from './foods';
 export * from './meal-plan';

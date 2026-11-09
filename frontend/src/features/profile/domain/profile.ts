@@ -21,6 +21,8 @@ export type ProfileData = {
   dietFocus: string;
   // Comidas al día y alimentos del catálogo que prefiere o no le gustan (preferencias blandas).
   mealPreferences: MealPreferences;
+  // Meta distinta en días de entrenamiento y descanso (RF-21). Desactivada por defecto.
+  trainingDayTargets: boolean;
   onboarding: OnboardingRecord | null;
   nutritionPlan: NutritionPlan | null;
   trainingPlan: (Plan & { createdAt: string }) | null;
@@ -43,7 +45,7 @@ export type LoadDecision = {
 
 export type PersonalField = 'name' | 'age' | 'height' | 'weight' | 'goal' | 'days' | 'minutes' | 'equipment';
 export type PersonalForm = Record<PersonalField, string>;
-export type PersonalValues = Omit<ProfileData, 'photo' | 'exclusions' | 'dietFocus' | 'mealPreferences' | 'onboarding' | 'nutritionPlan' | 'trainingPlan' | 'mealPlan' | 'nextLoads' | 'loadDecisions'>;
+export type PersonalValues = Omit<ProfileData, 'photo' | 'exclusions' | 'dietFocus' | 'mealPreferences' | 'trainingDayTargets' | 'onboarding' | 'nutritionPlan' | 'trainingPlan' | 'mealPlan' | 'nextLoads' | 'loadDecisions'>;
 export type FormErrors<Field extends string> = Partial<Record<Field, string>>;
 
 export type NutritionField = 'exclusions' | 'dietFocus';
@@ -51,7 +53,7 @@ export type NutritionForm = Record<NutritionField, string>;
 
 export type ProfileAction =
   | { type: 'update-personal'; values: PersonalValues }
-  | { type: 'update-nutrition'; exclusions: string[]; dietFocus: string; preferences?: MealPreferences }
+  | { type: 'update-nutrition'; exclusions: string[]; dietFocus: string; preferences?: MealPreferences; trainingDayTargets?: boolean }
   | { type: 'set-photo'; photo: ProfilePhoto }
   | { type: 'set-nutrition-plan'; plan: NutritionPlan }
   | { type: 'set-training-plan'; plan: Plan & { createdAt: string } }
@@ -81,7 +83,7 @@ export const createMealPreferences = (): MealPreferences => ({ mealsPerDay: DEFA
 
 export const createEmptyProfile = (): ProfileData => ({
   name: '', photo: null, ageYears: null, heightCm: null, weightKg: null, goal: '',
-  daysPerWeek: null, sessionMinutes: null, equipment: '', exclusions: [], dietFocus: '', mealPreferences: createMealPreferences(), onboarding: null, nutritionPlan: null, trainingPlan: null, mealPlan: null,
+  daysPerWeek: null, sessionMinutes: null, equipment: '', exclusions: [], dietFocus: '', mealPreferences: createMealPreferences(), trainingDayTargets: false, onboarding: null, nutritionPlan: null, trainingPlan: null, mealPlan: null,
   nextLoads: {}, loadDecisions: [],
 });
 
@@ -174,7 +176,8 @@ export function toggleFoodPreference(preferences: MealPreferences, list: 'prefer
 export function profileReducer(state: ProfileData, action: ProfileAction): ProfileData {
   switch (action.type) {
     case 'update-personal': return { ...state, ...action.values };
-    case 'update-nutrition': return { ...state, exclusions: action.exclusions, dietFocus: action.dietFocus, mealPreferences: action.preferences ?? state.mealPreferences };
+    case 'update-nutrition': return { ...state, exclusions: action.exclusions, dietFocus: action.dietFocus, mealPreferences: action.preferences ?? state.mealPreferences,
+      trainingDayTargets: action.trainingDayTargets ?? state.trainingDayTargets };
     case 'set-photo': return { ...state, photo: action.photo };
     case 'set-nutrition-plan': return { ...state, nutritionPlan: action.plan };
     case 'set-training-plan': return { ...state, trainingPlan: action.plan };
