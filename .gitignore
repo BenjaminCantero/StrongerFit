@@ -13,3 +13,8 @@ backend/supabase/.branches/
 frontend/android/
 frontend/ios/
 test-results/
+
+# Official USDA bulk downloads stay outside version control.
+FoodData_Central*/
+FoodData_Central*.zip
+__pycache__/

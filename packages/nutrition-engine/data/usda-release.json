@@ -1,0 +1,94 @@
+{
+  "release": "2018-04",
+  "importedAt": "2026-11-09",
+  "url": "https://fdc.nal.usda.gov/fdc-datasets/FoodData_Central_sr_legacy_food_csv_2018-04.zip",
+  "archiveSha256": "b80817294b8850530aaedf2e515c02593b1824f763a0ff356e5c2081643e6fd0",
+  "sha256": {
+    "food.csv": "de8b0390058db4f102368c9fbdfde144790b480ff4cb0507c0e060ef99805dee",
+    "nutrient.csv": "466ab9d011094cc1ad8d939b246693988b56817c42d0e40a98820723695c6084",
+    "food_nutrient.csv": "6d07e6fc062b09750c4d95112be5a5cdb56a2346efcfd0c96b7a7d705812d4bd"
+  },
+  "nutrients": {
+    "kcal": {
+      "id": "1008",
+      "name": "Energy",
+      "unit": "KCAL"
+    },
+    "protein": {
+      "id": "1003",
+      "name": "Protein",
+      "unit": "G"
+    },
+    "carbs": {
+      "id": "1005",
+      "name": "Carbohydrate, by difference",
+      "unit": "G"
+    },
+    "fat": {
+      "id": "1004",
+      "name": "Total lipid (fat)",
+      "unit": "G"
+    }
+  },
+  "originalIds": [
+    "chicken",
+    "avocado",
+    "bread",
+    "oats",
+    "walnuts",
+    "quinoa",
+    "turkey",
+    "beef",
+    "salmon",
+    "hake",
+    "tuna",
+    "shrimp",
+    "eggs",
+    "lentils",
+    "chickpeas",
+    "tofu",
+    "yogurt",
+    "greek-yogurt",
+    "milk",
+    "fresh-cheese",
+    "lactose-free-milk",
+    "lactose-free-yogurt",
+    "soy-drink",
+    "soy-yogurt",
+    "almond-drink",
+    "whole-bread",
+    "oat-flakes",
+    "corn-tortilla",
+    "rice-cakes",
+    "quinoa-flakes",
+    "rice",
+    "brown-rice",
+    "pasta",
+    "potato",
+    "sweet-potato",
+    "salad",
+    "broccoli",
+    "zucchini",
+    "green-beans",
+    "carrot",
+    "spinach",
+    "banana",
+    "apple",
+    "orange",
+    "strawberries",
+    "kiwi",
+    "almonds",
+    "peanuts",
+    "peanut-butter",
+    "olive-oil",
+    "olives",
+    "pumpkin-seeds",
+    "chia"
+  ],
+  "reviewedFoundation": {
+    "release": "2026-10-29",
+    "url": "https://fdc.nal.usda.gov/fdc-datasets/FoodData_Central_foundation_food_json_2026-10-29.zip",
+    "archiveSha256": "dd414cc9f1a132626bad354ef6655972c78b44aff14f16114dc899708663c579",
+    "importedFoods": 0
+  }
+}

@@ -1,0 +1,4215 @@
+[
+  {
+    "id": "chicken",
+    "name": "Pechuga de pollo sin piel a la plancha",
+    "servingGrams": 120,
+    "defaultGrams": 150,
+    "pairingIds": [
+      "avocado",
+      "bread",
+      "quinoa"
+    ],
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "carne",
+      "animal"
+    ],
+    "fdcId": 171534,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Chicken, broiler or fryers, breast, skinless, boneless, meat only, cooked, grilled"
+  },
+  {
+    "id": "avocado",
+    "name": "Palta cruda, variedades comerciales",
+    "servingGrams": 50,
+    "defaultGrams": 50,
+    "pairingIds": [
+      "bread"
+    ],
+    "role": "fat",
+    "meals": [
+      "breakfast",
+      "lunch",
+      "snack",
+      "dinner"
+    ],
+    "tags": [],
+    "fdcId": 171705,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Avocados, raw, all commercial varieties"
+  },
+  {
+    "id": "walnuts",
+    "name": "Nueces, sin cáscara",
+    "servingGrams": 20,
+    "defaultGrams": 20,
+    "pairingIds": [
+      "oats"
+    ],
+    "role": "fat",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "frutos-secos"
+    ],
+    "fdcId": 170187,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Nuts, walnuts, english"
+  },
+  {
+    "id": "quinoa",
+    "name": "Quinoa cocida",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "pairingIds": [
+      "avocado",
+      "chicken"
+    ],
+    "role": "carb",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "fdcId": 168917,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Quinoa, cooked"
+  },
+  {
+    "id": "turkey",
+    "name": "Pechuga de pavo sin piel asada",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "carne",
+      "animal"
+    ],
+    "fdcId": 171496,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Turkey, whole, breast, meat only, cooked, roasted"
+  },
+  {
+    "id": "salmon",
+    "name": "Salmón atlántico de cultivo al horno",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "pescado",
+      "animal"
+    ],
+    "fdcId": 175168,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Fish, salmon, Atlantic, farmed, cooked, dry heat"
+  },
+  {
+    "id": "tuna",
+    "name": "Atún claro en agua, escurrido",
+    "servingGrams": 100,
+    "defaultGrams": 100,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "pescado",
+      "animal"
+    ],
+    "fdcId": 173709,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Fish, tuna, light, canned in water, drained solids (Includes foods for USDA's Food Distribution Program)"
+  },
+  {
+    "id": "eggs",
+    "name": "Huevo duro",
+    "servingGrams": 100,
+    "defaultGrams": 100,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "breakfast",
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "huevo",
+      "animal"
+    ],
+    "fdcId": 173424,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Egg, whole, cooked, hard-boiled"
+  },
+  {
+    "id": "lentils",
+    "name": "Lentejas cocidas sin sal",
+    "servingGrams": 200,
+    "defaultGrams": 200,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "fdcId": 172421,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Lentils, mature seeds, cooked, boiled, without salt"
+  },
+  {
+    "id": "chickpeas",
+    "name": "Garbanzos cocidos sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "fdcId": 173757,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Chickpeas (garbanzo beans, bengal gram), mature seeds, cooked, boiled, without salt"
+  },
+  {
+    "id": "yogurt",
+    "name": "Yogur natural descremado",
+    "servingGrams": 170,
+    "defaultGrams": 170,
+    "pairingIds": [],
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "lactosa",
+      "lacteo",
+      "animal"
+    ],
+    "fdcId": 170887,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Yogurt, plain, skim milk"
+  },
+  {
+    "id": "greek-yogurt",
+    "name": "Yogur griego natural entero",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "lactosa",
+      "lacteo",
+      "animal"
+    ],
+    "fdcId": 171304,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Yogurt, Greek, plain, whole milk"
+  },
+  {
+    "id": "milk",
+    "name": "Leche semidescremada, 2% de grasa, sin fortificar",
+    "servingGrams": 200,
+    "defaultGrams": 200,
+    "pairingIds": [],
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "lactosa",
+      "lacteo",
+      "animal"
+    ],
+    "fdcId": 172205,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Milk, reduced fat, fluid, 2% milkfat, without added vitamin A and vitamin D"
+  },
+  {
+    "id": "soy-drink",
+    "name": "Bebida de soya sin azúcar, fortificada",
+    "servingGrams": 200,
+    "defaultGrams": 200,
+    "pairingIds": [],
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "soya"
+    ],
+    "fdcId": 175215,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Soymilk (all flavors), unsweetened, with added calcium, vitamins A and D"
+  },
+  {
+    "id": "soy-yogurt",
+    "name": "Yogur de tofu",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "soya"
+    ],
+    "fdcId": 167722,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Tofu yogurt"
+  },
+  {
+    "id": "almond-drink",
+    "name": "Bebida de almendras sin azúcar, larga vida",
+    "servingGrams": 250,
+    "defaultGrams": 250,
+    "pairingIds": [],
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "frutos-secos"
+    ],
+    "fdcId": 174832,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Beverages, almond milk, unsweetened, shelf stable"
+  },
+  {
+    "id": "whole-bread",
+    "name": "Pan integral comercial",
+    "servingGrams": 50,
+    "defaultGrams": 50,
+    "pairingIds": [],
+    "role": "carb",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "gluten",
+      "lacteo",
+      "lactosa",
+      "huevo",
+      "soya",
+      "animal"
+    ],
+    "fdcId": 172688,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Bread, whole-wheat, commercially prepared"
+  },
+  {
+    "id": "oat-flakes",
+    "name": "Avena en hojuelas seca, sin fortificar",
+    "servingGrams": 40,
+    "defaultGrams": 40,
+    "pairingIds": [],
+    "role": "carb",
+    "meals": [
+      "breakfast"
+    ],
+    "tags": [
+      "gluten"
+    ],
+    "fdcId": 173904,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Cereals, oats, regular and quick, not fortified, dry"
+  },
+  {
+    "id": "corn-tortilla",
+    "name": "Tortilla de maíz lista para calentar",
+    "servingGrams": 50,
+    "defaultGrams": 50,
+    "pairingIds": [],
+    "role": "carb",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "fdcId": 175036,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Tortillas, ready-to-bake or -fry, corn"
+  },
+  {
+    "id": "rice-cakes",
+    "name": "Galletas de arroz integral inflado sin sal",
+    "servingGrams": 25,
+    "defaultGrams": 25,
+    "pairingIds": [],
+    "role": "carb",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "fdcId": 170250,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Snacks, rice cakes, brown rice, plain, unsalted"
+  },
+  {
+    "id": "rice",
+    "name": "Arroz blanco de grano largo cocido sin sal, sin enriquecer",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "carb",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "fdcId": 169757,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Rice, white, long-grain, regular, unenriched, cooked without salt"
+  },
+  {
+    "id": "brown-rice",
+    "name": "Arroz integral de grano largo cocido",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "carb",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "fdcId": 169704,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Rice, brown, long-grain, cooked (Includes foods for USDA's Food Distribution Program)"
+  },
+  {
+    "id": "pasta",
+    "name": "Fideos cocidos sin sal, sin enriquecer",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "carb",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "gluten",
+      "huevo",
+      "animal"
+    ],
+    "fdcId": 168928,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Pasta, cooked, unenriched, without added salt"
+  },
+  {
+    "id": "potato",
+    "name": "Papa pelada cocida sin sal",
+    "servingGrams": 200,
+    "defaultGrams": 200,
+    "pairingIds": [],
+    "role": "carb",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "fdcId": 170440,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Potatoes, boiled, cooked without skin, flesh, without salt"
+  },
+  {
+    "id": "sweet-potato",
+    "name": "Camote al horno, pulpa sin sal",
+    "servingGrams": 180,
+    "defaultGrams": 180,
+    "pairingIds": [],
+    "role": "carb",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "fdcId": 168483,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Sweet potato, cooked, baked in skin, flesh, without salt"
+  },
+  {
+    "id": "green-beans",
+    "name": "Porotos verdes cocidos sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "fdcId": 169141,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Beans, snap, green, cooked, boiled, drained, without salt"
+  },
+  {
+    "id": "carrot",
+    "name": "Zanahoria cruda",
+    "servingGrams": 100,
+    "defaultGrams": 100,
+    "pairingIds": [],
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "fdcId": 170393,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Carrots, raw"
+  },
+  {
+    "id": "banana",
+    "name": "Plátano crudo",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "pairingIds": [],
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "fdcId": 173944,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Bananas, raw"
+  },
+  {
+    "id": "apple",
+    "name": "Manzana cruda con cáscara",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "fdcId": 171688,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Apples, raw, with skin (Includes foods for USDA's Food Distribution Program)"
+  },
+  {
+    "id": "orange",
+    "name": "Naranja cruda",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "fdcId": 169097,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Oranges, raw, all commercial varieties"
+  },
+  {
+    "id": "strawberries",
+    "name": "Frutillas crudas",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "fdcId": 167762,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Strawberries, raw"
+  },
+  {
+    "id": "kiwi",
+    "name": "Kiwi verde crudo",
+    "servingGrams": 100,
+    "defaultGrams": 100,
+    "pairingIds": [],
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "fdcId": 168153,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Kiwifruit, green, raw"
+  },
+  {
+    "id": "almonds",
+    "name": "Almendras naturales",
+    "servingGrams": 20,
+    "defaultGrams": 20,
+    "pairingIds": [],
+    "role": "fat",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "frutos-secos"
+    ],
+    "fdcId": 170567,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Nuts, almonds"
+  },
+  {
+    "id": "peanuts",
+    "name": "Maní tostado sin sal",
+    "servingGrams": 20,
+    "defaultGrams": 20,
+    "pairingIds": [],
+    "role": "fat",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "mani"
+    ],
+    "fdcId": 173806,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Peanuts, all types, dry-roasted, without salt"
+  },
+  {
+    "id": "peanut-butter",
+    "name": "Mantequilla de maní suave",
+    "servingGrams": 16,
+    "defaultGrams": 16,
+    "pairingIds": [],
+    "role": "fat",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "mani"
+    ],
+    "fdcId": 174294,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Peanut Butter, smooth (Includes foods for USDA's Food Distribution Program)"
+  },
+  {
+    "id": "olive-oil",
+    "name": "Aceite de oliva",
+    "servingGrams": 10,
+    "defaultGrams": 10,
+    "pairingIds": [],
+    "role": "fat",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "fdcId": 171413,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Oil, olive, salad or cooking"
+  },
+  {
+    "id": "olives",
+    "name": "Aceitunas maduras en conserva",
+    "servingGrams": 30,
+    "defaultGrams": 30,
+    "pairingIds": [],
+    "role": "fat",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "fdcId": 169094,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Olives, ripe, canned (small-extra large)"
+  },
+  {
+    "id": "pumpkin-seeds",
+    "name": "Semillas de zapallo peladas secas",
+    "servingGrams": 15,
+    "defaultGrams": 15,
+    "pairingIds": [],
+    "role": "fat",
+    "meals": [
+      "breakfast",
+      "lunch",
+      "snack",
+      "dinner"
+    ],
+    "tags": [],
+    "fdcId": 170556,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Seeds, pumpkin and squash seed kernels, dried"
+  },
+  {
+    "id": "chia",
+    "name": "Semillas de chía secas",
+    "servingGrams": 15,
+    "defaultGrams": 15,
+    "pairingIds": [],
+    "role": "fat",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "fdcId": 170554,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Seeds, chia seeds, dried"
+  },
+  {
+    "id": "usda-171477",
+    "fdcId": 171477,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Chicken, broilers or fryers, breast, meat only, cooked, roasted",
+    "name": "Pechuga de pollo sin piel asada",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "carne",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-172376",
+    "fdcId": 172376,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Chicken, broilers or fryers, dark meat, drumstick, meat only, cooked, roasted",
+    "name": "Trutro largo de pollo sin piel asado",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "carne",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-172388",
+    "fdcId": 172388,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Chicken, broilers or fryers, thigh, meat only, cooked, roasted",
+    "name": "Trutro de pollo, muslo sin piel asado",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "carne",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-168250",
+    "fdcId": 168250,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Pork, fresh, loin, tenderloin, separable lean only, cooked, roasted",
+    "name": "Filete de cerdo magro asado",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "carne",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-170633",
+    "fdcId": 170633,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Beef, round, eye of round roast, boneless, separable lean only, trimmed to 0\" fat, all grades, cooked, roasted",
+    "name": "Vacuno, corte redondo magro asado (eye of round)",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "carne",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-171956",
+    "fdcId": 171956,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Fish, cod, Atlantic, cooked, dry heat",
+    "name": "Bacalao atlántico al horno",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "pescado",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-172004",
+    "fdcId": 172004,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Fish, trout, mixed species, cooked, dry heat",
+    "name": "Trucha al horno, especies mixtas",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "pescado",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-173718",
+    "fdcId": 173718,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Fish, trout, rainbow, farmed, cooked, dry heat",
+    "name": "Trucha arcoíris de cultivo al horno",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "pescado",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-175177",
+    "fdcId": 175177,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Fish, tilapia, cooked, dry heat",
+    "name": "Tilapia al horno",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "pescado",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-175121",
+    "fdcId": 175121,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Fish, mackerel, jack, canned, drained solids",
+    "name": "Jurel en conserva, escurrido",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "pescado",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-175139",
+    "fdcId": 175139,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Fish, sardine, Atlantic, canned in oil, drained solids with bone",
+    "name": "Sardina atlántica en aceite, escurrida con espinas",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "pescado",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-175140",
+    "fdcId": 175140,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Fish, sardine, Pacific, canned in tomato sauce, drained solids with bone",
+    "name": "Sardina del Pacífico en salsa de tomate, escurrida con espinas",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "pescado",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-173708",
+    "fdcId": 173708,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Fish, tuna, light, canned in oil, drained solids",
+    "name": "Atún claro en aceite, escurrido",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "pescado",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-175158",
+    "fdcId": 175158,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Fish, tuna, white, canned in water, drained solids",
+    "name": "Atún blanco en agua, escurrido",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "pescado",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-173716",
+    "fdcId": 173716,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Fish, salmon, coho, farmed, cooked, dry heat",
+    "name": "Salmón coho de cultivo al horno",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "pescado",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-171971",
+    "fdcId": 171971,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Crustaceans, shrimp, mixed species, cooked, moist heat (may contain additives to retain moisture)",
+    "name": "Camarones cocidos en agua o vapor",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "mariscos",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-174217",
+    "fdcId": 174217,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Mollusks, mussel, blue, cooked, moist heat",
+    "name": "Mejillones azules cocidos en agua o vapor",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "mariscos",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-174249",
+    "fdcId": 174249,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Mollusks, octopus, common, cooked, moist heat",
+    "name": "Pulpo común cocido en agua o vapor",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "mariscos",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-171975",
+    "fdcId": 171975,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Mollusks, clam, mixed species, cooked, moist heat",
+    "name": "Almejas cocidas en agua o vapor",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "mariscos",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-167742",
+    "fdcId": 167742,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Mollusks, scallop, (bay and sea), cooked, steamed",
+    "name": "Ostiones cocidos al vapor",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "mariscos",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-173735",
+    "fdcId": 173735,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Beans, black, mature seeds, cooked, boiled, without salt",
+    "name": "Porotos negros cocidos sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-175203",
+    "fdcId": 175203,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Beans, white, mature seeds, cooked, boiled, without salt",
+    "name": "Porotos blancos cocidos sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-175194",
+    "fdcId": 175194,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Beans, kidney, red, mature seeds, cooked, boiled, without salt",
+    "name": "Porotos rojos cocidos sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-175200",
+    "fdcId": 175200,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Beans, pinto, mature seeds, cooked, boiled, without salt",
+    "name": "Porotos pintos cocidos sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-173753",
+    "fdcId": 173753,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Broadbeans (fava beans), mature seeds, cooked, boiled, without salt",
+    "name": "Habas secas cocidas sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-172429",
+    "fdcId": 172429,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Peas, split, mature seeds, cooked, boiled, without salt",
+    "name": "Arvejas partidas cocidas sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-172424",
+    "fdcId": 172424,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Lupins, mature seeds, cooked, boiled, without salt",
+    "name": "Lupinos cocidos sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-173800",
+    "fdcId": 173800,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Chickpeas (garbanzo beans, bengal gram), mature seeds, canned, drained solids",
+    "name": "Garbanzos en conserva, escurridos",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-174285",
+    "fdcId": 174285,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Beans, kidney, red, mature seeds, canned, drained solids",
+    "name": "Porotos rojos en conserva, escurridos",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-172475",
+    "fdcId": 172475,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Tofu, raw, firm, prepared with calcium sulfate",
+    "name": "Tofu firme crudo, con sulfato de calcio",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "protein",
+    "meals": [
+      "breakfast",
+      "snack",
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "soya"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-172476",
+    "fdcId": 172476,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Tofu, raw, regular, prepared with calcium sulfate",
+    "name": "Tofu regular crudo, con sulfato de calcio",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "protein",
+    "meals": [
+      "breakfast",
+      "snack",
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "soya"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-172467",
+    "fdcId": 172467,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Tempeh, cooked",
+    "name": "Tempeh cocido",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "protein",
+    "meals": [
+      "breakfast",
+      "snack",
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "soya"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-174271",
+    "fdcId": 174271,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Soybeans, mature cooked, boiled, without salt",
+    "name": "Porotos de soya cocidos sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "protein",
+    "meals": [
+      "breakfast",
+      "snack",
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "soya"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-169283",
+    "fdcId": 169283,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Soybeans, green, cooked, boiled, drained, without salt",
+    "name": "Porotos de soya verdes cocidos sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "protein",
+    "meals": [
+      "breakfast",
+      "snack",
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "soya"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-172186",
+    "fdcId": 172186,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Egg, whole, cooked, poached",
+    "name": "Huevo pochado",
+    "servingGrams": 100,
+    "defaultGrams": 100,
+    "role": "protein",
+    "meals": [
+      "breakfast",
+      "snack",
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "huevo",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-171284",
+    "fdcId": 171284,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Yogurt, plain, whole milk",
+    "name": "Yogur natural entero",
+    "servingGrams": 170,
+    "defaultGrams": 170,
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "lacteo",
+      "lactosa",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-170886",
+    "fdcId": 170886,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Yogurt, plain, low fat",
+    "name": "Yogur natural bajo en grasa",
+    "servingGrams": 170,
+    "defaultGrams": 170,
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "lacteo",
+      "lactosa",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-170894",
+    "fdcId": 170894,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Yogurt, Greek, plain, nonfat (Includes foods for USDA's Food Distribution Program)",
+    "name": "Yogur griego natural descremado",
+    "servingGrams": 170,
+    "defaultGrams": 170,
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "lacteo",
+      "lactosa",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-170903",
+    "fdcId": 170903,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Yogurt, Greek, plain, lowfat",
+    "name": "Yogur griego natural bajo en grasa",
+    "servingGrams": 170,
+    "defaultGrams": 170,
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "lacteo",
+      "lactosa",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-170888",
+    "fdcId": 170888,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Yogurt, vanilla, low fat.",
+    "name": "Yogur de vainilla bajo en grasa",
+    "servingGrams": 170,
+    "defaultGrams": 170,
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "lacteo",
+      "lactosa",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-170906",
+    "fdcId": 170906,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Yogurt, vanilla, non-fat",
+    "name": "Yogur de vainilla descremado",
+    "servingGrams": 170,
+    "defaultGrams": 170,
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "lacteo",
+      "lactosa",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-170901",
+    "fdcId": 170901,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Yogurt, Greek, strawberry, nonfat",
+    "name": "Yogur griego de frutilla descremado",
+    "servingGrams": 170,
+    "defaultGrams": 170,
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "lacteo",
+      "lactosa",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-170902",
+    "fdcId": 170902,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Yogurt, Greek, vanilla, nonfat",
+    "name": "Yogur griego de vainilla descremado",
+    "servingGrams": 170,
+    "defaultGrams": 170,
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "lacteo",
+      "lactosa",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-171300",
+    "fdcId": 171300,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Yogurt, Greek, strawberry, lowfat",
+    "name": "Yogur griego de frutilla bajo en grasa",
+    "servingGrams": 170,
+    "defaultGrams": 170,
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "lacteo",
+      "lactosa",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-169898",
+    "fdcId": 169898,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Yogurt, fruit variety, nonfat",
+    "name": "Yogur de frutas descremado",
+    "servingGrams": 170,
+    "defaultGrams": 170,
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "lacteo",
+      "lactosa",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-172217",
+    "fdcId": 172217,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Milk, whole, 3.25% milkfat, without added vitamin A and vitamin D",
+    "name": "Leche entera, 3,25% de grasa, sin fortificar",
+    "servingGrams": 200,
+    "defaultGrams": 200,
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "lacteo",
+      "lactosa",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-173432",
+    "fdcId": 173432,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Milk, nonfat, fluid, without added vitamin A and vitamin D (fat free or skim)",
+    "name": "Leche descremada sin fortificar",
+    "servingGrams": 200,
+    "defaultGrams": 200,
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "lacteo",
+      "lactosa",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-170872",
+    "fdcId": 170872,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Milk, lowfat, fluid, 1% milkfat, with added vitamin A and vitamin D",
+    "name": "Leche baja en grasa, 1%, con vitaminas A y D",
+    "servingGrams": 200,
+    "defaultGrams": 200,
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "lacteo",
+      "lactosa",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-171267",
+    "fdcId": 171267,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Milk, reduced fat, fluid, 2% milkfat, with added vitamin A and vitamin D",
+    "name": "Leche semidescremada, 2%, con vitaminas A y D",
+    "servingGrams": 200,
+    "defaultGrams": 200,
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "lacteo",
+      "lactosa",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-171241",
+    "fdcId": 171241,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Cheese, gouda",
+    "name": "Queso gouda",
+    "servingGrams": 40,
+    "defaultGrams": 40,
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "lacteo",
+      "lactosa",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-173419",
+    "fdcId": 173419,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Cheese, edam",
+    "name": "Queso edam",
+    "servingGrams": 40,
+    "defaultGrams": 40,
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "lacteo",
+      "lactosa",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-173414",
+    "fdcId": 173414,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Cheese, cheddar (Includes foods for USDA's Food Distribution Program)",
+    "name": "Queso cheddar",
+    "servingGrams": 40,
+    "defaultGrams": 40,
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "lacteo",
+      "lactosa",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-170845",
+    "fdcId": 170845,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Cheese, mozzarella, whole milk",
+    "name": "Queso mozzarella de leche entera",
+    "servingGrams": 40,
+    "defaultGrams": 40,
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "lacteo",
+      "lactosa",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-171244",
+    "fdcId": 171244,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Cheese, mozzarella, low moisture, part-skim",
+    "name": "Queso mozzarella semidescremado de baja humedad",
+    "servingGrams": 40,
+    "defaultGrams": 40,
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "lacteo",
+      "lactosa",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-170851",
+    "fdcId": 170851,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Cheese, ricotta, whole milk",
+    "name": "Ricota de leche entera",
+    "servingGrams": 40,
+    "defaultGrams": 40,
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "lacteo",
+      "lactosa",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-171248",
+    "fdcId": 171248,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Cheese, ricotta, part skim milk",
+    "name": "Ricota semidescremada",
+    "servingGrams": 40,
+    "defaultGrams": 40,
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "lacteo",
+      "lactosa",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-173418",
+    "fdcId": 173418,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Cheese, cream",
+    "name": "Queso crema",
+    "servingGrams": 40,
+    "defaultGrams": 40,
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "lacteo",
+      "lactosa",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-173417",
+    "fdcId": 173417,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Cheese, cottage, lowfat, 1% milkfat",
+    "name": "Queso cottage, 1% de grasa",
+    "servingGrams": 40,
+    "defaultGrams": 40,
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "lacteo",
+      "lactosa",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-172182",
+    "fdcId": 172182,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Cheese, cottage, lowfat, 2% milkfat",
+    "name": "Queso cottage, 2% de grasa",
+    "servingGrams": 40,
+    "defaultGrams": 40,
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "lacteo",
+      "lactosa",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-172177",
+    "fdcId": 172177,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Cheese, brie",
+    "name": "Queso brie",
+    "servingGrams": 40,
+    "defaultGrams": 40,
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "lacteo",
+      "lactosa",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-173420",
+    "fdcId": 173420,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Cheese, feta",
+    "name": "Queso feta",
+    "servingGrams": 40,
+    "defaultGrams": 40,
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "lacteo",
+      "lactosa",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-173435",
+    "fdcId": 173435,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Cheese, goat, soft type",
+    "name": "Queso de cabra blando",
+    "servingGrams": 40,
+    "defaultGrams": 40,
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "lacteo",
+      "lactosa",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-170848",
+    "fdcId": 170848,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Cheese, parmesan, hard",
+    "name": "Queso parmesano duro",
+    "servingGrams": 40,
+    "defaultGrams": 40,
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "lacteo",
+      "lactosa",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-171942",
+    "fdcId": 171942,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Beverages, rice milk, unsweetened",
+    "name": "Bebida de arroz sin azúcar",
+    "servingGrams": 200,
+    "defaultGrams": 200,
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-172446",
+    "fdcId": 172446,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Soymilk, original and vanilla, unfortified",
+    "name": "Bebida de soya original o vainilla, sin fortificar",
+    "servingGrams": 200,
+    "defaultGrams": 200,
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "soya"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-172456",
+    "fdcId": 172456,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Soymilk, original and vanilla, with added calcium, vitamins A and D",
+    "name": "Bebida de soya original o vainilla, fortificada",
+    "servingGrams": 200,
+    "defaultGrams": 200,
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "soya"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-174293",
+    "fdcId": 174293,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Soymilk, chocolate, unfortified",
+    "name": "Bebida de soya con chocolate, sin fortificar",
+    "servingGrams": 200,
+    "defaultGrams": 200,
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "soya"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-168875",
+    "fdcId": 168875,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Rice, brown, medium-grain, cooked (Includes foods for USDA's Food Distribution Program)",
+    "name": "Arroz integral de grano mediano cocido",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "carb",
+    "meals": [
+      "breakfast",
+      "snack",
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-168930",
+    "fdcId": 168930,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Rice, white, medium-grain, cooked, unenriched",
+    "name": "Arroz blanco de grano mediano cocido, sin enriquecer",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "carb",
+    "meals": [
+      "breakfast",
+      "snack",
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-168932",
+    "fdcId": 168932,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Rice, white, short-grain, cooked, unenriched",
+    "name": "Arroz blanco de grano corto cocido, sin enriquecer",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "carb",
+    "meals": [
+      "breakfast",
+      "snack",
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-169759",
+    "fdcId": 169759,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Rice, white, long-grain, parboiled, unenriched, cooked",
+    "name": "Arroz blanco parbolizado cocido, sin enriquecer",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "carb",
+    "meals": [
+      "breakfast",
+      "snack",
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-169711",
+    "fdcId": 169711,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Rice, white, glutinous, unenriched, cooked",
+    "name": "Arroz glutinoso blanco cocido",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "carb",
+    "meals": [
+      "breakfast",
+      "snack",
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-168900",
+    "fdcId": 168900,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Pasta, gluten-free, corn, cooked",
+    "name": "Fideos de maíz sin gluten cocidos",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "carb",
+    "meals": [
+      "breakfast",
+      "snack",
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-173265",
+    "fdcId": 173265,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Pasta, gluten-free, corn and rice flour, cooked",
+    "name": "Fideos de maíz y arroz sin gluten cocidos",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "carb",
+    "meals": [
+      "breakfast",
+      "snack",
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-168871",
+    "fdcId": 168871,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Millet, cooked",
+    "name": "Mijo cocido",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "carb",
+    "meals": [
+      "breakfast",
+      "snack",
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-170683",
+    "fdcId": 170683,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Amaranth grain, cooked",
+    "name": "Amaranto cocido",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "carb",
+    "meals": [
+      "breakfast",
+      "snack",
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-170686",
+    "fdcId": 170686,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Buckwheat groats, roasted, cooked",
+    "name": "Trigo sarraceno tostado y cocido",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "carb",
+    "meals": [
+      "breakfast",
+      "snack",
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-170093",
+    "fdcId": 170093,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Potatoes, baked, flesh and skin, without salt",
+    "name": "Papa al horno con cáscara, sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "carb",
+    "meals": [
+      "breakfast",
+      "snack",
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-170438",
+    "fdcId": 170438,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Potatoes, boiled, cooked in skin, flesh, without salt",
+    "name": "Papa cocida en su cáscara, solo pulpa, sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "carb",
+    "meals": [
+      "breakfast",
+      "snack",
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-168484",
+    "fdcId": 168484,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Sweet potato, cooked, boiled, without skin",
+    "name": "Camote pelado cocido sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "carb",
+    "meals": [
+      "breakfast",
+      "snack",
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-169999",
+    "fdcId": 169999,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Corn, sweet, yellow, cooked, boiled, drained, without salt",
+    "name": "Choclo amarillo cocido sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "carb",
+    "meals": [
+      "breakfast",
+      "snack",
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-169700",
+    "fdcId": 169700,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Couscous, cooked",
+    "name": "Cuscús cocido",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "carb",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "gluten"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-170285",
+    "fdcId": 170285,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Barley, pearled, cooked",
+    "name": "Cebada perlada cocida",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "carb",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "gluten"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-170287",
+    "fdcId": 170287,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Bulgur, cooked",
+    "name": "Bulgur cocido",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "carb",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "gluten"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-168910",
+    "fdcId": 168910,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Pasta, whole-wheat, cooked (Includes foods for USDA's Food Distribution Program)",
+    "name": "Fideos integrales cocidos",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "carb",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "gluten",
+      "huevo",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-168901",
+    "fdcId": 168901,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Pasta, homemade, made with egg, cooked",
+    "name": "Pasta casera con huevo cocida",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "carb",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "gluten",
+      "huevo",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-168912",
+    "fdcId": 168912,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Spaghetti, spinach, cooked",
+    "name": "Fideos de espinaca cocidos",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "carb",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "gluten",
+      "huevo",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-173905",
+    "fdcId": 173905,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Cereals, oats, regular and quick, unenriched, cooked with water (includes boiling and microwaving), without salt",
+    "name": "Avena cocida en agua sin sal, sin fortificar",
+    "servingGrams": 180,
+    "defaultGrams": 180,
+    "role": "carb",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "gluten"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-171662",
+    "fdcId": 171662,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Cereals, oats, instant, fortified, plain, prepared with water (boiling water added or microwaved)",
+    "name": "Avena instantánea fortificada preparada con agua",
+    "servingGrams": 180,
+    "defaultGrams": 180,
+    "role": "carb",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "gluten"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-172675",
+    "fdcId": 172675,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Bread, french or vienna (includes sourdough)",
+    "name": "Pan francés o vienés",
+    "servingGrams": 50,
+    "defaultGrams": 50,
+    "role": "carb",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "gluten",
+      "lacteo",
+      "lactosa",
+      "huevo",
+      "soya",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-172684",
+    "fdcId": 172684,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Bread, rye",
+    "name": "Pan de centeno",
+    "servingGrams": 50,
+    "defaultGrams": 50,
+    "role": "carb",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "gluten",
+      "lacteo",
+      "lactosa",
+      "huevo",
+      "soya",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-174915",
+    "fdcId": 174915,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Bread, pita, white, enriched",
+    "name": "Pan pita blanco enriquecido",
+    "servingGrams": 50,
+    "defaultGrams": 50,
+    "role": "carb",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "gluten",
+      "lacteo",
+      "lactosa",
+      "huevo",
+      "soya",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-174916",
+    "fdcId": 174916,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Bread, pita, whole-wheat",
+    "name": "Pan pita integral",
+    "servingGrams": 50,
+    "defaultGrams": 50,
+    "role": "carb",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "gluten",
+      "lacteo",
+      "lactosa",
+      "huevo",
+      "soya",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-168013",
+    "fdcId": 168013,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Bread, multi-grain (includes whole-grain)",
+    "name": "Pan multigrano",
+    "servingGrams": 50,
+    "defaultGrams": 50,
+    "role": "carb",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "gluten",
+      "lacteo",
+      "lactosa",
+      "huevo",
+      "soya",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-174924",
+    "fdcId": 174924,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Bread, white, commercially prepared (includes soft bread crumbs)",
+    "name": "Pan blanco comercial",
+    "servingGrams": 50,
+    "defaultGrams": 50,
+    "role": "carb",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "gluten",
+      "lacteo",
+      "lactosa",
+      "huevo",
+      "soya",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-172689",
+    "fdcId": 172689,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Bread, whole-wheat, commercially prepared, toasted",
+    "name": "Pan integral comercial tostado",
+    "servingGrams": 50,
+    "defaultGrams": 50,
+    "role": "carb",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "gluten",
+      "lacteo",
+      "lactosa",
+      "huevo",
+      "soya",
+      "animal"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-170251",
+    "fdcId": 170251,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Snacks, rice cakes, brown rice, buckwheat, unsalted",
+    "name": "Galletas de arroz integral y trigo sarraceno sin sal",
+    "servingGrams": 25,
+    "defaultGrams": 25,
+    "role": "carb",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-167724",
+    "fdcId": 167724,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Millet, puffed",
+    "name": "Mijo inflado",
+    "servingGrams": 25,
+    "defaultGrams": 25,
+    "role": "carb",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-168386",
+    "fdcId": 168386,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Artichokes, (globe or french), cooked, boiled, drained, without salt",
+    "name": "Alcachofa cocida sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-168426",
+    "fdcId": 168426,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Leeks, (bulb and lower leaf-portion), cooked, boiled, drained, without salt",
+    "name": "Puerro cocido sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-168449",
+    "fdcId": 168449,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Pumpkin, cooked, boiled, drained, without salt",
+    "name": "Zapallo cocido sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-168463",
+    "fdcId": 168463,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Spinach, cooked, boiled, drained, without salt",
+    "name": "Espinaca cocida sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-169229",
+    "fdcId": 169229,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Eggplant, cooked, boiled, drained, without salt",
+    "name": "Berenjena cocida sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-169238",
+    "fdcId": 169238,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Kale, cooked, boiled, drained, without salt",
+    "name": "Kale cocido sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-169252",
+    "fdcId": 169252,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Mushrooms, white, cooked, boiled, drained, without salt",
+    "name": "Champiñones blancos cocidos sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-169292",
+    "fdcId": 169292,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Squash, summer, zucchini, includes skin, cooked, boiled, drained, without salt",
+    "name": "Zapallo italiano con cáscara cocido sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-169296",
+    "fdcId": 169296,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Squash, winter, butternut, cooked, baked, without salt",
+    "name": "Zapallo butternut al horno sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-169967",
+    "fdcId": 169967,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Broccoli, cooked, boiled, drained, without salt",
+    "name": "Brócoli cocido sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-169971",
+    "fdcId": 169971,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Brussels sprouts, cooked, boiled, drained, without salt",
+    "name": "Repollitos de Bruselas cocidos sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-169976",
+    "fdcId": 169976,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Cabbage, cooked, boiled, drained, without salt",
+    "name": "Repollo cocido sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-169978",
+    "fdcId": 169978,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Cabbage, red, cooked, boiled, drained, without salt",
+    "name": "Repollo morado cocido sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-169989",
+    "fdcId": 169989,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Celery, cooked, boiled, drained, without salt",
+    "name": "Apio cocido sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-170001",
+    "fdcId": 170001,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Onions, cooked, boiled, drained, without salt",
+    "name": "Cebolla cocida sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-170058",
+    "fdcId": 170058,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Turnips, cooked, boiled, drained, without salt",
+    "name": "Nabo cocido sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-170110",
+    "fdcId": 170110,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Peppers, sweet, red, cooked, boiled, drained, without salt",
+    "name": "Pimentón rojo cocido sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-170394",
+    "fdcId": 170394,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Carrots, cooked, boiled, drained, without salt",
+    "name": "Zanahoria cocida sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-170397",
+    "fdcId": 170397,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Cauliflower, cooked, boiled, drained, without salt",
+    "name": "Coliflor cocida sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-170401",
+    "fdcId": 170401,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Chard, swiss, cooked, boiled, drained, without salt",
+    "name": "Acelga cocida sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-170428",
+    "fdcId": 170428,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Peppers, sweet, green, cooked, boiled, drained, without salt",
+    "name": "Pimentón verde cocido sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-168409",
+    "fdcId": 168409,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Cucumber, with peel, raw",
+    "name": "Pepino crudo con cáscara",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-169225",
+    "fdcId": 169225,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Cucumber, peeled, raw",
+    "name": "Pepino crudo pelado",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-169247",
+    "fdcId": 169247,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Lettuce, cos or romaine, raw",
+    "name": "Lechuga romana cruda",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-169248",
+    "fdcId": 169248,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Lettuce, iceberg (includes crisphead types), raw",
+    "name": "Lechuga iceberg cruda",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-169249",
+    "fdcId": 169249,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Lettuce, green leaf, raw",
+    "name": "Lechuga de hoja verde cruda",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-168431",
+    "fdcId": 168431,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Lettuce, red leaf, raw",
+    "name": "Lechuga de hoja roja cruda",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-169975",
+    "fdcId": 169975,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Cabbage, raw",
+    "name": "Repollo crudo",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-169977",
+    "fdcId": 169977,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Cabbage, red, raw",
+    "name": "Repollo morado crudo",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-169988",
+    "fdcId": 169988,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Celery, raw",
+    "name": "Apio crudo",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-170000",
+    "fdcId": 170000,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Onions, raw",
+    "name": "Cebolla cruda",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-170005",
+    "fdcId": 170005,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Onions, spring or scallions (includes tops and bulb), raw",
+    "name": "Cebollín crudo",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-170108",
+    "fdcId": 170108,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Peppers, sweet, red, raw",
+    "name": "Pimentón rojo crudo",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-170427",
+    "fdcId": 170427,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Peppers, sweet, green, raw",
+    "name": "Pimentón verde crudo",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-169383",
+    "fdcId": 169383,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Peppers, sweet, yellow, raw",
+    "name": "Pimentón amarillo crudo",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-170457",
+    "fdcId": 170457,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Tomatoes, red, ripe, raw, year round average",
+    "name": "Tomate rojo crudo",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-169276",
+    "fdcId": 169276,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Radishes, raw",
+    "name": "Rábanos crudos",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-168462",
+    "fdcId": 168462,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Spinach, raw",
+    "name": "Espinaca cruda",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-169145",
+    "fdcId": 169145,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Beets, raw",
+    "name": "Betarraga cruda",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-171697",
+    "fdcId": 171697,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Apricots, raw",
+    "name": "Damascos crudos",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-173946",
+    "fdcId": 173946,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Blackberries, raw",
+    "name": "Moras crudas",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-171711",
+    "fdcId": 171711,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Blueberries, raw",
+    "name": "Arándanos crudos",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-171719",
+    "fdcId": 171719,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Cherries, sweet, raw",
+    "name": "Cerezas crudas",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-167755",
+    "fdcId": 167755,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Raspberries, raw",
+    "name": "Frambuesas crudas",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-169949",
+    "fdcId": 169949,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Plums, raw",
+    "name": "Ciruelas crudas",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-169928",
+    "fdcId": 169928,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Peaches, yellow, raw",
+    "name": "Durazno amarillo crudo",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-169914",
+    "fdcId": 169914,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Nectarines, raw",
+    "name": "Nectarín crudo",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-169118",
+    "fdcId": 169118,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Pears, raw",
+    "name": "Pera cruda",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-174683",
+    "fdcId": 174683,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Grapes, red or green (European type, such as Thompson seedless), raw",
+    "name": "Uvas rojas o verdes crudas",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-169105",
+    "fdcId": 169105,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Tangerines, (mandarin oranges), raw",
+    "name": "Mandarinas crudas",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-169124",
+    "fdcId": 169124,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Pineapple, raw, all varieties",
+    "name": "Piña cruda",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-167765",
+    "fdcId": 167765,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Watermelon, raw",
+    "name": "Sandía cruda",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-169092",
+    "fdcId": 169092,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Melons, cantaloupe, raw",
+    "name": "Melón cantalupo crudo",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-169911",
+    "fdcId": 169911,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Melons, honeydew, raw",
+    "name": "Melón tuna crudo (honeydew)",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-169910",
+    "fdcId": 169910,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Mangos, raw",
+    "name": "Mango crudo",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-169926",
+    "fdcId": 169926,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Papayas, raw",
+    "name": "Papaya cruda",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-169134",
+    "fdcId": 169134,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Pomegranates, raw",
+    "name": "Granada cruda",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-173021",
+    "fdcId": 173021,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Figs, raw",
+    "name": "Higos crudos",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-173033",
+    "fdcId": 173033,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Grapefruit, raw, pink and red and white, all areas",
+    "name": "Pomelo crudo",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-167750",
+    "fdcId": 167750,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Prickly pears, raw",
+    "name": "Tuna cruda",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-173044",
+    "fdcId": 173044,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Guavas, common, raw",
+    "name": "Guayaba cruda",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-173043",
+    "fdcId": 173043,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Groundcherries, (cape-gooseberries or poha), raw",
+    "name": "Physalis crudo",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-171689",
+    "fdcId": 171689,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Apples, raw, without skin",
+    "name": "Manzana cruda pelada",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-173928",
+    "fdcId": 173928,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Apples, raw, without skin, cooked, boiled",
+    "name": "Manzana pelada cocida en agua",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-167767",
+    "fdcId": 167767,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Pineapple, canned, juice pack, drained",
+    "name": "Piña en conserva en jugo, escurrida",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-168173",
+    "fdcId": 168173,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Strawberries, frozen, unsweetened (Includes foods for USDA's Food Distribution Program)",
+    "name": "Frutillas congeladas sin azúcar",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-168162",
+    "fdcId": 168162,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Plums, dried (prunes), uncooked",
+    "name": "Ciruelas deshidratadas sin cocer",
+    "servingGrams": 30,
+    "defaultGrams": 30,
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-174665",
+    "fdcId": 174665,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Figs, dried, uncooked",
+    "name": "Higos secos sin cocer",
+    "servingGrams": 30,
+    "defaultGrams": 30,
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-173941",
+    "fdcId": 173941,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Apricots, dried, sulfured, uncooked",
+    "name": "Damascos secos sulfitados sin cocer",
+    "servingGrams": 30,
+    "defaultGrams": 30,
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-171723",
+    "fdcId": 171723,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Cranberries, dried, sweetened (Includes foods for USDA's Food Distribution Program)",
+    "name": "Arándanos rojos deshidratados endulzados",
+    "servingGrams": 30,
+    "defaultGrams": 30,
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-170158",
+    "fdcId": 170158,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Nuts, almonds, dry roasted, without salt added",
+    "name": "Almendras tostadas sin sal",
+    "servingGrams": 20,
+    "defaultGrams": 20,
+    "role": "fat",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "frutos-secos"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-170162",
+    "fdcId": 170162,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Nuts, cashew nuts, raw",
+    "name": "Castañas de cajú crudas",
+    "servingGrams": 20,
+    "defaultGrams": 20,
+    "role": "fat",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "frutos-secos"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-170571",
+    "fdcId": 170571,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Nuts, cashew nuts, dry roasted, without salt added",
+    "name": "Castañas de cajú tostadas sin sal",
+    "servingGrams": 20,
+    "defaultGrams": 20,
+    "role": "fat",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "frutos-secos"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-170581",
+    "fdcId": 170581,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Nuts, hazelnuts or filberts",
+    "name": "Avellanas europeas naturales",
+    "servingGrams": 20,
+    "defaultGrams": 20,
+    "role": "fat",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "frutos-secos"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-170583",
+    "fdcId": 170583,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Nuts, hazelnuts or filberts, dry roasted, without salt added",
+    "name": "Avellanas europeas tostadas sin sal",
+    "servingGrams": 20,
+    "defaultGrams": 20,
+    "role": "fat",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "frutos-secos"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-170184",
+    "fdcId": 170184,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Nuts, pistachio nuts, raw",
+    "name": "Pistachos crudos",
+    "servingGrams": 20,
+    "defaultGrams": 20,
+    "role": "fat",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "frutos-secos"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-170185",
+    "fdcId": 170185,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Nuts, pistachio nuts, dry roasted, without salt added",
+    "name": "Pistachos tostados sin sal",
+    "servingGrams": 20,
+    "defaultGrams": 20,
+    "role": "fat",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "frutos-secos"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-170182",
+    "fdcId": 170182,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Nuts, pecans",
+    "name": "Nueces pecanas naturales",
+    "servingGrams": 20,
+    "defaultGrams": 20,
+    "role": "fat",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "frutos-secos"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-170569",
+    "fdcId": 170569,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Nuts, brazilnuts, dried, unblanched",
+    "name": "Nueces de Brasil secas",
+    "servingGrams": 20,
+    "defaultGrams": 20,
+    "role": "fat",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "frutos-secos"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-170178",
+    "fdcId": 170178,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Nuts, macadamia nuts, raw",
+    "name": "Macadamias crudas",
+    "servingGrams": 20,
+    "defaultGrams": 20,
+    "role": "fat",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "frutos-secos"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-168588",
+    "fdcId": 168588,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Nuts, almond butter, plain, without salt added",
+    "name": "Mantequilla de almendras sin sal",
+    "servingGrams": 20,
+    "defaultGrams": 20,
+    "role": "fat",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "frutos-secos"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-170163",
+    "fdcId": 170163,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Nuts, cashew butter, plain, without salt added",
+    "name": "Mantequilla de castañas de cajú sin sal",
+    "servingGrams": 20,
+    "defaultGrams": 20,
+    "role": "fat",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "frutos-secos"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-170169",
+    "fdcId": 170169,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Nuts, coconut meat, raw",
+    "name": "Pulpa de coco cruda",
+    "servingGrams": 20,
+    "defaultGrams": 20,
+    "role": "fat",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "frutos-secos"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-170170",
+    "fdcId": 170170,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Nuts, coconut meat, dried (desiccated), not sweetened",
+    "name": "Coco rallado seco sin azúcar",
+    "servingGrams": 20,
+    "defaultGrams": 20,
+    "role": "fat",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "frutos-secos"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-169414",
+    "fdcId": 169414,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Seeds, flaxseed",
+    "name": "Semillas de linaza",
+    "servingGrams": 15,
+    "defaultGrams": 15,
+    "role": "fat",
+    "meals": [
+      "breakfast",
+      "snack",
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-170150",
+    "fdcId": 170150,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Seeds, sesame seeds, whole, dried",
+    "name": "Semillas de sésamo enteras secas",
+    "servingGrams": 15,
+    "defaultGrams": 15,
+    "role": "fat",
+    "meals": [
+      "breakfast",
+      "snack",
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-170151",
+    "fdcId": 170151,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Seeds, sesame seeds, whole, roasted and toasted",
+    "name": "Semillas de sésamo enteras tostadas",
+    "servingGrams": 15,
+    "defaultGrams": 15,
+    "role": "fat",
+    "meals": [
+      "breakfast",
+      "snack",
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-170562",
+    "fdcId": 170562,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Seeds, sunflower seed kernels, dried",
+    "name": "Semillas de maravilla peladas secas",
+    "servingGrams": 15,
+    "defaultGrams": 15,
+    "role": "fat",
+    "meals": [
+      "breakfast",
+      "snack",
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-170563",
+    "fdcId": 170563,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Seeds, sunflower seed kernels, dry roasted, without salt",
+    "name": "Semillas de maravilla tostadas sin sal",
+    "servingGrams": 15,
+    "defaultGrams": 15,
+    "role": "fat",
+    "meals": [
+      "breakfast",
+      "snack",
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-170557",
+    "fdcId": 170557,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Seeds, pumpkin and squash seed kernels, roasted, without salt",
+    "name": "Semillas de zapallo peladas tostadas sin sal",
+    "servingGrams": 15,
+    "defaultGrams": 15,
+    "role": "fat",
+    "meals": [
+      "breakfast",
+      "snack",
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-170189",
+    "fdcId": 170189,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Seeds, sesame butter, tahini, from roasted and toasted kernels (most common type)",
+    "name": "Tahini de sésamo tostado",
+    "servingGrams": 15,
+    "defaultGrams": 15,
+    "role": "fat",
+    "meals": [
+      "breakfast",
+      "snack",
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-170155",
+    "fdcId": 170155,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Seeds, sunflower seed butter, without salt",
+    "name": "Mantequilla de semillas de maravilla sin sal",
+    "servingGrams": 15,
+    "defaultGrams": 15,
+    "role": "fat",
+    "meals": [
+      "breakfast",
+      "snack",
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-172336",
+    "fdcId": 172336,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Oil, canola",
+    "name": "Aceite de canola",
+    "servingGrams": 10,
+    "defaultGrams": 10,
+    "role": "fat",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-171025",
+    "fdcId": 171025,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Oil, sunflower, linoleic, (approx. 65%)",
+    "name": "Aceite de maravilla linoleico",
+    "servingGrams": 10,
+    "defaultGrams": 10,
+    "role": "fat",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-171029",
+    "fdcId": 171029,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Oil, corn, industrial and retail, all purpose salad or cooking",
+    "name": "Aceite de maíz",
+    "servingGrams": 10,
+    "defaultGrams": 10,
+    "role": "fat",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-171016",
+    "fdcId": 171016,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Oil, sesame, salad or cooking",
+    "name": "Aceite de sésamo",
+    "servingGrams": 10,
+    "defaultGrams": 10,
+    "role": "fat",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-171028",
+    "fdcId": 171028,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Oil, grapeseed",
+    "name": "Aceite de pepita de uva",
+    "servingGrams": 10,
+    "defaultGrams": 10,
+    "role": "fat",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-171412",
+    "fdcId": 171412,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Oil, coconut",
+    "name": "Aceite de coco",
+    "servingGrams": 10,
+    "defaultGrams": 10,
+    "role": "fat",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "frutos-secos"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-171411",
+    "fdcId": 171411,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Oil, soybean, salad or cooking",
+    "name": "Aceite de soya",
+    "servingGrams": 10,
+    "defaultGrams": 10,
+    "role": "fat",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "soya"
+    ],
+    "pairingIds": []
+  },
+  {
+    "id": "usda-169096",
+    "fdcId": 169096,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Olives, pickled, canned or bottled, green",
+    "name": "Aceitunas verdes en conserva",
+    "servingGrams": 30,
+    "defaultGrams": 30,
+    "role": "fat",
+    "meals": [
+      "breakfast",
+      "snack",
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "pairingIds": []
+  }
+]
