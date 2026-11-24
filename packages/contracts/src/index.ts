@@ -17,3 +17,5 @@ export const ProblemSchema = z.object({
 
 export type HealthResponse = z.infer<typeof HealthResponseSchema>;
 export type IdentityResponse = z.infer<typeof IdentityResponseSchema>;
+
+export type { Database, Json, Tables, TablesInsert, TablesUpdate } from './database.types';

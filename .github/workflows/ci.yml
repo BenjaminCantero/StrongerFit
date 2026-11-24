@@ -35,3 +35,7 @@ jobs:
       - run: supabase db lint --workdir backend --level warning --fail-on error
       # Pruebas pgTAP de RLS y acceso cruzado (RNF-04, CA-01).
       - run: supabase test db --workdir backend
+      # Los tipos de la app deben corresponder a las migraciones (npm run db:types).
+      - run: |
+          supabase gen types typescript --local --workdir backend --schema public > packages/contracts/src/database.types.ts
+          git diff --exit-code -- packages/contracts/src/database.types.ts
