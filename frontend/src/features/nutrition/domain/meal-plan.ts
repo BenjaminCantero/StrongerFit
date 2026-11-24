@@ -4,6 +4,7 @@ import { formatKcal, formatMacro, planMealLabels } from '../presentation';
 import { searchFoods } from './food-entry';
 import type { OpenMealPlan, ProfileData } from '../../profile/domain/profile';
 import type { FoodEntry, Nutrients } from './food-entry';
+import { hasHealthRisk as healthRisk } from '../../onboarding/domain/onboarding';
 
 export const weekDays = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
 export const roleLabels: Record<FoodRole, string> = {
@@ -50,7 +51,7 @@ export function mealEntry(meal: Pick<PlannedMeal, 'meal' | 'items' | 'nutrients'
 }
 
 // Si el perfil declaró riesgo, la meta ya no tiene déficit (BR-19); se informa la derivación.
-export const hasHealthRisk = (profile: ProfileData) => !!profile.onboarding?.healthFlags.length;
+export const hasHealthRisk = (profile: ProfileData) => healthRisk(profile.onboarding?.healthFlags ?? []);
 
 // Buscador de preferencias: solo alimentos verificados, que son los que la minuta usa. Los que
 // bloquean las exclusiones actuales se marcan: una exclusión siempre gana a una preferencia.

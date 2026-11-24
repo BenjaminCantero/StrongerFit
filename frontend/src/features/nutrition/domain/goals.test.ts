@@ -19,10 +19,16 @@ describe('metas desde el perfil', () => {
       .toEqual({ direction: 'maintenance', adjustment: 0, proteinPerKg: 2, fatShare: 0.3 });
   });
 
-  it('no propone déficit por defecto si hay condiciones de salud declaradas', () => {
+  it('no propone déficit por defecto si hay condiciones de salud declaradas (BR-19)', () => {
     const profile = createProfilePreview();
-    const risky = { ...profile, onboarding: { ...profile.onboarding!, goal: 'fat-loss' as const, healthFlags: ['injury' as const] } };
+    const risky = { ...profile, onboarding: { ...profile.onboarding!, goal: 'fat-loss' as const, healthFlags: ['pregnancy' as const] } };
     expect(defaultSettings(risky).direction).toBe('maintenance');
     expect(defaultSettings({ ...risky, onboarding: { ...risky.onboarding, healthFlags: [] } }).direction).toBe('deficit');
+  });
+
+  it('una lesión solo afecta la rutina: no impide el déficit', () => {
+    const profile = createProfilePreview();
+    const injured = { ...profile, onboarding: { ...profile.onboarding!, goal: 'fat-loss' as const, healthFlags: ['injury' as const] } };
+    expect(defaultSettings(injured).direction).toBe('deficit');
   });
 });

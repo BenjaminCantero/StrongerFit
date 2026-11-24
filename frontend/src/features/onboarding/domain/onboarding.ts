@@ -138,7 +138,10 @@ export function paceSummary(draft: Draft) {
   return goal && typeof goal === 'object' ? goal : null;
 }
 
-export const hasHealthRisk = (flags: HealthFlag[]) => flags.length > 0;
+// Riesgo que limita las recomendaciones nutricionales (BR-19). Una lesión no lo es: solo
+// afecta la rutina (RF-30). Misma regla que health_screenings.has_risk en la base.
+const clinicalFlags: HealthFlag[] = ['cardiovascular', 'pregnancy', 'eating-disorder'];
+export const hasHealthRisk = (flags: HealthFlag[]) => flags.some((flag) => clinicalFlags.includes(flag));
 
 export function completeOnboarding(draft: Draft, now: Date, today: string):
   { ok: true; values: PersonalValues; exclusions: string[]; dietFocus: string; preferences: MealPreferences; onboarding: OnboardingRecord } | { ok: false; step: Step } {

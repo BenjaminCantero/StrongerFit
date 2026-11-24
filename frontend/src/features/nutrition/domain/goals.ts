@@ -1,5 +1,6 @@
 import { limits, nutritionTargets, type Direction, type TargetInput } from '@strongerfit/nutrition-engine';
 import type { ProfileData } from '../../profile/domain/profile';
+import { hasHealthRisk } from '../../onboarding/domain/onboarding';
 
 export type GoalSettings = { direction: Direction; adjustment: number; proteinPerKg: number; fatShare: number };
 export type MissingField = 'edad' | 'altura' | 'peso' | 'sexo' | 'actividad';
@@ -15,14 +16,14 @@ export function goalPerson(profile: ProfileData): { ok: true; person: Omit<Targe
   if (!record?.activity) missing.push('actividad');
   if (missing.length || !record) return { ok: false, missing };
   return { ok: true, person: { sex: record.sex, activity: record.activity, ageYears: profile.ageYears!, heightCm: profile.heightCm!,
-    weightKg: profile.weightKg!, healthRisk: record.healthFlags.length > 0 } };
+    weightKg: profile.weightKg!, healthRisk: hasHealthRisk(record.healthFlags) } };
 }
 
 export function defaultSettings(profile: ProfileData): GoalSettings {
   const saved = profile.nutritionPlan;
   if (saved) return { direction: saved.result.direction, adjustment: saved.result.adjustment, proteinPerKg: saved.proteinPerKg, fatShare: saved.fatShare };
   const goal = profile.onboarding?.goal;
-  const risk = !!profile.onboarding?.healthFlags.length;
+  const risk = hasHealthRisk(profile.onboarding?.healthFlags ?? []);
   const direction: Direction = goal === 'fat-loss' && !risk ? 'deficit' : goal === 'muscle' ? 'surplus' : 'maintenance';
   return { direction, adjustment: direction === 'deficit' ? limits.deficit.default : direction === 'surplus' ? limits.surplus.default : 0,
     proteinPerKg: limits.proteinPerKg.default, fatShare: limits.fatShare.default };

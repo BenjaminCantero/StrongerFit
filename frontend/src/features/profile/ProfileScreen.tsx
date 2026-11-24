@@ -13,7 +13,7 @@ import { PersonalDataCard } from './components/PersonalDataCard';
 import { PrivacyCard } from './components/PrivacyCard';
 import { NutritionEditor, PersonalEditor, TrainingSetupEditor } from './components/ProfileEditors';
 import { FormField } from '../../components/ui/FormField';
-import { labels } from '../onboarding/domain/onboarding';
+import { hasHealthRisk, labels } from '../onboarding/domain/onboarding';
 import { ProfileHero } from './components/ProfileHero';
 import { profileAvatar } from './presentation';
 import type { ExportResult } from './device';
@@ -124,7 +124,7 @@ export function ProfileScreen({ profile, dispatch, isPreview, onPickPhoto, onExp
       <NutritionCard exclusions={profile.exclusions} dietFocus={profile.dietFocus} preferences={profile.mealPreferences}
         trainingDayTargets={profile.trainingDayTargets} target={profile.nutritionPlan?.result ?? null} onGoals={onGoals} onAdjust={() => { setNotice(''); setDialog('nutrition'); }} />
       <PrivacyCard exporting={exporting} consentDate={formatDay(profile.onboarding?.consent.acceptedAt)}
-        healthDate={formatDay(profile.onboarding?.completedAt)} healthRisk={!!profile.onboarding?.healthFlags.length} onExport={exportData} onDelete={() => { setNotice(''); setDialog('delete'); }} />
+        healthDate={formatDay(profile.onboarding?.completedAt)} healthRisk={hasHealthRisk(profile.onboarding?.healthFlags ?? [])} onExport={exportData} onDelete={() => { setNotice(''); setDialog('delete'); }} />
       <AppInfoCard />
 
       <View style={styles.account}>

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { createEmptyProfile, profileReducer } from '../../profile/domain/profile';
-import { completeOnboarding, createDraft, validateStep, weightGoalPace, type Draft } from './onboarding';
+import { completeOnboarding, createDraft, hasHealthRisk, validateStep, weightGoalPace, type Draft } from './onboarding';
 
 const today = '2026-10-30';
 const valid = (): Draft => ({
@@ -35,6 +35,14 @@ describe('onboarding', () => {
     expect(validateStep('training', { ...valid(), days: '7' })).toHaveProperty('days');
     expect(validateStep('training', { ...valid(), days: '6' })).toEqual({});
     expect(validateStep('training', { ...valid(), environment: null })).toHaveProperty('environment');
+  });
+
+  it('solo las condiciones clínicas son riesgo; la lesión afecta la rutina (BR-19, RF-30)', () => {
+    expect(hasHealthRisk(['injury'])).toBe(false);
+    expect(hasHealthRisk(['injury', 'cardiovascular'])).toBe(true);
+    expect(hasHealthRisk(['pregnancy'])).toBe(true);
+    expect(hasHealthRisk(['eating-disorder'])).toBe(true);
+    expect(hasHealthRisk([])).toBe(false);
   });
 
   it('pide zonas si se declara una lesión (RF-30)', () => {
