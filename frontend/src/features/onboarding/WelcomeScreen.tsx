@@ -10,7 +10,7 @@ const values = [
   { icon: 'trending-up-outline', title: 'Progreso real', text: 'Registros simples y estimaciones rotuladas como tales.' },
 ] as const;
 
-export function WelcomeScreen({ onStart, onSignIn, onLocal }: { onStart: () => void; onSignIn: () => void; onLocal: () => void }) {
+export function WelcomeScreen({ onStart, onSignIn }: { onStart: () => void; onSignIn: () => void }) {
   return (
     <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right', 'bottom']}>
       <ScrollView contentContainerStyle={styles.scroll}>
@@ -38,10 +38,9 @@ export function WelcomeScreen({ onStart, onSignIn, onLocal }: { onStart: () => v
 
           <AppButton label="Crear cuenta" icon="arrow-forward-outline" onPress={onStart} />
           <AppButton label="Ya tengo cuenta" variant="secondary" onPress={onSignIn} />
-          <AppButton label="Usar sin cuenta" variant="ghost" onPress={onLocal} />
           <View style={styles.footer}>
             <AppText variant="caption" tone="muted" style={styles.center}>
-              Por ahora tu perfil se guarda en este dispositivo, con o sin cuenta. La sincronización con la nube llegará en una próxima versión.
+              Tu cuenta guarda tus datos de forma privada: solo tú puedes verlos.
             </AppText>
             <AppText variant="caption" tone="muted" style={styles.center}>
               Antes de crearlo verás el aviso de salud y el consentimiento de datos.

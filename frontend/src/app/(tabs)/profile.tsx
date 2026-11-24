@@ -1,5 +1,7 @@
+import { useQueryClient } from '@tanstack/react-query';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { deleteAccount, signOut, useAuthSession } from '../../features/account/auth';
+import { deleteAccount, useAuthSession } from '../../features/account/auth';
+import { purgeLocalData, signOutAndPurge } from '../../features/account/session';
 import { pickProfilePhoto, shareJsonExport } from '../../features/profile/device';
 import { buildLocalExport } from '../../features/profile/domain/profile';
 import { ProfileScreen } from '../../features/profile/ProfileScreen';
@@ -17,10 +19,16 @@ export default function ProfileRoute() {
   const isPreview = __DEV__ && !empty;
   const router = useRouter();
   const auth = useAuthSession();
+  const queryClient = useQueryClient();
 
   return <ProfileScreen profile={profile} dispatch={dispatch} account={{ configured: auth.configured, email: auth.session?.user.email ?? null }}
     onSignIn={() => router.push({ pathname: '/account', params: { mode: 'signin' } })} onSignUp={() => router.push({ pathname: '/account', params: { mode: 'signup' } })}
-    onSignOut={signOut} onDeleteAccount={deleteAccount} isPreview={isPreview} onPickPhoto={pickProfilePhoto} onGoals={() => router.push('/nutrition-goals')}
+    onSignOut={() => signOutAndPurge(queryClient)}
+    onDeleteAccount={async (password) => {
+      const result = await deleteAccount(password);
+      if (result.ok) await purgeLocalData(queryClient);
+      return result;
+    }} isPreview={isPreview} onPickPhoto={pickProfilePhoto} onGoals={() => router.push('/nutrition-goals')}
     onExport={() => shareJsonExport(`strongerfit-datos-${todayDateKey()}.json`, buildLocalExport({
       profile, exportedAt: new Date(), isPreview, nutritionDiary: nutritionDiarySnapshot(), progress: progressSnapshot(),
       sleep: { records: sleepStore.getState().records, cycleMinutes: sleepStore.getState().cycleMinutes },

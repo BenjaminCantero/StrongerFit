@@ -9,3 +9,9 @@ export async function writeValue(key: string, value: string | null): Promise<voi
   if (value === null) globalThis.localStorage?.removeItem(prefix + key);
   else globalThis.localStorage?.setItem(prefix + key, value);
 }
+
+export async function clearValues(): Promise<void> {
+  const storage = globalThis.localStorage;
+  if (!storage) return;
+  for (const key of Object.keys(storage)) if (key.startsWith(prefix)) storage.removeItem(key);
+}

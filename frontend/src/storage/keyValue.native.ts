@@ -17,3 +17,8 @@ export async function writeValue(key: string, value: string | null): Promise<voi
   if (value === null) await db.runAsync('DELETE FROM key_values WHERE key = ?', key);
   else await db.runAsync('INSERT OR REPLACE INTO key_values (key, value) VALUES (?, ?)', key, value);
 }
+
+// Borra todos los valores; se usa al entrar otra cuenta o al cerrar sesión (RNF-05).
+export async function clearValues(): Promise<void> {
+  await (await table()).runAsync('DELETE FROM key_values');
+}

@@ -2,7 +2,7 @@ import 'react-native-url-polyfill/auto';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from '@strongerfit/contracts';
 import * as SecureStore from 'expo-secure-store';
-import { Platform } from 'react-native';
+import { AppState, Platform } from 'react-native';
 
 let client: SupabaseClient<Database> | undefined;
 
@@ -20,10 +20,18 @@ export function getSupabase(): SupabaseClient<Database> {
         removeItem: (name) => SecureStore.deleteItemAsync(name),
       },
       persistSession: Platform.OS !== 'web',
-      autoRefreshToken: false,
+      autoRefreshToken: true,
       detectSessionInUrl: false,
       flowType: 'pkce',
     },
   });
+  // Patrón de Supabase para apps móviles: renovar el token solo en primer plano (AU-01).
+  if (Platform.OS !== 'web') {
+    const auth = client.auth;
+    AppState.addEventListener('change', (state) => {
+      if (state === 'active') auth.startAutoRefresh();
+      else auth.stopAutoRefresh();
+    });
+  }
   return client;
 }

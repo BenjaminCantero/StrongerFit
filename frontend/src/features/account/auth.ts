@@ -27,10 +27,6 @@ export async function submitAuth(mode: AuthMode, form: AuthForm): Promise<AuthRe
     : { ok: true, signedIn: false, message: 'Si existe una cuenta con ese correo, te enviamos un enlace para recuperar el acceso.' };
 }
 
-export async function signOut() {
-  await getSupabase().auth.signOut();
-}
-
 // CU-08: reautentica con la contraseña y pide al servidor eliminar la cuenta; luego cierra la sesión.
 export async function deleteAccount(password: string): Promise<{ ok: true } | { ok: false; message: string }> {
   const auth = getSupabase().auth;

@@ -11,18 +11,18 @@ import { MIN_PASSWORD, validateAuthForm, type AuthField, type AuthForm, type Aut
 
 const copy: Record<AuthMode, { title: string; lead: string; action: string }> = {
   signin: { title: 'Iniciar sesión', lead: 'Entra con el correo y la contraseña de tu cuenta.', action: 'Iniciar sesión' },
-  signup: { title: 'Crear cuenta', lead: 'Con una cuenta podrás recuperar tu acceso y, más adelante, sincronizar tus datos.', action: 'Crear cuenta' },
+  signup: { title: 'Crear cuenta', lead: 'Tu cuenta guarda tu perfil, entrenamientos y comidas para que no los pierdas al cambiar de teléfono.', action: 'Crear cuenta' },
   reset: { title: 'Recuperar acceso', lead: 'Te enviaremos un enlace para crear una nueva contraseña.', action: 'Enviar enlace' },
 };
 
 type Props = {
-  initialMode: AuthMode; configured: boolean;
+  initialMode: AuthMode;
   onSubmit: (mode: AuthMode, form: AuthForm) => Promise<AuthResult>;
-  onSignedIn: () => void; onContinueLocal: () => void;
 };
 
-// RF-01, CU-01: registro, inicio de sesión y recuperación con Supabase Auth.
-export function AuthScreen({ initialMode, configured, onSubmit, onSignedIn, onContinueLocal }: Props) {
+// RF-01, CU-01: registro, inicio de sesión y recuperación con Supabase Auth. Al iniciar
+// sesión las guardas de ruta llevan al onboarding o a Inicio (AU-01).
+export function AuthScreen({ initialMode, onSubmit }: Props) {
   const [mode, setMode] = useState<AuthMode>(initialMode);
   const [form, setForm] = useState<AuthForm>({ email: '', password: '', confirm: '' });
   const [errors, setErrors] = useState<Partial<Record<AuthField, string>>>({});
@@ -45,23 +45,11 @@ export function AuthScreen({ initialMode, configured, onSubmit, onSignedIn, onCo
     try {
       const result = await onSubmit(mode, form);
       if (!result.ok) setMessage({ tone: 'error', text: result.message });
-      else if (result.signedIn) onSignedIn();
-      else setMessage({ tone: 'info', text: result.message ?? '' });
+      else if (!result.signedIn) setMessage({ tone: 'info', text: result.message ?? '' });
     } finally {
       setBusy(false);
     }
   }
-
-  if (!configured) return <Screen safeBottom>
-    <AppText variant="title" accessibilityRole="header">{text.title}</AppText>
-    <View style={styles.note}>
-      <Ionicons name="cloud-offline-outline" size={20} color={colors.gold} />
-      <AppText variant="caption" style={styles.flex}>
-        La cuenta en la nube no está disponible en esta versión. Puedes usar la app con tu perfil guardado solo en este dispositivo.
-      </AppText>
-    </View>
-    <AppButton label="Continuar sin cuenta" icon="arrow-forward-outline" onPress={onContinueLocal} />
-  </Screen>;
 
   return <Screen safeBottom>
     <View style={styles.heading}>
@@ -92,10 +80,6 @@ export function AuthScreen({ initialMode, configured, onSubmit, onSignedIn, onCo
     <AppButton label={busy ? 'Un momento…' : text.action} icon="arrow-forward-outline" disabled={busy} onPress={submit} />
     {mode === 'signin' && <AppButton label="Olvidé mi contraseña" variant="ghost" onPress={() => switchTo('reset')} />}
     {mode === 'reset' && <AppButton label="Volver a iniciar sesión" variant="secondary" onPress={() => switchTo('signin')} />}
-    <AppButton label="Continuar sin cuenta" variant="ghost" onPress={onContinueLocal} />
-    <AppText variant="caption" tone="muted">
-      Por ahora tu perfil, entrenamientos y comidas se guardan en este dispositivo; la sincronización con la cuenta llegará en una próxima versión.
-    </AppText>
   </Screen>;
 }
 

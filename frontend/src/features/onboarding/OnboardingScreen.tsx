@@ -5,7 +5,6 @@ import { AppButton } from '../../components/ui/AppButton';
 import { AppText } from '../../components/ui/AppText';
 import { ProgressBar } from '../../components/ui/ProgressBar';
 import { colors, layout, spacing } from '../../theme';
-import type { ProfileAction } from '../profile/domain/profile';
 import { BasicsStep, HealthStep, NutritionStep, TrainingStep, WeightStep } from './components/Steps';
 import { completeOnboarding, createDraft, labels, paceSummary, steps, validateStep, type Draft, type DraftField, type Step } from './domain/onboarding';
 
@@ -17,12 +16,17 @@ const titles: Record<Step, { title: string; lead: string }> = {
   health: { title: 'Salud y confirmación', lead: 'Último paso antes de crear tu perfil.' },
 };
 
-type Props = { today: string; dispatch: (action: ProfileAction) => void; onDone: () => void; onExit: () => void };
+export type CompletedOnboarding = Extract<ReturnType<typeof completeOnboarding>, { ok: true }>;
 
-export function OnboardingScreen({ today, dispatch, onDone, onExit }: Props) {
+// onComplete guarda el perfil y devuelve un mensaje de error o null. onExit cierra la sesión.
+type Props = { today: string; onComplete: (result: CompletedOnboarding) => Promise<string | null>; onExit: () => void };
+
+export function OnboardingScreen({ today, onComplete, onExit }: Props) {
   const [draft, setDraft] = useState<Draft>(createDraft);
   const [index, setIndex] = useState(0);
   const [errors, setErrors] = useState<Partial<Record<DraftField, string>>>({});
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
   const scroll = useRef<ScrollViewInstance>(null);
   const step = steps[index]!;
   const last = index === steps.length - 1;
@@ -33,15 +37,19 @@ export function OnboardingScreen({ today, dispatch, onDone, onExit }: Props) {
   };
   const goTo = (next: number) => { setIndex(next); setErrors({}); scroll.current?.scrollTo({ y: 0, animated: false }); };
 
-  function next() {
+  async function next() {
     const found = validateStep(step, draft);
     if (Object.keys(found).length) { setErrors(found); return; }
     if (!last) { goTo(index + 1); return; }
     const result = completeOnboarding(draft, new Date(), today);
     if (!result.ok) { goTo(steps.indexOf(result.step)); return; }
-    const { ok: _ok, ...action } = result;
-    dispatch({ type: 'complete-onboarding', ...action });
-    onDone();
+    setSaving(true);
+    setSaveError(null);
+    try {
+      setSaveError(await onComplete(result));
+    } finally {
+      setSaving(false);
+    }
   }
 
   const pace = paceSummary(draft);
@@ -77,8 +85,10 @@ export function OnboardingScreen({ today, dispatch, onDone, onExit }: Props) {
             {errorCount === 1 ? 'Revisa el campo marcado.' : `Revisa los ${errorCount} campos marcados.`}
           </AppText>}
           <View style={styles.actions}>
-            <AppButton label={last ? 'Crear mi perfil' : 'Continuar'} icon={last ? 'checkmark-outline' : 'arrow-forward-outline'} onPress={next} />
-            <AppButton label={index === 0 ? 'Volver a Bienvenida' : 'Paso anterior'} variant="secondary"
+            {saveError && <AppText accessibilityRole="alert" variant="caption" style={styles.error}>{saveError}</AppText>}
+            <AppButton label={saving ? 'Guardando…' : last ? 'Crear mi perfil' : 'Continuar'} icon={last ? 'checkmark-outline' : 'arrow-forward-outline'}
+              disabled={saving} onPress={next} />
+            <AppButton label={index === 0 ? 'Cerrar sesión' : 'Paso anterior'} variant="secondary"
               onPress={() => index === 0 ? onExit() : goTo(index - 1)} />
           </View>
         </View>

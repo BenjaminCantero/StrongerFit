@@ -1,5 +1,5 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { Redirect, Tabs } from 'expo-router';
+import { Tabs } from 'expo-router';
 import type { ComponentProps } from 'react';
 import { useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -23,8 +23,6 @@ export default function TabLayout() {
   const compact = width < 360 || fontScale > 1.2;
   const { profile } = useProfile();
   const avatar = profileAvatar(profile.photo);
-  // Sin perfil completo no hay datos para planificar (BR-02): primero Bienvenida y onboarding.
-  if (!profile.onboarding) return <Redirect href="/welcome" />;
   return (
     <Tabs screenOptions={{
       headerShown: true,

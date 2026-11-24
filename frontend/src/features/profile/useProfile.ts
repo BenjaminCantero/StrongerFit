@@ -11,3 +11,6 @@ export function useProfile(empty = false) {
   const [emptyStore] = useState(() => createProfileStore(createEmptyProfile()));
   return useStore(empty ? emptyStore : profileStore);
 }
+
+// Vacía el perfil en memoria al cambiar de cuenta o cerrar sesión.
+export const resetProfile = () => profileStore.getState().dispatch({ type: 'reset' });
