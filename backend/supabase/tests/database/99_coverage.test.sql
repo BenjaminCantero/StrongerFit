@@ -7,7 +7,9 @@ select * from no_plan();
 create temp table manifest (name text primary key) on commit drop;
 insert into manifest values
   ('audit_events'),
-  ('profiles'), ('user_goals'), ('user_preferences'), ('user_injuries'), ('health_screenings'), ('consents');
+  ('profiles'), ('user_goals'), ('user_preferences'), ('user_injuries'), ('health_screenings'), ('consents'),
+  ('workout_plans'), ('workout_days'), ('workout_exercises'), ('workout_sessions'), ('performed_sets'),
+  ('load_suggestions'), ('timer_presets'), ('recommendation_runs');
 grant select on manifest to anon;
 
 select set_eq(
