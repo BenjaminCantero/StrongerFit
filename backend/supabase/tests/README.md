@@ -23,3 +23,11 @@ npm run db:test                           # reinicia la base local, aplica migra
 Cada tabla prueba que otra persona (B) no lee, no edita, no borra ni inserta a nombre de
 la dueña (A), y que no puede colgar filas en un padre ajeno. No sustituir estas pruebas
 por los mocks de autenticación de las pruebas de la API.
+
+## Integración de la app
+
+`npm run test:integration` prueba los repositorios del frontend (`*.integration.test.ts`)
+contra el stack local completo (`npm run supabase:start`, con Auth y API). Cada prueba crea
+personas nuevas con la Admin API local y las usa con la clave pública, igual que la app.
+La clave de servicio se lee de `supabase status` solo dentro del proceso de prueba.
+

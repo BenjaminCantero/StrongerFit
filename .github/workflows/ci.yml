@@ -27,11 +27,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
       - uses: supabase/setup-cli@v1
         with:
           version: 2.122.0
-      # Levanta Postgres y aplica todas las migraciones desde una base vacía (CA-10).
-      - run: supabase db start --workdir backend
+      # Levanta Postgres, Auth y la API y aplica todas las migraciones desde una base vacía (CA-10).
+      - run: supabase start --workdir backend -x studio,imgproxy,vector,logflare,edge-runtime,realtime,storage-api,supavisor,postgres-meta
       - run: supabase db lint --workdir backend --level warning --fail-on error
       # Pruebas pgTAP de RLS y acceso cruzado (RNF-04, CA-01).
       - run: supabase test db --workdir backend
@@ -39,3 +44,5 @@ jobs:
       - run: |
           supabase gen types typescript --local --workdir backend --schema public > packages/contracts/src/database.types.ts
           git diff --exit-code -- packages/contracts/src/database.types.ts
+      # Repositorios de la app contra RLS real (SY-01).
+      - run: npm run test:integration
