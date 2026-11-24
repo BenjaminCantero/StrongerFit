@@ -1,17 +1,18 @@
 import 'react-native-url-polyfill/auto';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
+import type { Database } from '@strongerfit/contracts';
 import * as SecureStore from 'expo-secure-store';
 import { Platform } from 'react-native';
 
-let client: SupabaseClient | undefined;
+let client: SupabaseClient<Database> | undefined;
 
-export function getSupabase(): SupabaseClient {
+export function getSupabase(): SupabaseClient<Database> {
   if (client) return client;
   const url = process.env.EXPO_PUBLIC_SUPABASE_URL;
   const key = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
   if (!url || !key) throw new Error('Configura Supabase en frontend/.env antes de usar autenticación.');
 
-  client = createClient(url, key, {
+  client = createClient<Database>(url, key, {
     auth: {
       storage: Platform.OS === 'web' ? undefined : {
         getItem: (name) => SecureStore.getItemAsync(name),
