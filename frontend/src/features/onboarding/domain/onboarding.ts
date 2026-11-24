@@ -20,6 +20,8 @@ export type OnboardingRecord = {
 export const steps = ['basics', 'training', 'weight', 'nutrition', 'health'] as const;
 export type Step = (typeof steps)[number];
 export const CONSENT_VERSION = 'consentimiento-salud-v0.1';
+// Versión del cuestionario de aptitud (RF-22); se guarda con cada respuesta.
+export const HEALTH_QUESTIONNAIRE_VERSION = 'aptitud-v0.1';
 
 export const labels = {
   sex: { female: 'Mujer', male: 'Hombre', unspecified: 'Prefiero no decirlo' },
