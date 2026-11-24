@@ -17,8 +17,9 @@
   usar App Links HTTPS verificados según RNF-24.
 - SQLite: punto de apertura preparado. Borradores, migraciones locales, cola e
   idempotencia se implementarán con RF-07/17.
-- No hay tablas privadas todavía. RLS y sus pruebas serán parte de cada migración
-  de dominio; esta entrega no afirma cumplir RNF-04.
+- Esquema en `backend/supabase/migrations` (DB-01 a DB-03): toda tabla privada tiene
+  RLS por propietario y pruebas pgTAP de acceso cruzado que corren en CI desde una base
+  vacía (RNF-04, CA-10). Ver `backend/supabase/migrations/README.md`.
 - Los motores están reservados, sin algoritmos ficticios. Su cobertura mínima del
   80 % se exigirá cuando exista implementación.
 

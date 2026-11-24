@@ -17,7 +17,8 @@
     "check": "npm run typecheck && npm run lint && npm test",
     "supabase:start": "supabase start --workdir backend",
     "supabase:stop": "supabase stop --workdir backend",
-    "supabase:serve": "supabase functions serve api --workdir backend"
+    "supabase:serve": "supabase functions serve api --workdir backend",
+    "db:test": "supabase db reset --workdir backend && supabase db lint --workdir backend --level warning --fail-on error && supabase test db --workdir backend"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",
