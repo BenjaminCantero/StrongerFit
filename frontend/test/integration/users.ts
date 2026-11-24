@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
-import type { Database } from '@strongerfit/contracts';
+import type { Database } from '@strongerfit/contracts/database';
 import { inject } from 'vitest';
 
 const options = { auth: { persistSession: false, autoRefreshToken: false } };

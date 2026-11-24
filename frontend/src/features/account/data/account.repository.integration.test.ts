@@ -1,5 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import type { Database } from '@strongerfit/contracts';
+import type { Database } from '@strongerfit/contracts/database';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { signedInUser } from '../../../../test/integration/users';
 import { completeOnboarding, createDraft, CONSENT_VERSION, type Draft } from '../../onboarding/domain/onboarding';
