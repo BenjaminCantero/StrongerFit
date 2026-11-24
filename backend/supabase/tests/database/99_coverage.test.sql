@@ -9,7 +9,9 @@ insert into manifest values
   ('audit_events'),
   ('profiles'), ('user_goals'), ('user_preferences'), ('user_injuries'), ('health_screenings'), ('consents'),
   ('workout_plans'), ('workout_days'), ('workout_exercises'), ('workout_sessions'), ('performed_sets'),
-  ('load_suggestions'), ('timer_presets'), ('recommendation_runs');
+  ('load_suggestions'), ('timer_presets'), ('recommendation_runs'),
+  ('nutrition_targets'), ('food_logs'), ('meal_plans'), ('planned_meals'), ('body_measurements'),
+  ('weight_goals'), ('data_requests');
 grant select on manifest to anon;
 
 select set_eq(
