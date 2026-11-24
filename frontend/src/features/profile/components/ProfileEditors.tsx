@@ -7,7 +7,7 @@ import { limits, nutritionForm, parseNutritionForm, parsePersonalForm, personalF
   type PersonalField, type PersonalValues, type ProfileData } from '../domain/profile';
 import { FormField } from '../../../components/ui/FormField';
 import { ChoiceChips } from '../../../components/ui/ChoiceChips';
-import { labels, optionalEquipment, toggle, type Environment, type Equipment, type Zone } from '../../onboarding/domain/onboarding';
+import { labels, optionalEquipment, toggle, type Environment, type Equipment, type Goal, type Zone } from '../../onboarding/domain/onboarding';
 import { CheckRow } from '../../onboarding/components/CheckRow';
 import { MealPreferencesEditor } from '../../nutrition/components/MealPreferencesEditor';
 import { trainingDayOption, weekDays } from '../../nutrition/domain/meal-plan';
@@ -20,8 +20,12 @@ const personalLabels: Record<PersonalField, string> = {
 
 type EditorProps<Values> = { profile: ProfileData; onSave: (values: Values) => void; onCancel: () => void };
 
-export function PersonalEditor({ profile, onSave, onCancel }: EditorProps<PersonalValues>) {
+// El objetivo usa las mismas opciones que el onboarding; edad, altura, días y minutos son
+// obligatorios porque alimentan las metas y la rutina. El peso es opcional (RF-03).
+export function PersonalEditor({ profile, onSave, onCancel }: EditorProps<{ values: PersonalValues; goal: Goal }>) {
   const [form, setForm] = useState(() => personalForm(profile));
+  const [goal, setGoal] = useState<Goal | null>(profile.onboarding?.goal ?? null);
+  const [goalError, setGoalError] = useState<string>();
   const [errors, setErrors] = useState<FormErrors<PersonalField>>({});
   const field = (name: PersonalField) => ({
     value: form[name], error: errors[name],
@@ -29,11 +33,14 @@ export function PersonalEditor({ profile, onSave, onCancel }: EditorProps<Person
   });
   function save() {
     const result = parsePersonalForm(form);
-    if (result.ok) onSave(result.values);
-    else setErrors(result.errors);
+    const found: FormErrors<PersonalField> = result.ok ? {} : { ...result.errors };
+    for (const key of ['age', 'height', 'days', 'minutes'] as const) if (!form[key].trim()) found[key] = 'Necesitamos este dato.';
+    setGoalError(goal ? undefined : 'Elige tu objetivo principal.');
+    if (!result.ok || Object.keys(found).length || !goal) { setErrors(found); return; }
+    onSave({ values: result.values, goal });
   }
   return <>
-    <AppText tone="muted">Los campos numéricos son opcionales. Puedes dejarlos vacíos si prefieres no indicarlos.</AppText>
+    <AppText tone="muted">El peso es opcional; si lo cambias, queda registrado como pesaje de hoy.</AppText>
     <FormField label="Nombre" {...field('name')} autoComplete="name" maxLength={60} />
     <View style={styles.row}>
       <View style={styles.cell}><FormField label="Edad" unit="años" {...field('age')} keyboardType="number-pad" maxLength={3}
@@ -41,7 +48,7 @@ export function PersonalEditor({ profile, onSave, onCancel }: EditorProps<Person
       <View style={styles.cell}><FormField label="Altura" unit="cm" {...field('height')} keyboardType="number-pad" maxLength={3} /></View>
     </View>
     <FormField label="Peso de referencia" unit="kg" {...field('weight')} keyboardType="decimal-pad" maxLength={5} placeholder="Ej: 71,4" />
-    <FormField label="Objetivo principal" {...field('goal')} maxLength={120} placeholder="Ej: ganar fuerza" />
+    <ChoiceChips label="Objetivo principal" options={labels.goal} value={goal} onChange={(value) => { setGoal(value); setGoalError(undefined); }} error={goalError} />
     <View style={styles.row}>
       <View style={styles.cell}><FormField label="Días por semana" {...field('days')} keyboardType="number-pad" maxLength={1} /></View>
       <View style={styles.cell}><FormField label="Por sesión" unit="min" {...field('minutes')} keyboardType="number-pad" maxLength={3} /></View>

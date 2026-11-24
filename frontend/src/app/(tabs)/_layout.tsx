@@ -1,10 +1,11 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Tabs } from 'expo-router';
 import type { ComponentProps } from 'react';
-import { useWindowDimensions } from 'react-native';
+import { useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AppHeader } from '../../components/AppHeader';
 import { AppText } from '../../components/ui/AppText';
+import { QueryState } from '../../lib/data/QueryState';
 import { profileAvatar } from '../../features/profile/presentation';
 import { useProfile } from '../../features/profile/useProfile';
 import { colors, fontFamily, layout } from '../../theme';
@@ -21,8 +22,14 @@ export default function TabLayout() {
   const insets = useSafeAreaInsets();
   const { width, fontScale } = useWindowDimensions();
   const compact = width < 360 || fontScale > 1.2;
-  const { profile } = useProfile();
+  const { profile, identity } = useProfile();
   const avatar = profileAvatar(profile.photo);
+  // Las pestañas leen la identidad guardada (SY-02): se espera antes de mostrarlas.
+  if (!identity.data) {
+    return <View style={{ flex: 1, justifyContent: 'center', padding: 24, paddingTop: insets.top + 24, backgroundColor: colors.canvas }}>
+      <QueryState isPending={identity.isPending} error={identity.error} onRetry={() => identity.refetch()} loadingLabel="Cargando tu perfil" />
+    </View>;
+  }
   return (
     <Tabs screenOptions={{
       headerShown: true,

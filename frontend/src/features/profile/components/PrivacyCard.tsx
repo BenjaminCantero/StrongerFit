@@ -22,9 +22,10 @@ function StatusRow({ icon, title, description, done }: { icon: IconName; title: 
   </View>;
 }
 
-type Props = { exporting: boolean; consentDate: string | null; healthDate: string | null; healthRisk: boolean; onExport: () => void; onDelete: () => void };
+type Props = { exporting: boolean; consentDate: string | null; healthDate: string | null; healthRisk: boolean; onExport: () => void; onDelete: () => void;
+  onWithdrawConsent: () => void };
 
-export function PrivacyCard({ exporting, consentDate, healthDate, healthRisk, onExport, onDelete }: Props) {
+export function PrivacyCard({ exporting, consentDate, healthDate, healthRisk, onExport, onDelete, onWithdrawConsent }: Props) {
   return (
     <View style={styles.section}>
       <View style={styles.sectionTitle}>
@@ -58,6 +59,12 @@ export function PrivacyCard({ exporting, consentDate, healthDate, healthRisk, on
           <Ionicons name="lock-closed-outline" size={16} color={colors.muted} />
           <AppText variant="label" tone="muted" style={styles.actionText}>Cambiar contraseña · Disponible al crear tu cuenta</AppText>
         </View>
+
+        <AppPressable accessibilityRole="button" accessibilityLabel="Retirar consentimiento de datos de salud" onPress={onWithdrawConsent}
+          style={({ pressed }) => [styles.actionRow, pressed && styles.dimmed]}>
+          <Ionicons name="hand-left-outline" size={16} color={colors.muted} />
+          <AppText variant="label" tone="muted" style={styles.actionText}>Retirar consentimiento de datos de salud</AppText>
+        </AppPressable>
 
         <AppPressable accessibilityRole="button" accessibilityLabel="Eliminar datos de este dispositivo" onPress={onDelete}
           style={({ pressed }) => [styles.actionRow, pressed && styles.dimmed]}>

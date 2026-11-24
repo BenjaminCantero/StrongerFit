@@ -17,15 +17,26 @@ import { hasHealthRisk, labels } from '../onboarding/domain/onboarding';
 import { ProfileHero } from './components/ProfileHero';
 import { profileAvatar } from './presentation';
 import type { ExportResult } from './device';
-import type { ProfileAction, ProfileData } from './domain/profile';
+import type { PersonalValues, ProfileAction, ProfileData } from './domain/profile';
+import type { NutritionValues } from './components/ProfileEditors';
+import type { Environment, Equipment, Goal, Zone } from '../onboarding/domain/onboarding';
 
-type Dialog = 'personal' | 'nutrition' | 'training' | 'photo' | 'delete' | null;
+type Dialog = 'personal' | 'nutrition' | 'training' | 'photo' | 'delete' | 'consent' | null;
+
+// Guardados en Supabase (SY-02). Cada uno devuelve un mensaje de error o null.
+export type ProfileSaves = {
+  personal: (input: { values: PersonalValues; goal: Goal }) => Promise<string | null>;
+  nutrition: (values: NutritionValues) => Promise<string | null>;
+  training: (setup: { environment: Environment; equipment: Equipment[]; zones: Zone[] }) => Promise<string | null>;
+  withdrawConsent: () => Promise<string | null>;
+};
 
 export type AccountState = { configured: boolean; email: string | null };
 
 type Props = {
   profile: ProfileData;
   dispatch: (action: ProfileAction) => void;
+  save: ProfileSaves;
   isPreview: boolean;
   onPickPhoto: () => Promise<string | null>;
   onExport: () => Promise<ExportResult>;
@@ -52,24 +63,41 @@ function heroSummary(profile: ProfileData): string {
   return parts.length ? parts.join(' · ') : 'Completa tu ficha para preparar tu plan';
 }
 
-export function ProfileScreen({ profile, dispatch, isPreview, onPickPhoto, onExport, onDeleteLocalData, onGoals, account, onSignIn, onSignUp, onSignOut, onDeleteAccount }: Props) {
+export function ProfileScreen({ profile, dispatch, save, isPreview, onPickPhoto, onExport, onDeleteLocalData, onGoals, account, onSignIn, onSignUp, onSignOut, onDeleteAccount }: Props) {
   const [dialog, setDialog] = useState<Dialog>(null);
   const [notice, setNotice] = useState('');
   const [exporting, setExporting] = useState(false);
   const [password, setPassword] = useState('');
   const [deleteError, setDeleteError] = useState('');
   const [deleting, setDeleting] = useState(false);
-  const close = () => { setDialog(null); setPassword(''); setDeleteError(''); };
+  const [saveError, setSaveError] = useState('');
+  const [saving, setSaving] = useState(false);
+  const close = () => { setDialog(null); setPassword(''); setDeleteError(''); setSaveError(''); };
   const record = profile.onboarding;
   const done = (message: string) => { close(); setNotice(message); };
 
   const photo = profileAvatar(profile.photo);
 
+  // Si falla, el diálogo queda abierto con el error y lo escrito no se pierde.
+  async function persist(task: () => Promise<string | null>, message: string) {
+    if (saving) return;
+    setSaving(true);
+    setSaveError('');
+    try {
+      const error = await task();
+      if (error) setSaveError(error);
+      else done(message);
+    } finally {
+      setSaving(false);
+    }
+  }
+  const errorText = !!saveError && <AppText accessibilityRole="alert" variant="caption" style={styles.saveError}>{saveError}</AppText>;
+
   async function pickPhoto() {
     close();
     try {
       const uri = await onPickPhoto();
-      if (uri) { dispatch({ type: 'set-photo', photo: { uri } }); setNotice('Foto actualizada en este dispositivo.'); }
+      if (uri) { dispatch({ type: 'set-photo', photo: { uri } }); setNotice('Foto actualizada. Solo se guarda en este teléfono.'); }
     } catch {
       setNotice('No se pudo abrir la galería. Inténtalo de nuevo.');
     }
@@ -99,7 +127,7 @@ export function ProfileScreen({ profile, dispatch, isPreview, onPickPhoto, onExp
   return (
     <Screen>
       <PreviewNotice local={!isPreview}>
-        {isPreview ? 'Vista previa · Datos de ejemplo y cambios solo en memoria' : 'Perfil local · Los cambios se borran al cerrar la app'}
+        {isPreview ? 'Vista previa · Algunas secciones muestran datos de ejemplo' : 'Tu perfil se guarda en tu cuenta'}
       </PreviewNotice>
 
       <ProfileHero name={profile.name} photo={photo} summary={heroSummary(profile)}
@@ -124,7 +152,8 @@ export function ProfileScreen({ profile, dispatch, isPreview, onPickPhoto, onExp
       <NutritionCard exclusions={profile.exclusions} dietFocus={profile.dietFocus} preferences={profile.mealPreferences}
         trainingDayTargets={profile.trainingDayTargets} target={profile.nutritionPlan?.result ?? null} onGoals={onGoals} onAdjust={() => { setNotice(''); setDialog('nutrition'); }} />
       <PrivacyCard exporting={exporting} consentDate={formatDay(profile.onboarding?.consent.acceptedAt)}
-        healthDate={formatDay(profile.onboarding?.completedAt)} healthRisk={hasHealthRisk(profile.onboarding?.healthFlags ?? [])} onExport={exportData} onDelete={() => { setNotice(''); setDialog('delete'); }} />
+        healthDate={formatDay(profile.onboarding?.completedAt)} healthRisk={hasHealthRisk(profile.onboarding?.healthFlags ?? [])} onExport={exportData} onDelete={() => { setNotice(''); setDialog('delete'); }}
+        onWithdrawConsent={() => { setNotice(''); setDialog('consent'); }} />
       <AppInfoCard />
 
       <View style={styles.account}>
@@ -136,7 +165,7 @@ export function ProfileScreen({ profile, dispatch, isPreview, onPickPhoto, onExp
           </AppText> : account.email ? <>
             <AppText variant="caption" tone="muted">Sesión iniciada como {account.email}.</AppText>
             <AppButton label="Cerrar sesión" icon="log-out-outline" variant="secondary"
-              onPress={() => onSignOut().then(() => setNotice('Sesión cerrada. Tus datos siguen en este dispositivo.'))} />
+              onPress={() => { onSignOut().catch(() => undefined); }} />
           </> : <>
             <AppText variant="caption" tone="muted">Crea una cuenta para recuperar tu acceso. Tus datos siguen guardados en este dispositivo.</AppText>
             <AppButton label="Iniciar sesión" icon="log-in-outline" variant="secondary" onPress={onSignIn} />
@@ -146,18 +175,32 @@ export function ProfileScreen({ profile, dispatch, isPreview, onPickPhoto, onExp
       </View>
 
       <AppDialog title="Editar ficha personal" visible={dialog === 'personal'} onClose={close}>
+        {errorText}
         {dialog === 'personal' && <PersonalEditor profile={profile} onCancel={close}
-          onSave={(values) => { dispatch({ type: 'update-personal', values }); done('Ficha actualizada en este dispositivo.'); }} />}
+          onSave={(input) => persist(() => save.personal(input), 'Ficha actualizada.')} />}
       </AppDialog>
 
       <AppDialog title="Nutrición y restricciones" visible={dialog === 'nutrition'} onClose={close}>
+        {errorText}
         {dialog === 'nutrition' && <NutritionEditor profile={profile} onCancel={close}
-          onSave={(values) => { dispatch({ type: 'update-nutrition', ...values }); done('Preferencias actualizadas en este dispositivo.'); }} />}
+          onSave={(values) => persist(() => save.nutrition(values), 'Preferencias actualizadas.')} />}
       </AppDialog>
 
       <AppDialog title="Entorno y lesiones" visible={dialog === 'training'} onClose={close}>
+        {errorText}
         {dialog === 'training' && <TrainingSetupEditor profile={profile} onCancel={close}
-          onSave={(values) => { dispatch({ type: 'update-training-setup', ...values }); done('Guardado. Regenera tu rutina en Entrenar para aplicar los cambios.'); }} />}
+          onSave={(values) => persist(() => save.training(values), 'Guardado. Regenera tu rutina en Entrenar para aplicar los cambios.')} />}
+      </AppDialog>
+
+      <AppDialog title="¿Retirar tu consentimiento?" visible={dialog === 'consent'} onClose={close}>
+        <AppText tone="muted">
+          Dejaremos de registrar y calcular datos de salud nuevos. Lo ya guardado se conserva y puedes exportarlo o eliminarlo.
+          Para volver a usar la app tendrás que otorgarlo de nuevo.
+        </AppText>
+        {errorText}
+        <AppButton label={saving ? 'Guardando…' : 'Retirar consentimiento'} icon="hand-left-outline" variant="danger" disabled={saving}
+          onPress={() => persist(save.withdrawConsent, 'Consentimiento retirado.')} />
+        <AppButton label="Cancelar" variant="secondary" onPress={close} />
       </AppDialog>
 
       <AppDialog title="Foto de perfil" visible={dialog === 'photo'} onClose={close}>
@@ -192,6 +235,7 @@ export function ProfileScreen({ profile, dispatch, isPreview, onPickPhoto, onExp
 const styles = StyleSheet.create({
   account: { flexDirection: 'row', alignItems: 'flex-start', gap: spacing.md, padding: spacing.lg, borderRadius: radius.md, backgroundColor: colors.surfaceLow },
   accountText: { flex: 1, gap: spacing.xs },
+  saveError: { color: colors.error },
   dangerIcon: {
     width: 52, height: 52, borderRadius: 999,
     backgroundColor: '#FFDAD8', alignItems: 'center', justifyContent: 'center', alignSelf: 'center',
