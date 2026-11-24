@@ -9,6 +9,7 @@ Esquema versionado de Supabase (RNF-12). El diseño completo está en
 | `20261124000002_identity.sql` | DB-01 | perfil, metas, preferencias, lesiones, cuestionario y consentimientos |
 | `20261124000003_training.sql` | DB-02 | planes, días, ejercicios, sesiones, series, cargas, temporizadores, `submit_session()` |
 | `20261124000004_nutrition_progress.sql` | DB-03 | metas nutricionales, registro alimentario, minuta, mediciones, objetivo de peso, `data_requests` |
+| `20261124000005_complete_onboarding.sql` | AU-01 | RPC `complete_onboarding()` atómica e idempotente; `EXECUTE` revocado a `anon` |
 
 ## Convenciones
 

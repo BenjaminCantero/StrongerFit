@@ -41,5 +41,11 @@ begin
 end $$;
 select pass('anon no puede leer ninguna tabla de public');
 
+select is_empty(
+  $$ select p.proname from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+     where n.nspname = 'public' and has_function_privilege('anon', p.oid, 'execute') $$,
+  'anon no puede ejecutar funciones de public'
+);
+
 select * from finish();
 rollback;

@@ -405,7 +405,10 @@ isOneToOne: false
                 }
           }
           Functions: {
-            "has_health_consent":
+            "complete_onboarding":
+{ Args: { "payload": Json }; Returns: boolean
+                           },
+"has_health_consent":
 { Args: Record<PropertyKey, never>; Returns: boolean
                            },
 "has_health_risk":
