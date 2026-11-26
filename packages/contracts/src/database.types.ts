@@ -63,14 +63,14 @@ export type Database = {
                   ]
                 },"food_logs": {
                   Row: {
-                    "carbs_g": number,"catalog_version": string,"created_at": string,"entry_id": string,"fat_g": number,"food_id": string,"food_name": string,"grams": number,"id": string,"kcal": number,"license": string,"logged_on": string,"meal": string,"protein_g": number,"source": string,"source_version": string,"updated_at": string,"user_id": string
+                    "carbs_g": number,"catalog_version": string,"created_at": string,"entry_id": string,"fat_g": number,"food_id": string,"food_name": string,"grams": number,"id": string,"kcal": number,"license": string,"logged_on": string,"meal": string,"position": number,"protein_g": number,"source": string,"source_version": string,"updated_at": string,"user_id": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "carbs_g": number,"catalog_version": string,"created_at"?: string,"entry_id": string,"fat_g": number,"food_id": string,"food_name": string,"grams": number,"id"?: string,"kcal": number,"license": string,"logged_on": string,"meal": string,"protein_g": number,"source": string,"source_version": string,"updated_at"?: string,"user_id"?: string
+                    "carbs_g": number,"catalog_version": string,"created_at"?: string,"entry_id": string,"fat_g": number,"food_id": string,"food_name": string,"grams": number,"id"?: string,"kcal": number,"license": string,"logged_on": string,"meal": string,"position"?: number,"protein_g": number,"source": string,"source_version": string,"updated_at"?: string,"user_id"?: string
                   }
                   Update: {
-                    "carbs_g"?: number,"catalog_version"?: string,"created_at"?: string,"entry_id"?: string,"fat_g"?: number,"food_id"?: string,"food_name"?: string,"grams"?: number,"id"?: string,"kcal"?: number,"license"?: string,"logged_on"?: string,"meal"?: string,"protein_g"?: number,"source"?: string,"source_version"?: string,"updated_at"?: string,"user_id"?: string
+                    "carbs_g"?: number,"catalog_version"?: string,"created_at"?: string,"entry_id"?: string,"fat_g"?: number,"food_id"?: string,"food_name"?: string,"grams"?: number,"id"?: string,"kcal"?: number,"license"?: string,"logged_on"?: string,"meal"?: string,"position"?: number,"protein_g"?: number,"source"?: string,"source_version"?: string,"updated_at"?: string,"user_id"?: string
                   }
                   Relationships: [
                     
@@ -413,6 +413,9 @@ isOneToOne: false
                            },
 "has_health_risk":
 { Args: Record<PropertyKey, never>; Returns: boolean
+                           },
+"save_meal_plan":
+{ Args: { "payload": Json }; Returns: string
                            },
 "save_workout_plan":
 { Args: { "payload": Json }; Returns: string
