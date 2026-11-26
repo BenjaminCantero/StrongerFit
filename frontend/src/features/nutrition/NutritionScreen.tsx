@@ -1,6 +1,6 @@
 import { AppPressable } from '../../components/ui/AppPressable';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Screen } from '../../components/Screen';
 import { AppButton } from '../../components/ui/AppButton';
@@ -21,9 +21,11 @@ type Props = {
   onMoveDate: (direction: number) => void; onToday: () => void;
   onAdd: (meal: MealId) => void; onEdit: (entry: DiaryEntry) => void; onDelete: (meal: MealId) => void;
   onAdjustGoals: () => void; onMealPlan: () => void; onPhoto: () => void; onBarcode: () => void; mealPlanSummary: string | null;
+  // Aviso de una escritura fallida del diario (SY-04).
+  writeNotice?: ReactNode;
 };
 
-export function NutritionScreen({ date, entries, targets, isPreview, onMoveDate, onToday, onAdd, onEdit, onDelete, onAdjustGoals, onMealPlan, onPhoto, onBarcode, mealPlanSummary }: Props) {
+export function NutritionScreen({ date, entries, targets, isPreview, onMoveDate, onToday, onAdd, onEdit, onDelete, onAdjustGoals, onMealPlan, onPhoto, onBarcode, mealPlanSummary, writeNotice }: Props) {
   const [deleting, setDeleting] = useState<MealId | null>(null);
   const [notice, setNotice] = useState('');
   const consumed = diaryTotals(entries);
@@ -36,6 +38,7 @@ export function NutritionScreen({ date, entries, targets, isPreview, onMoveDate,
 
   return (
     <Screen>
+      {writeNotice}
       <DiaryDateSelector date={date} onPrevious={() => moveDate(-1)} onNext={() => moveDate(1)} onToday={() => { setNotice(''); onToday(); }} />
       {isPreview && <PreviewNotice>Vista previa · Diario de ejemplo y cambios solo en memoria</PreviewNotice>}
       <AppPressable accessibilityRole="button" accessibilityLabel="Abrir minuta semanal" onPress={onMealPlan}

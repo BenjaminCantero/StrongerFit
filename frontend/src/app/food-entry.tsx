@@ -9,11 +9,13 @@ import { isDateKey } from '../features/nutrition/domain/diary';
 import { isExternalEntry } from '../features/nutrition/domain/entry-adjust';
 import { isMealId, type FoodEntry } from '../features/nutrition/domain/food-entry';
 import { useNutritionDiary } from '../features/nutrition/useNutritionDiary';
+import { useDiaryWrite } from '../features/nutrition/useNutrition';
 
 export default function FoodEntryRoute() {
   const router = useRouter();
   const params = useLocalSearchParams<{ date?: string; meal?: string; entryId?: string; preview?: string }>();
   const diary = useNutritionDiary();
+  const write = useDiaryWrite();
   const existing = params.entryId ? diary.entries.find((entry) => entry.id === Number(params.entryId)) : undefined;
   const date = existing?.date ?? params.date ?? diary.selectedDate;
   const exit = () => router.dismissTo('/nutrition');
@@ -26,7 +28,7 @@ export default function FoodEntryRoute() {
   }
 
   function save(entry: FoodEntry) {
-    diary.dispatch(existing ? { type: 'update', id: existing.id, entry } : { type: 'add', date, entry });
+    write.mutate(existing ? { kind: 'update', before: existing, entry } : { kind: 'add', date, entry });
     diary.dispatch({ type: 'select-date', date });
     exit();
   }

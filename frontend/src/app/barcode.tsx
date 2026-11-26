@@ -4,16 +4,18 @@ import { isDateKey } from '../features/nutrition/domain/diary';
 import { isMealId, type FoodEntry } from '../features/nutrition/domain/food-entry';
 import { lookupProduct } from '../features/nutrition/openfoodfacts';
 import { useNutritionDiary } from '../features/nutrition/useNutritionDiary';
+import { useDiaryWrite } from '../features/nutrition/useNutrition';
 
 export default function BarcodeRoute() {
   const router = useRouter();
   const params = useLocalSearchParams<{ date?: string; meal?: string }>();
   const diary = useNutritionDiary();
+  const write = useDiaryWrite();
   const date = isDateKey(params.date) ? params.date : diary.selectedDate;
   const exit = () => router.dismissTo('/nutrition');
 
   function save(entry: FoodEntry) {
-    diary.dispatch({ type: 'add', date, entry });
+    write.mutate({ kind: 'add', date, entry });
     diary.dispatch({ type: 'select-date', date });
     exit();
   }

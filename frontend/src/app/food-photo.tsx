@@ -5,16 +5,18 @@ import { isMealId, type FoodEntry } from '../features/nutrition/domain/food-entr
 import { previewFoodPhotoAnalyzer } from '../features/nutrition/photo-analyzer';
 import { pickFoodPhoto } from '../features/nutrition/photo-picker';
 import { useNutritionDiary } from '../features/nutrition/useNutritionDiary';
+import { useDiaryWrite } from '../features/nutrition/useNutrition';
 
 export default function FoodPhotoRoute() {
   const router = useRouter();
   const params = useLocalSearchParams<{ date?: string; meal?: string }>();
   const diary = useNutritionDiary();
+  const write = useDiaryWrite();
   const date = isDateKey(params.date) ? params.date : diary.selectedDate;
   const exit = () => router.dismissTo('/nutrition');
 
   function save(entry: FoodEntry) {
-    diary.dispatch({ type: 'add', date, entry });
+    write.mutate({ kind: 'add', date, entry });
     diary.dispatch({ type: 'select-date', date });
     exit();
   }
