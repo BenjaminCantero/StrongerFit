@@ -1,8 +1,8 @@
-import { Redirect } from 'expo-router';
 import type { ComponentType } from 'react';
 
+// En producción la ruta está protegida; no redirige para no crear un bucle si '/' tampoco está disponible.
 function Unavailable() {
-  return <Redirect href="/" />;
+  return null;
 }
 
 // En producción Metro descarta la rama `__DEV__`: la pantalla de desarrollo no entra al bundle.
