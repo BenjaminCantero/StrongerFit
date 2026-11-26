@@ -60,9 +60,12 @@
     "typecheck": "tsc --noEmit",
     "lint": "expo lint",
     "export": "expo export --platform android --platform web",
-    "build:android:dev": "npx --yes eas-cli@27.11.0 build --local --platform android --profile development --output ../dist-builds/strongerfit-development.apk",
-    "build:android:preview": "npx --yes eas-cli@27.11.0 build --local --platform android --profile preview --output ../dist-builds/strongerfit-preview.apk",
-    "build:android:prod": "npx --yes eas-cli@27.11.0 build --local --platform android --profile production --output ../dist-builds/strongerfit-production.aab"
+    "build:android:dev": "npx --yes eas-cli@27.11.0 build --platform android --profile development",
+    "build:android:dev:local": "npx --yes eas-cli@27.11.0 build --local --platform android --profile development --output ../dist-builds/strongerfit-development.apk",
+    "build:android:preview": "npx --yes eas-cli@27.11.0 build --platform android --profile preview",
+    "build:android:preview:local": "npx --yes eas-cli@27.11.0 build --local --platform android --profile preview --output ../dist-builds/strongerfit-preview.apk",
+    "build:android:prod": "npx --yes eas-cli@27.11.0 build --platform android --profile production",
+    "build:android:prod:local": "npx --yes eas-cli@27.11.0 build --local --platform android --profile production --output ../dist-builds/strongerfit-production.aab"
   },
   "private": true
 }

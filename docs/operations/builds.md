@@ -1,18 +1,31 @@
 # Builds de Android con EAS (BL-01)
 
 Requisitos SRS: RNF-11, RNF-26 y CA-20. Expo Go no sirve para medir el aviso del
-temporizador ni las restricciones nativas, por eso hay builds propios. Se compilan
-**localmente** (`eas build --local`) en esta máquina; la firma la gestiona EAS.
+temporizador ni las restricciones nativas, por eso hay builds propios. Se compilan en
+la **nube de EAS** (servidores de Expo); la firma la gestiona EAS. El build local
+(`eas build --local`) queda como opción secundaria (ver "Build local (opcional)").
+
+## Cómo funciona el build en la nube
+
+1. `npm run -w frontend build:android:preview` (o `:dev` / `:prod`) sube el proyecto a
+   EAS. El archivo se arma respetando `.gitignore`, así que `frontend/.env` no se sube.
+2. EAS compila en servidores de Expo y entrega un enlace y un QR para descargar el APK
+   (`preview`/`development`) o el AAB (`production`).
+3. Estado de los builds: `npx eas-cli@27.11.0 build:list --platform android --limit 5`
+   o en expo.dev, proyecto `@beeinx/strongerfit`, sección Builds.
+4. Plan gratuito: hay cola de espera y un cupo mensual de builds. No lances builds
+   innecesarios.
+5. La firma sigue gestionada por EAS (ya existe el keystore "Build Credentials (default)").
 
 ## Requisitos
 
-- Android SDK y Java 17 instalados (`ANDROID_HOME` y `JAVA_HOME` definidos).
 - Cuenta Expo (gratuita) con acceso al proyecto `strongerfit`.
 - Dependencias instaladas con `npm ci` en la raíz. `eas-cli` no es dependencia del
   proyecto (expo-doctor lo desaconseja): los scripts lo ejecutan con
   `npx --yes eas-cli@27.11.0`.
-- Un teléfono Android 10 o superior (API 29, el `minSdkVersion` de la app) con depuración
-  USB y `adb` para instalar.
+- Un teléfono Android 10 o superior (API 29, el `minSdkVersion` de la app). Para instalar
+  desde el PC, depuración USB y `adb`.
+- Solo para el build local: Android SDK y Java 17 (ver "Build local (opcional)").
 
 ## Pasos únicos (los hace la persona dueña de la cuenta Expo)
 
@@ -26,7 +39,7 @@ npx eas-cli@27.11.0 init
    (`app.config.ts`), no puede escribir el `projectId`: imprime el ID y las
    instrucciones. Pega el ID en la constante `EAS_PROJECT_ID` de
    `frontend/app.config.ts` y haz commit (no es secreto). No sirve `frontend/.env`:
-   está en `.gitignore` y no entra al archivo que se compila localmente.
+   está en `.gitignore` y no entra al archivo que se sube a EAS.
 2. La primera `npm run build:android:preview` (o `:prod`) pregunta si EAS genera el
    keystore de Android: responde que sí. EAS lo guarda en tu cuenta (credenciales
    gestionadas). Revisa con `npx eas-cli@27.11.0 credentials` (no hace falta nada más).
@@ -42,7 +55,8 @@ npx eas-cli@27.11.0 init
 ## Perfiles
 
 Todos se ejecutan desde la raíz con `npm run -w frontend <script>` o desde `frontend/`.
-Las salidas quedan en `dist-builds/` (fuera de git).
+En la nube, el artefacto se descarga desde el enlace de EAS. Las variantes `:local`
+(p. ej. `build:android:preview:local`) dejan la salida en `dist-builds/` (fuera de git).
 
 | Perfil | Script | Paquete | Nombre | Backend | Tipo | Uso |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -53,38 +67,49 @@ Las salidas quedan en `dist-builds/` (fuera de git).
 Los tres paquetes distintos permiten tenerlos instalados a la vez en el mismo teléfono.
 `allowBackup: false` en todos; HTTP en claro solo en `development`.
 
-- **development** no fija URLs de Supabase en `eas.json`: toma `EXPO_PUBLIC_*` de
-  `frontend/.env` (ver `.env.example`; en teléfono físico usa la IP de la LAN del PC,
+- **development** no fija URLs de Supabase en `eas.json`: en local toma `EXPO_PUBLIC_*`
+  de `frontend/.env` (ver `.env.example`; en teléfono físico usa la IP de la LAN del PC,
   `http://IP_LAN_DE_TU_PC:54321` y `:8000`). Ejecuta el stack local antes.
+  **Pendiente:** el build `development` en la nube sigue usando `APP_VARIANT=development`,
+  pero como `.env` no se sube, para apuntar al stack local por la LAN hay que definir las
+  variables `EXPO_PUBLIC_*` del perfil `development` en `eas.json` o como variables de
+  entorno de EAS (environment `development`). Aún no está hecho; no se ha cambiado
+  `eas.json`.
 - **preview** y **production** fijan en `eas.json` la URL del backend alojado
   (`https://xwzpdaiaxmkcnepqxcky.supabase.co`, API en `/functions/v1/api`) y la clave
   publishable. Esa clave es pública (RLS protege los datos). NUNCA va `service_role` ni
   una clave secreta.
 
-### Precedencia de variables en builds locales
+### Precedencia de variables
 
 Revisado en `eas-cli` 27.11.0 (`node_modules/eas-cli/build/build/local.js`,
 `evaluateConfigWithEnvVarsAsync.js`, `vcs/local.js`):
 
-- Las `env` del perfil de `eas.json` se combinan con las del entorno de EAS y las del
-  perfil ganan (el CLI lo avisa en la salida).
-- El CLI copia el proyecto con git y respeta `.gitignore`; `frontend/.env` está
-  ignorado, así que **no entra** a la copia donde se compila y no puede filtrarse a
-  `preview` ni `production`.
-- Excepción: `local.js` hace `{ ...env, ...process.env }`, es decir, las variables
+- En la nube, las `env` del perfil de `eas.json` se aplican sobre las variables de
+  entorno de EAS (environment del perfil) y las del perfil ganan (el CLI lo avisa en la
+  salida).
+- El CLI empaqueta el proyecto con git y respeta `.gitignore`; `frontend/.env` está
+  ignorado, así que **no se sube** y no puede filtrarse a `preview` ni `production`.
+- Solo build local: `local.js` hace `{ ...env, ...process.env }`, es decir, las variables
   exportadas en tu shell **ganan** sobre `eas.json`. No tengas exportadas
   `EXPO_PUBLIC_*` ni `APP_VARIANT` al compilar `preview`/`production`
-  (`env | grep -E 'EXPO_PUBLIC|APP_VARIANT'` debe salir vacío).
+  (`env | grep -E 'EXPO_PUBLIC|APP_VARIANT'` debe salir vacío). En la nube no aplica.
 - Si creas `frontend/.easignore`, deja de usarse `.gitignore`: repite allí `.env*`.
 - Fuente: https://docs.expo.dev/eas/environment-variables/ y
   https://docs.expo.dev/build-reference/variables/ .
 
 ## Instalar
 
+Opción A: abre el enlace del build (o escanea el QR) en el teléfono y descarga el APK.
+
+Opción B: descarga el APK al PC e instala con `adb`:
+
 ```sh
 adb devices
-adb install -r dist-builds/strongerfit-preview.apk
+adb install -r <archivo>.apk
 ```
+
+(En un build local, el archivo está en `dist-builds/strongerfit-preview.apk`.)
 
 El `.aab` de producción no se instala con `adb`: se sube a Google Play (pista interna).
 
@@ -110,3 +135,29 @@ El `.aab` de producción no se instala con `adb`: se sube a Google Play (pista i
 | Dispositivo | Android | Perfil | N (s) | Retraso medido (s) | Resultado |
 | --- | --- | --- | --- | --- | --- |
 |  |  | preview |  |  |  |
+
+## Build local (opcional)
+
+Alternativa a la nube, con los scripts `build:android:dev:local`,
+`build:android:preview:local` y `build:android:prod:local` (`eas build --local`, salida
+en `dist-builds/`).
+
+Requisitos: Android SDK y Java 17 (`ANDROID_HOME` y `JAVA_HOME` definidos).
+
+> **Advertencia de RAM:** el build local compila C++ para 4 ABIs en paralelo; con 16 GB
+> puede congelar el PC. Por eso el flujo principal es la nube.
+
+Mitigación en `~/.gradle/gradle.properties`:
+
+```properties
+org.gradle.jvmargs=-Xmx4g -XX:MaxMetaspaceSize=1g
+org.gradle.workers.max=4
+org.gradle.parallel=false
+kotlin.daemon.jvmargs=-Xmx2g
+# Solo para pruebas; NUNCA para el AAB de Play (necesita todas las ABIs):
+reactNativeArchitectures=arm64-v8a
+```
+
+Nota: un `PATH` gigante (más de 128 KiB, p. ej. por exports duplicados en `~/.zshrc`)
+hace que el `npx` anidado del build salga con código 249 sin mensaje. Revisa
+`echo -n "$PATH" | wc -c`.
