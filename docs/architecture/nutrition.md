@@ -90,10 +90,18 @@ Capturas: [diario — paso 4](../design/step-04-nutrition-diary.png),
 ## Minuta semanal (RF-12, RF-13)
 
 `packages/nutrition-engine/src/foods.ts` expone el catálogo generado
-`foods.generated.ts`, versión `usda-sr-2018-04-cl-1`: 251 alimentos, 237 importados de
-USDA FoodData Central SR Legacy 2018-04 y 14 propios no verificados. También alimenta
-el buscador. No hace llamadas USDA en tiempo real. Cada alimento conserva fuente,
-conjunto, versión, licencia, fecha de importación (2026-11-09) y, para USDA, `fdcId`.
+`foods.generated.ts`, versión `usda-sr-2018-04-cl-2`: 347 alimentos, 333 importados de
+USDA FoodData Central SR Legacy 2018-04 y 14 propios no verificados (meta SRS v1.3:
+300 a 500 ítems, con al menos 300 verificados). También alimenta el buscador. No hace
+llamadas USDA en tiempo real. Cada alimento conserva fuente, conjunto, versión,
+licencia, su propia fecha de importación y, para USDA, `fdcId`. La fecha es por ítem:
+2026-11-09 para los 237 originales y 2026-11-26 para los 96 de la ampliación CO-01;
+en `food-mapping.json` el campo opcional `importedAt` (YYYY-MM-DD) la fija y, si falta,
+se usa la del manifiesto `usda-release.json`. La ampliación excluye ultraprocesados y
+productos azucarados que el generador de minutas podría elegir (embutidos como vienesas,
+longaniza, salame o jamones, manjar, mayonesa, margarina, galletas dulces, cereales azucarados,
+bebidas azucaradas, néctares y papas fritas); los nombres en español describen fielmente
+la descripción USDA y no rebautizan un producto como uno chileno que no es equivalente.
 `verified` significa importado de la fuente identificada; no certifica alérgenos ni
 valida un producto comercial. `FoodSummary` presenta la fuente junto a los nutrientes.
 

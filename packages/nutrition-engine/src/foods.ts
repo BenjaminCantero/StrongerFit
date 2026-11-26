@@ -1,4 +1,4 @@
-export const FOOD_CATALOG_VERSION = 'usda-sr-2018-04-cl-1';
+export const FOOD_CATALOG_VERSION = 'usda-sr-2018-04-cl-2';
 
 export type Nutrients = { kcal: number; protein: number; carbs: number; fat: number };
 export type FoodRole = 'protein' | 'dairy' | 'carb' | 'veg' | 'fruit' | 'fat';

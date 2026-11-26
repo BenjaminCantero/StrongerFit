@@ -5,6 +5,7 @@ import csv
 import hashlib
 import json
 import math
+import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -12,6 +13,7 @@ DATA = ROOT / 'packages/nutrition-engine/data'
 OUTPUT = ROOT / 'packages/nutrition-engine/src/foods.generated.ts'
 ROLES = {'protein', 'dairy', 'carb', 'veg', 'fruit', 'fat'}
 MEALS = {'breakfast', 'lunch', 'snack', 'dinner'}
+DATE = re.compile(r'^\d{4}-\d{2}-\d{2}$')
 TAGS = {'gluten', 'lactosa', 'lacteo', 'frutos-secos', 'mani', 'huevo', 'pescado', 'mariscos', 'soya', 'carne', 'animal'}
 
 
@@ -72,10 +74,14 @@ def import_catalog(directory, mapping, own, manifest):
         if missing:
             excluded.append({'id': row['id'], 'fdcId': fid, 'missing': missing})
             continue
-        food = {key: value for key, value in row.items() if key not in {'fdcId', 'dataset', 'usdaDescription'}}
+        # Fecha de importación por ítem: opcional, cae al manifiesto si falta.
+        imported_at = row.get('importedAt', manifest['importedAt'])
+        if not isinstance(imported_at, str) or not DATE.match(imported_at):
+            raise ValueError(f"{row['id']}: importedAt must be YYYY-MM-DD")
+        food = {key: value for key, value in row.items() if key not in {'fdcId', 'dataset', 'usdaDescription', 'importedAt'}}
         food.update(per100g={key: nutrients[key] for key in manifest['nutrients']}, verified=True, provenance={
             'source': 'USDA FoodData Central', 'fdcId': fid, 'dataset': 'SR Legacy',
-            'version': manifest['release'], 'license': 'CC0-1.0', 'importedAt': manifest['importedAt'],
+            'version': manifest['release'], 'license': 'CC0-1.0', 'importedAt': imported_at,
         })
         catalog.append(food)
     for row in own:

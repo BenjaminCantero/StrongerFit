@@ -4211,5 +4211,1817 @@
     ],
     "tags": [],
     "pairingIds": []
+  },
+  {
+    "id": "usda-171794",
+    "name": "Carne molida de vacuno 90% magra, salteada",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "carne",
+      "animal"
+    ],
+    "fdcId": 171794,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Beef, ground, 90% lean meat / 10% fat, crumbles, cooked, pan-browned",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-168634",
+    "name": "Vacuno, posta/asiento (top sirloin) magro a la parrilla, sin grasa",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "carne",
+      "animal"
+    ],
+    "fdcId": 168634,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Beef, top sirloin, steak, separable lean only, trimmed to 0\" fat, all grades, cooked, broiled",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-168649",
+    "name": "Vacuno, posta rosada (top round) magra a la parrilla, sin grasa",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "carne",
+      "animal"
+    ],
+    "fdcId": 168649,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Beef, round, top round steak, boneless, separable lean only, trimmed to 0\" fat, all grades, cooked, grilled",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-170629",
+    "name": "Vacuno, posta negra (bottom round) magra asada, sin grasa",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "carne",
+      "animal"
+    ],
+    "fdcId": 170629,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Beef, round, bottom round, roast, separable lean only, trimmed to 0\" fat, all grades, cooked, roasted",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-174050",
+    "name": "Vacuno, tapapecho/brazuelo (chuck) magro braseado",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "carne",
+      "animal"
+    ],
+    "fdcId": 174050,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Beef, chuck, arm pot roast, separable lean only, trimmed to 1/8\" fat, all grades, cooked, braised",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-168626",
+    "name": "Hígado de vacuno braseado",
+    "servingGrams": 100,
+    "defaultGrams": 100,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "carne",
+      "animal"
+    ],
+    "fdcId": 168626,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Beef, variety meats and by-products, liver, cooked, braised",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-171450",
+    "name": "Pollo entero con piel asado",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "carne",
+      "animal"
+    ],
+    "fdcId": 171450,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Chicken, broilers or fryers, meat and skin, cooked, roasted",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-171075",
+    "name": "Pechuga de pollo con piel asada",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "carne",
+      "animal"
+    ],
+    "fdcId": 171075,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Chicken, broilers or fryers, breast, meat and skin, cooked, roasted",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-173630",
+    "name": "Ala de pollo con piel asada",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "carne",
+      "animal"
+    ],
+    "fdcId": 173630,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Chicken, broilers or fryers, wing, meat and skin, cooked, roasted",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-168253",
+    "name": "Chuleta de cerdo (lomo vetado), magra a la parrilla",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "carne",
+      "animal"
+    ],
+    "fdcId": 168253,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Pork, fresh, loin, top loin (chops), boneless, separable lean only, cooked, broiled",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-168233",
+    "name": "Lomo de cerdo entero magro asado",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "carne",
+      "animal"
+    ],
+    "fdcId": 168233,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Pork, fresh, loin, whole, separable lean only, cooked, roasted",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-172851",
+    "name": "Pavo molido 93% magro, salteado",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "carne",
+      "animal"
+    ],
+    "fdcId": 172851,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Turkey, ground, 93% lean, 7% fat, pan-broiled crumbles",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-171492",
+    "name": "Pechuga de pavo con piel asada",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "carne",
+      "animal"
+    ],
+    "fdcId": 171492,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Turkey, all classes, breast, meat and skin, cooked, roasted",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-172492",
+    "name": "Cordero, lomo magro a la parrilla",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "carne",
+      "animal"
+    ],
+    "fdcId": 172492,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Lamb, loin, separable lean only, trimmed to 1/4\" fat, choice, cooked, broiled",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-171994",
+    "name": "Jurel o caballa del Pacífico cocidos al horno",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "pescado",
+      "animal"
+    ],
+    "fdcId": 171994,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Fish, mackerel, Pacific and jack, mixed species, cooked, dry heat",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-173674",
+    "name": "Caballa española cocida al horno",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "pescado",
+      "animal"
+    ],
+    "fdcId": 173674,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Fish, mackerel, spanish, cooked, dry heat",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-173681",
+    "name": "Abadejo de Alaska cocido al horno",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "pescado",
+      "animal"
+    ],
+    "fdcId": 173681,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Fish, pollock, Alaska, cooked, dry heat (may contain additives to retain moisture)",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-171999",
+    "name": "Salmón chinook al horno",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "pescado",
+      "animal"
+    ],
+    "fdcId": 171999,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Fish, salmon, chinook, cooked, dry heat",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-172001",
+    "name": "Salmón rosado al horno",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "pescado",
+      "animal"
+    ],
+    "fdcId": 172001,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Fish, salmon, pink, cooked, dry heat",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-171986",
+    "name": "Atún claro en agua sin sal, escurrido",
+    "servingGrams": 100,
+    "defaultGrams": 100,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "pescado",
+      "animal"
+    ],
+    "fdcId": 171986,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Fish, tuna, light, canned in water, without salt, drained solids",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-172007",
+    "name": "Jaiba dungeness cocida al vapor",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "mariscos",
+      "animal"
+    ],
+    "fdcId": 172007,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Crustaceans, crab, dungeness, cooked, moist heat",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-171976",
+    "name": "Almejas en conserva, escurridas",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "mariscos",
+      "animal"
+    ],
+    "fdcId": 171976,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Mollusks, clam, mixed species, canned, drained solids",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-172187",
+    "name": "Huevo revuelto",
+    "servingGrams": 100,
+    "defaultGrams": 100,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "breakfast",
+      "snack",
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "huevo",
+      "lacteo",
+      "lactosa",
+      "animal"
+    ],
+    "fdcId": 172187,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Egg, whole, cooked, scrambled",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-173423",
+    "name": "Huevo frito",
+    "servingGrams": 100,
+    "defaultGrams": 100,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "breakfast",
+      "snack",
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "huevo",
+      "animal"
+    ],
+    "fdcId": 173423,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Egg, whole, cooked, fried",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-173736",
+    "name": "Porotos cranberry (roman) cocidos sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "fdcId": 173736,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Beans, cranberry (roman), mature seeds, cooked, boiled, without salt",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-175191",
+    "name": "Porotos great northern cocidos sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "fdcId": 175191,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Beans, great northern, mature seeds, cooked, boiled, without salt",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-169737",
+    "name": "Pasta cocida enriquecida, sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "carb",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "gluten"
+    ],
+    "fdcId": 169737,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Pasta, cooked, enriched, without added salt",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-169728",
+    "name": "Pasta fresca refrigerada cocida",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "carb",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "gluten",
+      "huevo",
+      "animal"
+    ],
+    "fdcId": 169728,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Pasta, fresh-refrigerated, plain, cooked",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-168919",
+    "name": "Tallarines de huevo cocidos enriquecidos, con sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "carb",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "gluten",
+      "huevo",
+      "animal"
+    ],
+    "fdcId": 168919,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Noodles, egg, cooked, enriched, with added salt",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-168907",
+    "name": "Fideos soba japoneses cocidos",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "carb",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "gluten"
+    ],
+    "fdcId": 168907,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Noodles, japanese, soba, cooked",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-171655",
+    "name": "Sémola de maíz blanco cocida en agua, sin sal",
+    "servingGrams": 180,
+    "defaultGrams": 180,
+    "pairingIds": [],
+    "role": "carb",
+    "meals": [
+      "breakfast",
+      "snack",
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "fdcId": 171655,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Cereals, corn grits, white, regular and quick, enriched, cooked with water, without salt",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-171659",
+    "name": "Sémola de trigo (farina) enriquecida cocida en agua, sin sal",
+    "servingGrams": 180,
+    "defaultGrams": 180,
+    "pairingIds": [],
+    "role": "carb",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "gluten"
+    ],
+    "fdcId": 171659,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Cereals, farina, enriched, assorted brands including CREAM OF WHEAT, quick (1-3 minutes), cooked with water, without salt",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-169701",
+    "name": "Maíz hominy blanco en conserva",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "carb",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "fdcId": 169701,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Hominy, canned, white",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-169708",
+    "name": "Arroz blanco parbolizado enriquecido cocido",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "carb",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "fdcId": 169708,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Rice, white, long-grain, parboiled, enriched, cooked",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-169135",
+    "name": "Habas lima inmaduras cocidas sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "carb",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "fdcId": 169135,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Lima beans, immature seeds, cooked, boiled, drained, without salt",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-168216",
+    "name": "Plátano verde hervido",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "carb",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "fdcId": 168216,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Plantains, green, boiled",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-168486",
+    "name": "Taro cocido sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "carb",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "fdcId": 168486,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Taro, cooked, without salt",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-167532",
+    "name": "Pan blanco de trigo",
+    "servingGrams": 50,
+    "defaultGrams": 50,
+    "pairingIds": [],
+    "role": "carb",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "gluten",
+      "lacteo",
+      "lactosa",
+      "huevo",
+      "soya",
+      "animal"
+    ],
+    "fdcId": 167532,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Bread, white wheat",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-171850",
+    "name": "Pan de trigo germinado",
+    "servingGrams": 50,
+    "defaultGrams": 50,
+    "pairingIds": [],
+    "role": "carb",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "gluten",
+      "lacteo",
+      "lactosa",
+      "huevo",
+      "soya",
+      "animal"
+    ],
+    "fdcId": 171850,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Bread, wheat, sprouted",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-172678",
+    "name": "Pan de avena",
+    "servingGrams": 50,
+    "defaultGrams": 50,
+    "pairingIds": [],
+    "role": "carb",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "gluten",
+      "lacteo",
+      "lactosa",
+      "huevo",
+      "soya",
+      "animal"
+    ],
+    "fdcId": 172678,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Bread, oatmeal",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-172746",
+    "name": "Galletas saltines (de agua)",
+    "servingGrams": 25,
+    "defaultGrams": 25,
+    "pairingIds": [],
+    "role": "carb",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "gluten"
+    ],
+    "fdcId": 172746,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Crackers, saltines (includes oyster, soda, soup)",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-174977",
+    "name": "Pan tostado melba",
+    "servingGrams": 20,
+    "defaultGrams": 20,
+    "pairingIds": [],
+    "role": "carb",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "gluten"
+    ],
+    "fdcId": 174977,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Crackers, melba toast, plain",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-174081",
+    "name": "Tortilla de trigo integral lista para calentar",
+    "servingGrams": 50,
+    "defaultGrams": 50,
+    "pairingIds": [],
+    "role": "carb",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "gluten"
+    ],
+    "fdcId": 174081,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Tortillas, ready-to-bake or -fry, whole wheat",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-175037",
+    "name": "Tortilla de harina de trigo refrigerada, lista para calentar",
+    "servingGrams": 50,
+    "defaultGrams": 50,
+    "pairingIds": [],
+    "role": "carb",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "gluten"
+    ],
+    "fdcId": 175037,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Tortillas, ready-to-bake or -fry, flour, refrigerated",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-170050",
+    "name": "Tomate rojo cocido",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "fdcId": 170050,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Tomatoes, red, ripe, cooked",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-170138",
+    "name": "Tomate rojo en conserva en jugo, sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "fdcId": 170138,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Tomatoes, red, ripe, canned, packed in tomato juice, no salt added",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-169146",
+    "name": "Betarraga cocida sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "fdcId": 169146,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Beets, cooked, boiled, drained",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-169966",
+    "name": "Betarraga en conserva, escurrida",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "fdcId": 169966,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Beets, canned, drained solids",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-168389",
+    "name": "Espárragos crudos",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "fdcId": 168389,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Asparagus, raw",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-168390",
+    "name": "Espárragos cocidos sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "fdcId": 168390,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Asparagus, cooked, boiled, drained",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-169205",
+    "name": "Alcachofa cruda",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "fdcId": 169205,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Artichokes, (globe or french), raw",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-169961",
+    "name": "Porotos verdes crudos",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "fdcId": 169961,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Beans, snap, green, raw",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-170487",
+    "name": "Zapallo de verano crudo",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "fdcId": 170487,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Squash, summer, all varieties, raw",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-170488",
+    "name": "Zapallo de verano cocido sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "fdcId": 170488,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Squash, summer, all varieties, cooked, boiled, drained, without salt",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-168407",
+    "name": "Berros crudos",
+    "servingGrams": 100,
+    "defaultGrams": 100,
+    "pairingIds": [],
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "fdcId": 168407,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Cress, garden, raw",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-169387",
+    "name": "Rúcula cruda",
+    "servingGrams": 100,
+    "defaultGrams": 100,
+    "pairingIds": [],
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "fdcId": 169387,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Arugula, raw",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-168434",
+    "name": "Champiñones crimini crudos",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "fdcId": 168434,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Mushrooms, brown, italian, or crimini, raw",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-168437",
+    "name": "Hongos shiitake cocidos sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "fdcId": 168437,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Mushrooms, shiitake, cooked, without salt",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-168421",
+    "name": "Kale crudo",
+    "servingGrams": 100,
+    "defaultGrams": 100,
+    "pairingIds": [],
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "fdcId": 168421,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Kale, raw",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-168429",
+    "name": "Lechuga mantequilla cruda",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "fdcId": 168429,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Lettuce, butterhead (includes boston and bibb types), raw",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-169986",
+    "name": "Coliflor cruda",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "fdcId": 169986,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Cauliflower, raw",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-170379",
+    "name": "Brócoli crudo",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "fdcId": 170379,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Broccoli, raw",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-169991",
+    "name": "Acelga cruda",
+    "servingGrams": 100,
+    "defaultGrams": 100,
+    "pairingIds": [],
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "fdcId": 169991,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Chard, swiss, raw",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-168412",
+    "name": "Endibia cruda",
+    "servingGrams": 100,
+    "defaultGrams": 100,
+    "pairingIds": [],
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "fdcId": 168412,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Endive, raw",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-170017",
+    "name": "Arvejas verdes congeladas cocidas sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "fdcId": 170017,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Peas, green, frozen, cooked, boiled, drained, without salt",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-170104",
+    "name": "Arvejas verdes en conserva sin sal, escurridas",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "fdcId": 170104,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Peas, green, canned, no salt added, drained solids",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-169293",
+    "name": "Zapallo acorn al horno sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "fdcId": 169293,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Squash, winter, acorn, cooked, baked, without salt",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-169941",
+    "name": "Caqui japonés crudo",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "fdcId": 169941,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Persimmons, japanese, raw",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-173953",
+    "name": "Chirimoya cruda",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "fdcId": 173953,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Cherimoya, raw",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-174673",
+    "name": "Pomelo rosado crudo",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "fdcId": 174673,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Grapefruit, raw, pink and red, all areas",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-171710",
+    "name": "Moras congeladas sin azúcar",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "fdcId": 171710,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Blackberries, frozen, unsweetened",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-171695",
+    "name": "Puré de manzana sin azúcar, sin vitamina C añadida",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "fdcId": 171695,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Applesauce, canned, unsweetened, without added ascorbic acid (Includes foods for USDA's Food Distribution Program)",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-169936",
+    "name": "Peras en conserva en jugo, con líquido",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "fdcId": 169936,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Pears, canned, juice pack, solids and liquids",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-169930",
+    "name": "Duraznos en conserva en jugo, con líquido",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "fdcId": 169930,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Peaches, canned, juice pack, solids and liquids",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-168211",
+    "name": "Kiwi dorado (SunGold) crudo",
+    "servingGrams": 100,
+    "defaultGrams": 100,
+    "pairingIds": [],
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "fdcId": 168211,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Kiwifruit, ZESPRI SunGold, raw",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-169917",
+    "name": "Naranja navel cruda",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "fdcId": 169917,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Oranges, raw, navels (Includes foods for USDA's Food Distribution Program)",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-173963",
+    "name": "Grosellas negras europeas crudas",
+    "servingGrams": 100,
+    "defaultGrams": 100,
+    "pairingIds": [],
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "fdcId": 173963,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Currants, european black, raw",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-168165",
+    "name": "Pasas oscuras sin semilla",
+    "servingGrams": 30,
+    "defaultGrams": 30,
+    "pairingIds": [],
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "fdcId": 168165,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Raisins, dark, seedless (Includes foods for USDA's Food Distribution Program)",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-168191",
+    "name": "Dátiles medjool",
+    "servingGrams": 30,
+    "defaultGrams": 30,
+    "pairingIds": [],
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "fdcId": 168191,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Dates, medjool",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-169934",
+    "name": "Duraznos deshidratados sulfitados sin cocer",
+    "servingGrams": 30,
+    "defaultGrams": 30,
+    "pairingIds": [],
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "fdcId": 169934,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Peaches, dried, sulfured, uncooked",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-171265",
+    "name": "Leche entera, 3,25% de grasa, con vitamina D",
+    "servingGrams": 200,
+    "defaultGrams": 200,
+    "pairingIds": [],
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "lacteo",
+      "lactosa",
+      "animal"
+    ],
+    "fdcId": 171265,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Milk, whole, 3.25% milkfat, with added vitamin D",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-170877",
+    "name": "Leche en polvo descremada, sin vitaminas A y D añadidas",
+    "servingGrams": 30,
+    "defaultGrams": 30,
+    "pairingIds": [],
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "lacteo",
+      "lactosa",
+      "animal"
+    ],
+    "fdcId": 170877,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Milk, dry, nonfat, regular, without added vitamin A and vitamin D",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-170876",
+    "name": "Leche en polvo entera, con vitamina D",
+    "servingGrams": 30,
+    "defaultGrams": 30,
+    "pairingIds": [],
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "lacteo",
+      "lactosa",
+      "animal"
+    ],
+    "fdcId": 170876,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Milk, dry, whole, with added vitamin D",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-170874",
+    "name": "Suero de leche cultivado (buttermilk) bajo en grasa",
+    "servingGrams": 200,
+    "defaultGrams": 200,
+    "pairingIds": [],
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "lacteo",
+      "lactosa",
+      "animal"
+    ],
+    "fdcId": 170874,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Milk, buttermilk, fluid, cultured, lowfat",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-170904",
+    "name": "Kéfir bajo en grasa natural",
+    "servingGrams": 200,
+    "defaultGrams": 200,
+    "pairingIds": [],
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "lacteo",
+      "lactosa",
+      "animal"
+    ],
+    "fdcId": 170904,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Kefir, lowfat, plain, LIFEWAY",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-170844",
+    "name": "Queso monterey",
+    "servingGrams": 40,
+    "defaultGrams": 40,
+    "pairingIds": [],
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "lacteo",
+      "lactosa",
+      "animal"
+    ],
+    "fdcId": 170844,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Cheese, monterey",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-168098",
+    "name": "Queso monterey bajo en grasa",
+    "servingGrams": 40,
+    "defaultGrams": 40,
+    "pairingIds": [],
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "lacteo",
+      "lactosa",
+      "animal"
+    ],
+    "fdcId": 168098,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Cheese, monterey, low fat",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-168141",
+    "name": "Queso suizo bajo en grasa",
+    "servingGrams": 40,
+    "defaultGrams": 40,
+    "pairingIds": [],
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "lacteo",
+      "lactosa",
+      "animal"
+    ],
+    "fdcId": 168141,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Cheese, swiss, low fat",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-170847",
+    "name": "Queso mozzarella semidescremado",
+    "servingGrams": 40,
+    "defaultGrams": 40,
+    "pairingIds": [],
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "lacteo",
+      "lactosa",
+      "animal"
+    ],
+    "fdcId": 170847,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Cheese, mozzarella, part skim milk",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-167703",
+    "name": "Queso cottage 1% de grasa, sin lactosa",
+    "servingGrams": 40,
+    "defaultGrams": 40,
+    "pairingIds": [],
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "lacteo",
+      "animal"
+    ],
+    "fdcId": 167703,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Cheese, cottage, lowfat, 1% milkfat, lactose reduced",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-173430",
+    "name": "Mantequilla sin sal",
+    "servingGrams": 10,
+    "defaultGrams": 10,
+    "pairingIds": [],
+    "role": "fat",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "lacteo",
+      "lactosa",
+      "animal"
+    ],
+    "fdcId": 173430,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Butter, without salt",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-170859",
+    "name": "Crema de leche para batir, alta en grasa",
+    "servingGrams": 15,
+    "defaultGrams": 15,
+    "pairingIds": [],
+    "role": "fat",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "lacteo",
+      "lactosa",
+      "animal"
+    ],
+    "fdcId": 170859,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Cream, fluid, heavy whipping",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-170857",
+    "name": "Crema de leche ligera (crema para café)",
+    "servingGrams": 15,
+    "defaultGrams": 15,
+    "pairingIds": [],
+    "role": "fat",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "lacteo",
+      "lactosa",
+      "animal"
+    ],
+    "fdcId": 170857,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Cream, fluid, light (coffee cream or table cream)",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-171706",
+    "name": "Palta Hass/California cruda",
+    "servingGrams": 50,
+    "defaultGrams": 50,
+    "pairingIds": [],
+    "role": "fat",
+    "meals": [
+      "breakfast",
+      "snack",
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "fdcId": 171706,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Avocados, raw, California",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-172430",
+    "name": "Maní crudo",
+    "servingGrams": 20,
+    "defaultGrams": 20,
+    "pairingIds": [],
+    "role": "fat",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "mani"
+    ],
+    "fdcId": 172430,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Peanuts, all types, raw",
+    "importedAt": "2026-11-26"
+  },
+  {
+    "id": "usda-175258",
+    "name": "Maní tostado en aceite sin sal",
+    "servingGrams": 20,
+    "defaultGrams": 20,
+    "pairingIds": [],
+    "role": "fat",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "mani"
+    ],
+    "fdcId": 175258,
+    "dataset": "SR Legacy",
+    "usdaDescription": "Peanuts, all types, oil-roasted, without salt",
+    "importedAt": "2026-11-26"
   }
 ]

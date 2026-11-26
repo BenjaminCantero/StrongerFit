@@ -12,12 +12,25 @@ describe('catálogo USDA', () => {
     expect(new Set(ids).size).toBe(ids.length);
     expect(original.originalIds).toHaveLength(53);
     expect(ids).toEqual(expect.arrayContaining(original.originalIds));
-    expect(ids.length).toBeGreaterThanOrEqual(200);
-    expect(ids.length).toBeLessThanOrEqual(300);
+    // Meta del SRS v1.3: de 300 a 500 ítems; los verificados son los que cuentan para el mínimo.
+    expect(foodCatalog.filter((food) => food.verified === true).length).toBeGreaterThanOrEqual(300);
+    expect(ids.length).toBeLessThanOrEqual(500);
     for (const role of ['protein', 'dairy', 'carb', 'veg', 'fruit', 'fat']) {
       expect(foodCatalog.filter((food) => food.role === role).length).toBeGreaterThanOrEqual(30);
     }
     for (const food of foodCatalog) expect(ids).toEqual(expect.arrayContaining(food.pairingIds));
+  });
+
+  it('cada ítem USDA conserva su fecha de importación y los originales no cambian', () => {
+    // Lote original (manifiesto) y ampliación CO-01. Una fecha nueva exige actualizar esta lista a propósito.
+    const allowed = new Set([original.importedAt, '2026-11-26']);
+    expect(original.importedAt).toBe('2026-11-09');
+    for (const food of foodCatalog) {
+      if (!food.verified) continue;
+      expect(allowed.has(food.provenance.importedAt)).toBe(true);
+      if (original.originalIds.includes(food.id)) expect(food.provenance.importedAt).toBe(original.importedAt);
+    }
+    expect(foodCatalog.filter((food) => food.verified && food.provenance.importedAt === '2026-11-26').length).toBeGreaterThanOrEqual(70);
   });
 
   it('exige procedencia completa y mantiene los valores propios no verificados', () => {

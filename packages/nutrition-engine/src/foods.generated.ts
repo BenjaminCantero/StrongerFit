@@ -1585,6 +1585,72 @@ export const foodCatalog: CatalogFood[] = [
     }
   },
   {
+    "id": "usda-167532",
+    "name": "Pan blanco de trigo",
+    "servingGrams": 50,
+    "defaultGrams": 50,
+    "pairingIds": [],
+    "role": "carb",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "gluten",
+      "lacteo",
+      "lactosa",
+      "huevo",
+      "soya",
+      "animal"
+    ],
+    "per100g": {
+      "kcal": 238.0,
+      "protein": 10.66,
+      "carbs": 43.91,
+      "fat": 2.15
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 167532,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
+    "id": "usda-167703",
+    "name": "Queso cottage 1% de grasa, sin lactosa",
+    "servingGrams": 40,
+    "defaultGrams": 40,
+    "pairingIds": [],
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "lacteo",
+      "animal"
+    ],
+    "per100g": {
+      "kcal": 74.0,
+      "protein": 12.4,
+      "carbs": 3.2,
+      "fat": 1.0
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 167703,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
     "id": "usda-167724",
     "name": "Mijo inflado",
     "servingGrams": 25,
@@ -1791,6 +1857,70 @@ export const foodCatalog: CatalogFood[] = [
     }
   },
   {
+    "id": "usda-168098",
+    "name": "Queso monterey bajo en grasa",
+    "servingGrams": 40,
+    "defaultGrams": 40,
+    "pairingIds": [],
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "lacteo",
+      "lactosa",
+      "animal"
+    ],
+    "per100g": {
+      "kcal": 313.0,
+      "protein": 28.2,
+      "carbs": 0.7,
+      "fat": 21.6
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 168098,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
+    "id": "usda-168141",
+    "name": "Queso suizo bajo en grasa",
+    "servingGrams": 40,
+    "defaultGrams": 40,
+    "pairingIds": [],
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "lacteo",
+      "lactosa",
+      "animal"
+    ],
+    "per100g": {
+      "kcal": 179.0,
+      "protein": 28.4,
+      "carbs": 3.4,
+      "fat": 5.1
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 168141,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
     "id": "usda-168162",
     "name": "Ciruelas deshidratadas sin cocer",
     "servingGrams": 30,
@@ -1819,6 +1949,34 @@ export const foodCatalog: CatalogFood[] = [
     }
   },
   {
+    "id": "usda-168165",
+    "name": "Pasas oscuras sin semilla",
+    "servingGrams": 30,
+    "defaultGrams": 30,
+    "pairingIds": [],
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "per100g": {
+      "kcal": 299.0,
+      "protein": 3.3,
+      "carbs": 79.32,
+      "fat": 0.25
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 168165,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
     "id": "usda-168173",
     "name": "Frutillas congeladas sin azúcar",
     "servingGrams": 150,
@@ -1844,6 +2002,121 @@ export const foodCatalog: CatalogFood[] = [
       "version": "2018-04",
       "license": "CC0-1.0",
       "importedAt": "2026-11-09"
+    }
+  },
+  {
+    "id": "usda-168191",
+    "name": "Dátiles medjool",
+    "servingGrams": 30,
+    "defaultGrams": 30,
+    "pairingIds": [],
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "per100g": {
+      "kcal": 277.0,
+      "protein": 1.81,
+      "carbs": 74.97,
+      "fat": 0.15
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 168191,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
+    "id": "usda-168211",
+    "name": "Kiwi dorado (SunGold) crudo",
+    "servingGrams": 100,
+    "defaultGrams": 100,
+    "pairingIds": [],
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "per100g": {
+      "kcal": 63.0,
+      "protein": 1.02,
+      "carbs": 15.79,
+      "fat": 0.28
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 168211,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
+    "id": "usda-168216",
+    "name": "Plátano verde hervido",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "carb",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "per100g": {
+      "kcal": 121.0,
+      "protein": 1.09,
+      "carbs": 29.15,
+      "fat": 0.08
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 168216,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
+    "id": "usda-168233",
+    "name": "Lomo de cerdo entero magro asado",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "carne",
+      "animal"
+    ],
+    "per100g": {
+      "kcal": 209.0,
+      "protein": 28.62,
+      "carbs": 0.0,
+      "fat": 9.63
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 168233,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
     }
   },
   {
@@ -1878,6 +2151,37 @@ export const foodCatalog: CatalogFood[] = [
     }
   },
   {
+    "id": "usda-168253",
+    "name": "Chuleta de cerdo (lomo vetado), magra a la parrilla",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "carne",
+      "animal"
+    ],
+    "per100g": {
+      "kcal": 173.0,
+      "protein": 27.58,
+      "carbs": 0.0,
+      "fat": 6.08
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 168253,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
     "id": "usda-168386",
     "name": "Alcachofa cocida sin sal",
     "servingGrams": 150,
@@ -1903,6 +2207,90 @@ export const foodCatalog: CatalogFood[] = [
       "version": "2018-04",
       "license": "CC0-1.0",
       "importedAt": "2026-11-09"
+    }
+  },
+  {
+    "id": "usda-168389",
+    "name": "Espárragos crudos",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "per100g": {
+      "kcal": 20.0,
+      "protein": 2.2,
+      "carbs": 3.88,
+      "fat": 0.12
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 168389,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
+    "id": "usda-168390",
+    "name": "Espárragos cocidos sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "per100g": {
+      "kcal": 22.0,
+      "protein": 2.4,
+      "carbs": 4.11,
+      "fat": 0.22
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 168390,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
+    "id": "usda-168407",
+    "name": "Berros crudos",
+    "servingGrams": 100,
+    "defaultGrams": 100,
+    "pairingIds": [],
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "per100g": {
+      "kcal": 32.0,
+      "protein": 2.6,
+      "carbs": 5.5,
+      "fat": 0.7
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 168407,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
     }
   },
   {
@@ -1934,6 +2322,62 @@ export const foodCatalog: CatalogFood[] = [
     }
   },
   {
+    "id": "usda-168412",
+    "name": "Endibia cruda",
+    "servingGrams": 100,
+    "defaultGrams": 100,
+    "pairingIds": [],
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "per100g": {
+      "kcal": 17.0,
+      "protein": 1.25,
+      "carbs": 3.35,
+      "fat": 0.2
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 168412,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
+    "id": "usda-168421",
+    "name": "Kale crudo",
+    "servingGrams": 100,
+    "defaultGrams": 100,
+    "pairingIds": [],
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "per100g": {
+      "kcal": 35.0,
+      "protein": 2.92,
+      "carbs": 4.42,
+      "fat": 1.49
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 168421,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
     "id": "usda-168426",
     "name": "Puerro cocido sin sal",
     "servingGrams": 150,
@@ -1962,6 +2406,34 @@ export const foodCatalog: CatalogFood[] = [
     }
   },
   {
+    "id": "usda-168429",
+    "name": "Lechuga mantequilla cruda",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "per100g": {
+      "kcal": 13.0,
+      "protein": 1.35,
+      "carbs": 2.23,
+      "fat": 0.22
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 168429,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
     "id": "usda-168431",
     "name": "Lechuga de hoja roja cruda",
     "servingGrams": 150,
@@ -1987,6 +2459,62 @@ export const foodCatalog: CatalogFood[] = [
       "version": "2018-04",
       "license": "CC0-1.0",
       "importedAt": "2026-11-09"
+    }
+  },
+  {
+    "id": "usda-168434",
+    "name": "Champiñones crimini crudos",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "per100g": {
+      "kcal": 22.0,
+      "protein": 2.5,
+      "carbs": 4.3,
+      "fat": 0.1
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 168434,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
+    "id": "usda-168437",
+    "name": "Hongos shiitake cocidos sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "per100g": {
+      "kcal": 56.0,
+      "protein": 1.56,
+      "carbs": 14.39,
+      "fat": 0.22
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 168437,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
     }
   },
   {
@@ -2104,6 +2632,34 @@ export const foodCatalog: CatalogFood[] = [
     }
   },
   {
+    "id": "usda-168486",
+    "name": "Taro cocido sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "carb",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "per100g": {
+      "kcal": 142.0,
+      "protein": 0.52,
+      "carbs": 34.6,
+      "fat": 0.11
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 168486,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
     "id": "usda-168588",
     "name": "Mantequilla de almendras sin sal",
     "servingGrams": 20,
@@ -2131,6 +2687,99 @@ export const foodCatalog: CatalogFood[] = [
       "version": "2018-04",
       "license": "CC0-1.0",
       "importedAt": "2026-11-09"
+    }
+  },
+  {
+    "id": "usda-168626",
+    "name": "Hígado de vacuno braseado",
+    "servingGrams": 100,
+    "defaultGrams": 100,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "carne",
+      "animal"
+    ],
+    "per100g": {
+      "kcal": 191.0,
+      "protein": 29.08,
+      "carbs": 5.13,
+      "fat": 5.26
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 168626,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
+    "id": "usda-168634",
+    "name": "Vacuno, posta/asiento (top sirloin) magro a la parrilla, sin grasa",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "carne",
+      "animal"
+    ],
+    "per100g": {
+      "kcal": 183.0,
+      "protein": 30.55,
+      "carbs": 0.0,
+      "fat": 5.79
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 168634,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
+    "id": "usda-168649",
+    "name": "Vacuno, posta rosada (top round) magra a la parrilla, sin grasa",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "carne",
+      "animal"
+    ],
+    "per100g": {
+      "kcal": 162.0,
+      "protein": 30.09,
+      "carbs": 0.0,
+      "fat": 3.77
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 168649,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
     }
   },
   {
@@ -2256,6 +2905,36 @@ export const foodCatalog: CatalogFood[] = [
     }
   },
   {
+    "id": "usda-168907",
+    "name": "Fideos soba japoneses cocidos",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "carb",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "gluten"
+    ],
+    "per100g": {
+      "kcal": 99.0,
+      "protein": 5.06,
+      "carbs": 21.44,
+      "fat": 0.1
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 168907,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
     "id": "usda-168910",
     "name": "Fideos integrales cocidos",
     "servingGrams": 150,
@@ -2317,6 +2996,38 @@ export const foodCatalog: CatalogFood[] = [
       "version": "2018-04",
       "license": "CC0-1.0",
       "importedAt": "2026-11-09"
+    }
+  },
+  {
+    "id": "usda-168919",
+    "name": "Tallarines de huevo cocidos enriquecidos, con sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "carb",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "gluten",
+      "huevo",
+      "animal"
+    ],
+    "per100g": {
+      "kcal": 138.0,
+      "protein": 4.54,
+      "carbs": 25.16,
+      "fat": 2.07
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 168919,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
     }
   },
   {
@@ -2550,6 +3261,34 @@ export const foodCatalog: CatalogFood[] = [
     }
   },
   {
+    "id": "usda-169135",
+    "name": "Habas lima inmaduras cocidas sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "carb",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "per100g": {
+      "kcal": 123.0,
+      "protein": 6.81,
+      "carbs": 23.64,
+      "fat": 0.32
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 169135,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
     "id": "usda-169145",
     "name": "Betarraga cruda",
     "servingGrams": 150,
@@ -2575,6 +3314,62 @@ export const foodCatalog: CatalogFood[] = [
       "version": "2018-04",
       "license": "CC0-1.0",
       "importedAt": "2026-11-09"
+    }
+  },
+  {
+    "id": "usda-169146",
+    "name": "Betarraga cocida sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "per100g": {
+      "kcal": 44.0,
+      "protein": 1.68,
+      "carbs": 9.96,
+      "fat": 0.18
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 169146,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
+    "id": "usda-169205",
+    "name": "Alcachofa cruda",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "per100g": {
+      "kcal": 47.0,
+      "protein": 3.27,
+      "carbs": 10.51,
+      "fat": 0.15
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 169205,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
     }
   },
   {
@@ -2862,6 +3657,34 @@ export const foodCatalog: CatalogFood[] = [
     }
   },
   {
+    "id": "usda-169293",
+    "name": "Zapallo acorn al horno sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "per100g": {
+      "kcal": 56.0,
+      "protein": 1.12,
+      "carbs": 14.58,
+      "fat": 0.14
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 169293,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
     "id": "usda-169296",
     "name": "Zapallo butternut al horno sin sal",
     "servingGrams": 150,
@@ -2915,6 +3738,34 @@ export const foodCatalog: CatalogFood[] = [
       "version": "2018-04",
       "license": "CC0-1.0",
       "importedAt": "2026-11-09"
+    }
+  },
+  {
+    "id": "usda-169387",
+    "name": "Rúcula cruda",
+    "servingGrams": 100,
+    "defaultGrams": 100,
+    "pairingIds": [],
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "per100g": {
+      "kcal": 25.0,
+      "protein": 2.58,
+      "carbs": 3.65,
+      "fat": 0.66
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 169387,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
     }
   },
   {
@@ -2978,6 +3829,62 @@ export const foodCatalog: CatalogFood[] = [
     }
   },
   {
+    "id": "usda-169701",
+    "name": "Maíz hominy blanco en conserva",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "carb",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "per100g": {
+      "kcal": 72.0,
+      "protein": 1.48,
+      "carbs": 14.26,
+      "fat": 0.88
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 169701,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
+    "id": "usda-169708",
+    "name": "Arroz blanco parbolizado enriquecido cocido",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "carb",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "per100g": {
+      "kcal": 123.0,
+      "protein": 2.91,
+      "carbs": 26.05,
+      "fat": 0.37
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 169708,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
     "id": "usda-169711",
     "name": "Arroz glutinoso blanco cocido",
     "servingGrams": 150,
@@ -3005,6 +3912,68 @@ export const foodCatalog: CatalogFood[] = [
       "version": "2018-04",
       "license": "CC0-1.0",
       "importedAt": "2026-11-09"
+    }
+  },
+  {
+    "id": "usda-169728",
+    "name": "Pasta fresca refrigerada cocida",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "carb",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "gluten",
+      "huevo",
+      "animal"
+    ],
+    "per100g": {
+      "kcal": 131.0,
+      "protein": 5.15,
+      "carbs": 24.93,
+      "fat": 1.05
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 169728,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
+    "id": "usda-169737",
+    "name": "Pasta cocida enriquecida, sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "carb",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "gluten"
+    ],
+    "per100g": {
+      "kcal": 158.0,
+      "protein": 5.8,
+      "carbs": 30.86,
+      "fat": 0.93
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 169737,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
     }
   },
   {
@@ -3154,6 +4123,34 @@ export const foodCatalog: CatalogFood[] = [
     }
   },
   {
+    "id": "usda-169917",
+    "name": "Naranja navel cruda",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "per100g": {
+      "kcal": 49.0,
+      "protein": 0.91,
+      "carbs": 12.54,
+      "fat": 0.15
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 169917,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
     "id": "usda-169926",
     "name": "Papaya cruda",
     "servingGrams": 150,
@@ -3210,6 +4207,118 @@ export const foodCatalog: CatalogFood[] = [
     }
   },
   {
+    "id": "usda-169930",
+    "name": "Duraznos en conserva en jugo, con líquido",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "per100g": {
+      "kcal": 44.0,
+      "protein": 0.63,
+      "carbs": 11.57,
+      "fat": 0.03
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 169930,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
+    "id": "usda-169934",
+    "name": "Duraznos deshidratados sulfitados sin cocer",
+    "servingGrams": 30,
+    "defaultGrams": 30,
+    "pairingIds": [],
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "per100g": {
+      "kcal": 239.0,
+      "protein": 3.61,
+      "carbs": 61.33,
+      "fat": 0.76
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 169934,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
+    "id": "usda-169936",
+    "name": "Peras en conserva en jugo, con líquido",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "per100g": {
+      "kcal": 50.0,
+      "protein": 0.34,
+      "carbs": 12.94,
+      "fat": 0.07
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 169936,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
+    "id": "usda-169941",
+    "name": "Caqui japonés crudo",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "per100g": {
+      "kcal": 70.0,
+      "protein": 0.58,
+      "carbs": 18.59,
+      "fat": 0.19
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 169941,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
     "id": "usda-169949",
     "name": "Ciruelas crudas",
     "servingGrams": 150,
@@ -3235,6 +4344,62 @@ export const foodCatalog: CatalogFood[] = [
       "version": "2018-04",
       "license": "CC0-1.0",
       "importedAt": "2026-11-09"
+    }
+  },
+  {
+    "id": "usda-169961",
+    "name": "Porotos verdes crudos",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "per100g": {
+      "kcal": 31.0,
+      "protein": 1.83,
+      "carbs": 6.97,
+      "fat": 0.22
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 169961,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
+    "id": "usda-169966",
+    "name": "Betarraga en conserva, escurrida",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "per100g": {
+      "kcal": 31.0,
+      "protein": 0.91,
+      "carbs": 7.21,
+      "fat": 0.14
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 169966,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
     }
   },
   {
@@ -3406,6 +4571,34 @@ export const foodCatalog: CatalogFood[] = [
     }
   },
   {
+    "id": "usda-169986",
+    "name": "Coliflor cruda",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "per100g": {
+      "kcal": 25.0,
+      "protein": 1.92,
+      "carbs": 4.97,
+      "fat": 0.28
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 169986,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
     "id": "usda-169988",
     "name": "Apio crudo",
     "servingGrams": 150,
@@ -3459,6 +4652,34 @@ export const foodCatalog: CatalogFood[] = [
       "version": "2018-04",
       "license": "CC0-1.0",
       "importedAt": "2026-11-09"
+    }
+  },
+  {
+    "id": "usda-169991",
+    "name": "Acelga cruda",
+    "servingGrams": 100,
+    "defaultGrams": 100,
+    "pairingIds": [],
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "per100g": {
+      "kcal": 19.0,
+      "protein": 1.8,
+      "carbs": 3.74,
+      "fat": 0.2
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 169991,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
     }
   },
   {
@@ -3576,6 +4797,62 @@ export const foodCatalog: CatalogFood[] = [
     }
   },
   {
+    "id": "usda-170017",
+    "name": "Arvejas verdes congeladas cocidas sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "per100g": {
+      "kcal": 78.0,
+      "protein": 5.15,
+      "carbs": 14.26,
+      "fat": 0.27
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 170017,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
+    "id": "usda-170050",
+    "name": "Tomate rojo cocido",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "per100g": {
+      "kcal": 18.0,
+      "protein": 0.95,
+      "carbs": 4.01,
+      "fat": 0.11
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 170050,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
     "id": "usda-170058",
     "name": "Nabo cocido sin sal",
     "servingGrams": 150,
@@ -3634,6 +4911,34 @@ export const foodCatalog: CatalogFood[] = [
     }
   },
   {
+    "id": "usda-170104",
+    "name": "Arvejas verdes en conserva sin sal, escurridas",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "per100g": {
+      "kcal": 69.0,
+      "protein": 4.42,
+      "carbs": 12.58,
+      "fat": 0.35
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 170104,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
     "id": "usda-170108",
     "name": "Pimentón rojo crudo",
     "servingGrams": 150,
@@ -3687,6 +4992,34 @@ export const foodCatalog: CatalogFood[] = [
       "version": "2018-04",
       "license": "CC0-1.0",
       "importedAt": "2026-11-09"
+    }
+  },
+  {
+    "id": "usda-170138",
+    "name": "Tomate rojo en conserva en jugo, sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "per100g": {
+      "kcal": 16.0,
+      "protein": 0.79,
+      "carbs": 3.47,
+      "fat": 0.25
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 170138,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
     }
   },
   {
@@ -4168,6 +5501,34 @@ export const foodCatalog: CatalogFood[] = [
     }
   },
   {
+    "id": "usda-170379",
+    "name": "Brócoli crudo",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "per100g": {
+      "kcal": 34.0,
+      "protein": 2.82,
+      "carbs": 6.64,
+      "fat": 0.37
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 170379,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
     "id": "usda-170394",
     "name": "Zanahoria cocida sin sal",
     "servingGrams": 150,
@@ -4363,6 +5724,62 @@ export const foodCatalog: CatalogFood[] = [
       "version": "2018-04",
       "license": "CC0-1.0",
       "importedAt": "2026-11-09"
+    }
+  },
+  {
+    "id": "usda-170487",
+    "name": "Zapallo de verano crudo",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "per100g": {
+      "kcal": 16.0,
+      "protein": 1.21,
+      "carbs": 3.35,
+      "fat": 0.18
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 170487,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
+    "id": "usda-170488",
+    "name": "Zapallo de verano cocido sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "veg",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "per100g": {
+      "kcal": 20.0,
+      "protein": 0.91,
+      "carbs": 4.31,
+      "fat": 0.31
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 170488,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
     }
   },
   {
@@ -4576,6 +5993,37 @@ export const foodCatalog: CatalogFood[] = [
     }
   },
   {
+    "id": "usda-170629",
+    "name": "Vacuno, posta negra (bottom round) magra asada, sin grasa",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "carne",
+      "animal"
+    ],
+    "per100g": {
+      "kcal": 177.0,
+      "protein": 27.76,
+      "carbs": 0.0,
+      "fat": 6.48
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 170629,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
     "id": "usda-170633",
     "name": "Vacuno, corte redondo magro asado (eye of round)",
     "servingGrams": 120,
@@ -4667,6 +6115,38 @@ export const foodCatalog: CatalogFood[] = [
     }
   },
   {
+    "id": "usda-170844",
+    "name": "Queso monterey",
+    "servingGrams": 40,
+    "defaultGrams": 40,
+    "pairingIds": [],
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "lacteo",
+      "lactosa",
+      "animal"
+    ],
+    "per100g": {
+      "kcal": 373.0,
+      "protein": 24.48,
+      "carbs": 0.68,
+      "fat": 30.28
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 170844,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
     "id": "usda-170845",
     "name": "Queso mozzarella de leche entera",
     "servingGrams": 40,
@@ -4696,6 +6176,38 @@ export const foodCatalog: CatalogFood[] = [
       "version": "2018-04",
       "license": "CC0-1.0",
       "importedAt": "2026-11-09"
+    }
+  },
+  {
+    "id": "usda-170847",
+    "name": "Queso mozzarella semidescremado",
+    "servingGrams": 40,
+    "defaultGrams": 40,
+    "pairingIds": [],
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "lacteo",
+      "lactosa",
+      "animal"
+    ],
+    "per100g": {
+      "kcal": 254.0,
+      "protein": 24.26,
+      "carbs": 2.77,
+      "fat": 15.92
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 170847,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
     }
   },
   {
@@ -4763,6 +6275,70 @@ export const foodCatalog: CatalogFood[] = [
     }
   },
   {
+    "id": "usda-170857",
+    "name": "Crema de leche ligera (crema para café)",
+    "servingGrams": 15,
+    "defaultGrams": 15,
+    "pairingIds": [],
+    "role": "fat",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "lacteo",
+      "lactosa",
+      "animal"
+    ],
+    "per100g": {
+      "kcal": 195.0,
+      "protein": 2.96,
+      "carbs": 3.66,
+      "fat": 19.1
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 170857,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
+    "id": "usda-170859",
+    "name": "Crema de leche para batir, alta en grasa",
+    "servingGrams": 15,
+    "defaultGrams": 15,
+    "pairingIds": [],
+    "role": "fat",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "lacteo",
+      "lactosa",
+      "animal"
+    ],
+    "per100g": {
+      "kcal": 340.0,
+      "protein": 2.84,
+      "carbs": 2.84,
+      "fat": 36.08
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 170859,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
     "id": "usda-170872",
     "name": "Leche baja en grasa, 1%, con vitaminas A y D",
     "servingGrams": 200,
@@ -4792,6 +6368,102 @@ export const foodCatalog: CatalogFood[] = [
       "version": "2018-04",
       "license": "CC0-1.0",
       "importedAt": "2026-11-09"
+    }
+  },
+  {
+    "id": "usda-170874",
+    "name": "Suero de leche cultivado (buttermilk) bajo en grasa",
+    "servingGrams": 200,
+    "defaultGrams": 200,
+    "pairingIds": [],
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "lacteo",
+      "lactosa",
+      "animal"
+    ],
+    "per100g": {
+      "kcal": 40.0,
+      "protein": 3.31,
+      "carbs": 4.79,
+      "fat": 1.07
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 170874,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
+    "id": "usda-170876",
+    "name": "Leche en polvo entera, con vitamina D",
+    "servingGrams": 30,
+    "defaultGrams": 30,
+    "pairingIds": [],
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "lacteo",
+      "lactosa",
+      "animal"
+    ],
+    "per100g": {
+      "kcal": 496.0,
+      "protein": 26.32,
+      "carbs": 38.42,
+      "fat": 26.71
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 170876,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
+    "id": "usda-170877",
+    "name": "Leche en polvo descremada, sin vitaminas A y D añadidas",
+    "servingGrams": 30,
+    "defaultGrams": 30,
+    "pairingIds": [],
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "lacteo",
+      "lactosa",
+      "animal"
+    ],
+    "per100g": {
+      "kcal": 362.0,
+      "protein": 36.16,
+      "carbs": 51.98,
+      "fat": 0.77
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 170877,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
     }
   },
   {
@@ -4987,6 +6659,38 @@ export const foodCatalog: CatalogFood[] = [
     }
   },
   {
+    "id": "usda-170904",
+    "name": "Kéfir bajo en grasa natural",
+    "servingGrams": 200,
+    "defaultGrams": 200,
+    "pairingIds": [],
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "lacteo",
+      "lactosa",
+      "animal"
+    ],
+    "per100g": {
+      "kcal": 43.0,
+      "protein": 3.79,
+      "carbs": 4.77,
+      "fat": 1.02
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 170904,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
     "id": "usda-170906",
     "name": "Yogur de vainilla descremado",
     "servingGrams": 170,
@@ -5131,6 +6835,37 @@ export const foodCatalog: CatalogFood[] = [
     }
   },
   {
+    "id": "usda-171075",
+    "name": "Pechuga de pollo con piel asada",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "carne",
+      "animal"
+    ],
+    "per100g": {
+      "kcal": 197.0,
+      "protein": 29.8,
+      "carbs": 0.0,
+      "fat": 7.78
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 171075,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
     "id": "usda-171241",
     "name": "Queso gouda",
     "servingGrams": 40,
@@ -5224,6 +6959,38 @@ export const foodCatalog: CatalogFood[] = [
       "version": "2018-04",
       "license": "CC0-1.0",
       "importedAt": "2026-11-09"
+    }
+  },
+  {
+    "id": "usda-171265",
+    "name": "Leche entera, 3,25% de grasa, con vitamina D",
+    "servingGrams": 200,
+    "defaultGrams": 200,
+    "pairingIds": [],
+    "role": "dairy",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "lacteo",
+      "lactosa",
+      "animal"
+    ],
+    "per100g": {
+      "kcal": 61.0,
+      "protein": 3.15,
+      "carbs": 4.8,
+      "fat": 3.25
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 171265,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
     }
   },
   {
@@ -5383,6 +7150,37 @@ export const foodCatalog: CatalogFood[] = [
     }
   },
   {
+    "id": "usda-171450",
+    "name": "Pollo entero con piel asado",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "carne",
+      "animal"
+    ],
+    "per100g": {
+      "kcal": 239.0,
+      "protein": 27.3,
+      "carbs": 0.0,
+      "fat": 13.6
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 171450,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
     "id": "usda-171477",
     "name": "Pechuga de pollo sin piel asada",
     "servingGrams": 120,
@@ -5411,6 +7209,97 @@ export const foodCatalog: CatalogFood[] = [
       "version": "2018-04",
       "license": "CC0-1.0",
       "importedAt": "2026-11-09"
+    }
+  },
+  {
+    "id": "usda-171492",
+    "name": "Pechuga de pavo con piel asada",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "carne",
+      "animal"
+    ],
+    "per100g": {
+      "kcal": 189.0,
+      "protein": 28.71,
+      "carbs": 0.0,
+      "fat": 7.41
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 171492,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
+    "id": "usda-171655",
+    "name": "Sémola de maíz blanco cocida en agua, sin sal",
+    "servingGrams": 180,
+    "defaultGrams": 180,
+    "pairingIds": [],
+    "role": "carb",
+    "meals": [
+      "breakfast",
+      "snack",
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "per100g": {
+      "kcal": 71.0,
+      "protein": 1.71,
+      "carbs": 14.76,
+      "fat": 0.46
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 171655,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
+    "id": "usda-171659",
+    "name": "Sémola de trigo (farina) enriquecida cocida en agua, sin sal",
+    "servingGrams": 180,
+    "defaultGrams": 180,
+    "pairingIds": [],
+    "role": "carb",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "gluten"
+    ],
+    "per100g": {
+      "kcal": 55.0,
+      "protein": 1.82,
+      "carbs": 10.92,
+      "fat": 0.34
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 171659,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
     }
   },
   {
@@ -5472,6 +7361,34 @@ export const foodCatalog: CatalogFood[] = [
     }
   },
   {
+    "id": "usda-171695",
+    "name": "Puré de manzana sin azúcar, sin vitamina C añadida",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "per100g": {
+      "kcal": 42.0,
+      "protein": 0.17,
+      "carbs": 11.27,
+      "fat": 0.1
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 171695,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
     "id": "usda-171697",
     "name": "Damascos crudos",
     "servingGrams": 150,
@@ -5497,6 +7414,64 @@ export const foodCatalog: CatalogFood[] = [
       "version": "2018-04",
       "license": "CC0-1.0",
       "importedAt": "2026-11-09"
+    }
+  },
+  {
+    "id": "usda-171706",
+    "name": "Palta Hass/California cruda",
+    "servingGrams": 50,
+    "defaultGrams": 50,
+    "pairingIds": [],
+    "role": "fat",
+    "meals": [
+      "breakfast",
+      "snack",
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "per100g": {
+      "kcal": 167.0,
+      "protein": 1.96,
+      "carbs": 8.64,
+      "fat": 15.41
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 171706,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
+    "id": "usda-171710",
+    "name": "Moras congeladas sin azúcar",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "per100g": {
+      "kcal": 64.0,
+      "protein": 1.18,
+      "carbs": 15.67,
+      "fat": 0.43
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 171710,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
     }
   },
   {
@@ -5581,6 +7556,72 @@ export const foodCatalog: CatalogFood[] = [
       "version": "2018-04",
       "license": "CC0-1.0",
       "importedAt": "2026-11-09"
+    }
+  },
+  {
+    "id": "usda-171794",
+    "name": "Carne molida de vacuno 90% magra, salteada",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "carne",
+      "animal"
+    ],
+    "per100g": {
+      "kcal": 230.0,
+      "protein": 28.45,
+      "carbs": 0.0,
+      "fat": 12.04
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 171794,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
+    "id": "usda-171850",
+    "name": "Pan de trigo germinado",
+    "servingGrams": 50,
+    "defaultGrams": 50,
+    "pairingIds": [],
+    "role": "carb",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "gluten",
+      "lacteo",
+      "lactosa",
+      "huevo",
+      "soya",
+      "animal"
+    ],
+    "per100g": {
+      "kcal": 188.0,
+      "protein": 13.16,
+      "carbs": 33.88,
+      "fat": 0.0
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 171850,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
     }
   },
   {
@@ -5705,6 +7746,161 @@ export const foodCatalog: CatalogFood[] = [
     }
   },
   {
+    "id": "usda-171976",
+    "name": "Almejas en conserva, escurridas",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "mariscos",
+      "animal"
+    ],
+    "per100g": {
+      "kcal": 142.0,
+      "protein": 24.25,
+      "carbs": 5.9,
+      "fat": 1.59
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 171976,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
+    "id": "usda-171986",
+    "name": "Atún claro en agua sin sal, escurrido",
+    "servingGrams": 100,
+    "defaultGrams": 100,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "pescado",
+      "animal"
+    ],
+    "per100g": {
+      "kcal": 116.0,
+      "protein": 25.51,
+      "carbs": 0.0,
+      "fat": 0.82
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 171986,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
+    "id": "usda-171994",
+    "name": "Jurel o caballa del Pacífico cocidos al horno",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "pescado",
+      "animal"
+    ],
+    "per100g": {
+      "kcal": 201.0,
+      "protein": 25.73,
+      "carbs": 0.0,
+      "fat": 10.12
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 171994,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
+    "id": "usda-171999",
+    "name": "Salmón chinook al horno",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "pescado",
+      "animal"
+    ],
+    "per100g": {
+      "kcal": 231.0,
+      "protein": 25.72,
+      "carbs": 0.0,
+      "fat": 13.38
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 171999,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
+    "id": "usda-172001",
+    "name": "Salmón rosado al horno",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "pescado",
+      "animal"
+    ],
+    "per100g": {
+      "kcal": 153.0,
+      "protein": 24.58,
+      "carbs": 0.0,
+      "fat": 5.28
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 172001,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
     "id": "usda-172004",
     "name": "Trucha al horno, especies mixtas",
     "servingGrams": 120,
@@ -5733,6 +7929,37 @@ export const foodCatalog: CatalogFood[] = [
       "version": "2018-04",
       "license": "CC0-1.0",
       "importedAt": "2026-11-09"
+    }
+  },
+  {
+    "id": "usda-172007",
+    "name": "Jaiba dungeness cocida al vapor",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "mariscos",
+      "animal"
+    ],
+    "per100g": {
+      "kcal": 110.0,
+      "protein": 22.32,
+      "carbs": 0.95,
+      "fat": 1.24
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 172007,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
     }
   },
   {
@@ -5830,6 +8057,41 @@ export const foodCatalog: CatalogFood[] = [
       "version": "2018-04",
       "license": "CC0-1.0",
       "importedAt": "2026-11-09"
+    }
+  },
+  {
+    "id": "usda-172187",
+    "name": "Huevo revuelto",
+    "servingGrams": 100,
+    "defaultGrams": 100,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "breakfast",
+      "snack",
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "huevo",
+      "lacteo",
+      "lactosa",
+      "animal"
+    ],
+    "per100g": {
+      "kcal": 149.0,
+      "protein": 9.99,
+      "carbs": 1.61,
+      "fat": 10.98
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 172187,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
     }
   },
   {
@@ -6011,6 +8273,36 @@ export const foodCatalog: CatalogFood[] = [
     }
   },
   {
+    "id": "usda-172430",
+    "name": "Maní crudo",
+    "servingGrams": 20,
+    "defaultGrams": 20,
+    "pairingIds": [],
+    "role": "fat",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "mani"
+    ],
+    "per100g": {
+      "kcal": 567.0,
+      "protein": 25.8,
+      "carbs": 16.13,
+      "fat": 49.24
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 172430,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
     "id": "usda-172446",
     "name": "Bebida de soya original o vainilla, sin fortificar",
     "servingGrams": 200,
@@ -6167,6 +8459,37 @@ export const foodCatalog: CatalogFood[] = [
     }
   },
   {
+    "id": "usda-172492",
+    "name": "Cordero, lomo magro a la parrilla",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "carne",
+      "animal"
+    ],
+    "per100g": {
+      "kcal": 216.0,
+      "protein": 29.99,
+      "carbs": 0.0,
+      "fat": 9.73
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 172492,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
     "id": "usda-172675",
     "name": "Pan francés o vienés",
     "servingGrams": 50,
@@ -6199,6 +8522,41 @@ export const foodCatalog: CatalogFood[] = [
       "version": "2018-04",
       "license": "CC0-1.0",
       "importedAt": "2026-11-09"
+    }
+  },
+  {
+    "id": "usda-172678",
+    "name": "Pan de avena",
+    "servingGrams": 50,
+    "defaultGrams": 50,
+    "pairingIds": [],
+    "role": "carb",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "gluten",
+      "lacteo",
+      "lactosa",
+      "huevo",
+      "soya",
+      "animal"
+    ],
+    "per100g": {
+      "kcal": 269.0,
+      "protein": 8.4,
+      "carbs": 48.5,
+      "fat": 4.4
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 172678,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
     }
   },
   {
@@ -6269,6 +8627,67 @@ export const foodCatalog: CatalogFood[] = [
       "version": "2018-04",
       "license": "CC0-1.0",
       "importedAt": "2026-11-09"
+    }
+  },
+  {
+    "id": "usda-172746",
+    "name": "Galletas saltines (de agua)",
+    "servingGrams": 25,
+    "defaultGrams": 25,
+    "pairingIds": [],
+    "role": "carb",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "gluten"
+    ],
+    "per100g": {
+      "kcal": 418.0,
+      "protein": 9.46,
+      "carbs": 74.05,
+      "fat": 8.64
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 172746,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
+    "id": "usda-172851",
+    "name": "Pavo molido 93% magro, salteado",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "carne",
+      "animal"
+    ],
+    "per100g": {
+      "kcal": 213.0,
+      "protein": 27.1,
+      "carbs": 0.0,
+      "fat": 11.6
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 172851,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
     }
   },
   {
@@ -6574,6 +8993,71 @@ export const foodCatalog: CatalogFood[] = [
     }
   },
   {
+    "id": "usda-173423",
+    "name": "Huevo frito",
+    "servingGrams": 100,
+    "defaultGrams": 100,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "breakfast",
+      "snack",
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "huevo",
+      "animal"
+    ],
+    "per100g": {
+      "kcal": 196.0,
+      "protein": 13.61,
+      "carbs": 0.83,
+      "fat": 14.84
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 173423,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
+    "id": "usda-173430",
+    "name": "Mantequilla sin sal",
+    "servingGrams": 10,
+    "defaultGrams": 10,
+    "pairingIds": [],
+    "role": "fat",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "lacteo",
+      "lactosa",
+      "animal"
+    ],
+    "per100g": {
+      "kcal": 717.0,
+      "protein": 0.85,
+      "carbs": 0.06,
+      "fat": 81.11
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 173430,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
     "id": "usda-173432",
     "name": "Leche descremada sin fortificar",
     "servingGrams": 200,
@@ -6635,6 +9119,99 @@ export const foodCatalog: CatalogFood[] = [
       "version": "2018-04",
       "license": "CC0-1.0",
       "importedAt": "2026-11-09"
+    }
+  },
+  {
+    "id": "usda-173630",
+    "name": "Ala de pollo con piel asada",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "carne",
+      "animal"
+    ],
+    "per100g": {
+      "kcal": 254.0,
+      "protein": 23.79,
+      "carbs": 0.0,
+      "fat": 16.87
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 173630,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
+    "id": "usda-173674",
+    "name": "Caballa española cocida al horno",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "pescado",
+      "animal"
+    ],
+    "per100g": {
+      "kcal": 158.0,
+      "protein": 23.59,
+      "carbs": 0.0,
+      "fat": 6.32
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 173674,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
+    "id": "usda-173681",
+    "name": "Abadejo de Alaska cocido al horno",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "pescado",
+      "animal"
+    ],
+    "per100g": {
+      "kcal": 111.0,
+      "protein": 23.48,
+      "carbs": 0.0,
+      "fat": 1.18
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 173681,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
     }
   },
   {
@@ -6756,6 +9333,34 @@ export const foodCatalog: CatalogFood[] = [
       "version": "2018-04",
       "license": "CC0-1.0",
       "importedAt": "2026-11-09"
+    }
+  },
+  {
+    "id": "usda-173736",
+    "name": "Porotos cranberry (roman) cocidos sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "per100g": {
+      "kcal": 136.0,
+      "protein": 9.34,
+      "carbs": 24.46,
+      "fat": 0.46
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 173736,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
     }
   },
   {
@@ -6926,6 +9531,123 @@ export const foodCatalog: CatalogFood[] = [
       "version": "2018-04",
       "license": "CC0-1.0",
       "importedAt": "2026-11-09"
+    }
+  },
+  {
+    "id": "usda-173953",
+    "name": "Chirimoya cruda",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "per100g": {
+      "kcal": 75.0,
+      "protein": 1.57,
+      "carbs": 17.71,
+      "fat": 0.68
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 173953,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
+    "id": "usda-173963",
+    "name": "Grosellas negras europeas crudas",
+    "servingGrams": 100,
+    "defaultGrams": 100,
+    "pairingIds": [],
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "per100g": {
+      "kcal": 63.0,
+      "protein": 1.4,
+      "carbs": 15.38,
+      "fat": 0.41
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 173963,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
+    "id": "usda-174050",
+    "name": "Vacuno, tapapecho/brazuelo (chuck) magro braseado",
+    "servingGrams": 120,
+    "defaultGrams": 120,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [
+      "carne",
+      "animal"
+    ],
+    "per100g": {
+      "kcal": 214.0,
+      "protein": 34.66,
+      "carbs": 0.0,
+      "fat": 7.36
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 174050,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
+    "id": "usda-174081",
+    "name": "Tortilla de trigo integral lista para calentar",
+    "servingGrams": 50,
+    "defaultGrams": 50,
+    "pairingIds": [],
+    "role": "carb",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "gluten"
+    ],
+    "per100g": {
+      "kcal": 310.0,
+      "protein": 9.76,
+      "carbs": 45.89,
+      "fat": 9.76
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 174081,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
     }
   },
   {
@@ -7109,6 +9831,34 @@ export const foodCatalog: CatalogFood[] = [
     }
   },
   {
+    "id": "usda-174673",
+    "name": "Pomelo rosado crudo",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "fruit",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [],
+    "per100g": {
+      "kcal": 42.0,
+      "protein": 0.77,
+      "carbs": 10.66,
+      "fat": 0.14
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 174673,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
     "id": "usda-174683",
     "name": "Uvas rojas o verdes crudas",
     "servingGrams": 150,
@@ -7239,6 +9989,66 @@ export const foodCatalog: CatalogFood[] = [
       "version": "2018-04",
       "license": "CC0-1.0",
       "importedAt": "2026-11-09"
+    }
+  },
+  {
+    "id": "usda-174977",
+    "name": "Pan tostado melba",
+    "servingGrams": 20,
+    "defaultGrams": 20,
+    "pairingIds": [],
+    "role": "carb",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "gluten"
+    ],
+    "per100g": {
+      "kcal": 390.0,
+      "protein": 12.1,
+      "carbs": 76.6,
+      "fat": 3.2
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 174977,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
+    "id": "usda-175037",
+    "name": "Tortilla de harina de trigo refrigerada, lista para calentar",
+    "servingGrams": 50,
+    "defaultGrams": 50,
+    "pairingIds": [],
+    "role": "carb",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "gluten"
+    ],
+    "per100g": {
+      "kcal": 306.0,
+      "protein": 8.2,
+      "carbs": 49.38,
+      "fat": 7.99
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 175037,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
     }
   },
   {
@@ -7397,6 +10207,34 @@ export const foodCatalog: CatalogFood[] = [
     }
   },
   {
+    "id": "usda-175191",
+    "name": "Porotos great northern cocidos sin sal",
+    "servingGrams": 150,
+    "defaultGrams": 150,
+    "pairingIds": [],
+    "role": "protein",
+    "meals": [
+      "lunch",
+      "dinner"
+    ],
+    "tags": [],
+    "per100g": {
+      "kcal": 118.0,
+      "protein": 8.33,
+      "carbs": 21.09,
+      "fat": 0.45
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 175191,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
+    }
+  },
+  {
     "id": "usda-175194",
     "name": "Porotos rojos cocidos sin sal",
     "servingGrams": 150,
@@ -7478,6 +10316,36 @@ export const foodCatalog: CatalogFood[] = [
       "version": "2018-04",
       "license": "CC0-1.0",
       "importedAt": "2026-11-09"
+    }
+  },
+  {
+    "id": "usda-175258",
+    "name": "Maní tostado en aceite sin sal",
+    "servingGrams": 20,
+    "defaultGrams": 20,
+    "pairingIds": [],
+    "role": "fat",
+    "meals": [
+      "breakfast",
+      "snack"
+    ],
+    "tags": [
+      "mani"
+    ],
+    "per100g": {
+      "kcal": 599.0,
+      "protein": 28.03,
+      "carbs": 15.26,
+      "fat": 52.5
+    },
+    "verified": true,
+    "provenance": {
+      "source": "USDA FoodData Central",
+      "fdcId": 175258,
+      "dataset": "SR Legacy",
+      "version": "2018-04",
+      "license": "CC0-1.0",
+      "importedAt": "2026-11-26"
     }
   }
 ];

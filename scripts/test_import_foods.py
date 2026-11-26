@@ -92,6 +92,19 @@ class ImportTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'changed description'):
             self.run_import()
 
+    def test_per_item_imported_at(self):
+        self.assertEqual(self.run_import()[0][0]['provenance']['importedAt'], '2026-11-09')
+        self.mapping[0]['importedAt'] = '2026-11-26'
+        food = self.run_import()[0][0]
+        self.assertEqual(food['provenance']['importedAt'], '2026-11-26')
+        self.assertNotIn('importedAt', food)
+
+    def test_rejects_invalid_imported_at(self):
+        for bad in ['26-11-2026', '2026-11-26T00:00', '', None, 20261126]:
+            self.mapping[0]['importedAt'] = bad
+            with self.assertRaisesRegex(ValueError, 'importedAt'):
+                self.run_import()
+
 
 if __name__ == '__main__':
     unittest.main()
