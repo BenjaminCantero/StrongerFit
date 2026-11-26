@@ -57,8 +57,6 @@ export type ProfileAction =
   | { type: 'update-personal'; values: PersonalValues }
   | { type: 'update-nutrition'; exclusions: string[]; dietFocus: string; preferences?: MealPreferences; trainingDayTargets?: boolean }
   | { type: 'set-photo'; photo: ProfilePhoto }
-  | { type: 'set-nutrition-plan'; plan: NutritionPlan }
-  | { type: 'set-meal-plan'; plan: SavedMealPlan | null }
   | { type: 'update-training-setup'; environment: Environment; equipment: Equipment[]; zones: Zone[] }
   | { type: 'complete-onboarding'; values: PersonalValues; exclusions: string[]; dietFocus: string; preferences: MealPreferences; onboarding: OnboardingRecord }
   | { type: 'reset' };
@@ -177,8 +175,6 @@ export function profileReducer(state: ProfileData, action: ProfileAction): Profi
     case 'update-nutrition': return { ...state, exclusions: action.exclusions, dietFocus: action.dietFocus, mealPreferences: action.preferences ?? state.mealPreferences,
       trainingDayTargets: action.trainingDayTargets ?? state.trainingDayTargets };
     case 'set-photo': return { ...state, photo: action.photo };
-    case 'set-nutrition-plan': return { ...state, nutritionPlan: action.plan };
-    case 'set-meal-plan': return { ...state, mealPlan: action.plan };
     case 'update-training-setup': {
       if (!state.onboarding) return state;
       const { environment, equipment, zones } = action;

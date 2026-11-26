@@ -28,9 +28,12 @@ const warningText: Record<Warning, string> = {
   'unspecified-sex': 'Sin sexo declarado usamos un promedio de la fórmula y el piso de seguridad más alto.',
 };
 
-type Props = { profile: ProfileData; onSave: (settings: GoalSettings, result: ReturnType<typeof calculateGoals>) => void; onEditProfile: () => void };
+type Props = {
+  profile: ProfileData; onSave: (settings: GoalSettings, result: ReturnType<typeof calculateGoals>) => void; onEditProfile: () => void;
+  error?: string | null; saving?: boolean;
+};
 
-export function NutritionGoalsScreen({ profile, onSave, onEditProfile }: Props) {
+export function NutritionGoalsScreen({ profile, onSave, onEditProfile, error, saving }: Props) {
   const [settings, setSettings] = useState(() => defaultSettings(profile));
   const person = goalPerson(profile);
 
@@ -98,7 +101,8 @@ export function NutritionGoalsScreen({ profile, onSave, onEditProfile }: Props) 
       Las calorías de tus entrenamientos no se suman a esta meta. Proteína y carbohidratos aportan 4 kcal por gramo; la grasa, 9.
       Valores de referencia pendientes de revisión profesional.
     </AppText>
-    <AppButton label="Guardar meta" icon="checkmark-outline" onPress={() => onSave(settings, result)} />
+    {!!error && <AppText accessibilityRole="alert" variant="caption">{error}</AppText>}
+    <AppButton label={saving ? 'Guardando…' : 'Guardar meta'} icon="checkmark-outline" disabled={saving} onPress={() => onSave(settings, result)} />
   </Screen>;
 }
 

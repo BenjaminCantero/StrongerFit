@@ -18,7 +18,7 @@ import { formatKcal, planMealLabels } from './presentation';
 
 type Props = {
   profile: ProfileData; targets: Nutrients | null; todayIndex: number;
-  onSave: (plan: SavedMealPlan) => void; onRegister: (day: number, meal: PlanSlot) => void;
+  onSave: (plan: SavedMealPlan) => void; onSwap: (plan: SavedMealPlan) => void; onRegister: (day: number, meal: PlanSlot) => void;
   onGoals: () => void; onProfile: () => void;
 };
 type Blocked = { meal: PlanSlot; role: keyof typeof roleLabels }[];
@@ -32,7 +32,7 @@ function Deviation({ label, value, ok }: { label: string; value: number; ok: boo
   </View>;
 }
 
-export function MealPlanScreen({ profile, targets, todayIndex, onSave, onRegister, onGoals, onProfile }: Props) {
+export function MealPlanScreen({ profile, targets, todayIndex, onSave, onSwap, onRegister, onGoals, onProfile }: Props) {
   const [proposal, setProposal] = useState<OpenMealPlan | null>(null);
   const [blocked, setBlocked] = useState<Blocked | null>(null);
   const [day, setDay] = useState(todayIndex);
@@ -58,7 +58,7 @@ export function MealPlanScreen({ profile, targets, todayIndex, onSave, onRegiste
     if (!plan || !swapping) return;
     const next = { ...applySwap(plan, day, swapping.meal, swapping.index, replacement), createdAt: plan.createdAt };
     // En la minuta guardada, elegir una opción es la confirmación del intercambio.
-    if (proposal) setProposal(next); else onSave(next);
+    if (proposal) setProposal(next); else onSwap(next);
     setNotice(`Cambiado por ${replacement.name}.`);
     setSwapping(null);
   }

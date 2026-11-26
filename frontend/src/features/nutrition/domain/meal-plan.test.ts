@@ -1,20 +1,18 @@
 import { describe, expect, it } from 'vitest';
 import { createProfilePreview } from '../../profile/data/profile.preview';
-import { profileReducer } from '../../profile/domain/profile';
 import { calculateGoals, defaultSettings, goalPerson } from './goals';
 import { mealEntry, noticeText, preferenceOptions, proposeMealPlan, trainingDayOption, weekdayIndex } from './meal-plan';
 
 const targets = { kcal: 2100, protein: 130, carbs: 220, fat: 60 };
 
 describe('minuta en la app', () => {
-  it('propone con las exclusiones del perfil y se guarda solo al aceptar', () => {
+  it('propone con las exclusiones del perfil y no toca la minuta guardada', () => {
     const profile = createProfilePreview(); // excluye gluten
     const result = proposeMealPlan(profile, targets, new Date('2026-10-31T12:00:00Z'));
     if (!result.ok) throw new Error('sin minuta');
     expect(result.plan.restrictions.tags).toEqual(['gluten']);
     expect(result.plan.createdAt).toBe('2026-10-31T12:00:00.000Z');
     expect(profile.mealPlan).toBeNull();
-    expect(profileReducer(profile, { type: 'set-meal-plan', plan: result.plan }).mealPlan).toBe(result.plan);
   });
 
   it('convierte una comida de la minuta en un registro del diario', () => {
