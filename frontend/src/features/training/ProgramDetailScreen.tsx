@@ -15,7 +15,7 @@ import { labels } from '../onboarding/domain/onboarding';
 import { MovementPictogram } from './components/MovementPictogram';
 import { focusLabels, signature } from './ProgramsScreen';
 
-type Props = { program: Program; input: PlanInput; hasPlan: boolean; active: boolean; onApply: (plan: Plan) => void };
+type Props = { program: Program; input: PlanInput; hasPlan: boolean; active: boolean; onApply: (plan: Plan) => void; error?: string | null };
 
 const name = (id: string) => exerciseById(id)?.name ?? id;
 function changeText(change: PlanChange) {
@@ -24,7 +24,7 @@ function changeText(change: PlanChange) {
 }
 const reps = (min: number, max: number) => min === max ? `${min}` : `${min}–${max}`;
 
-export function ProgramDetailScreen({ program, input, hasPlan, active, onApply }: Props) {
+export function ProgramDetailScreen({ program, input, hasPlan, active, onApply, error }: Props) {
   const [confirming, setConfirming] = useState(false);
   const fit = planFromProgram(program, input);
   const apply = () => { if (fit.ok) onApply(fit.plan); };
@@ -94,6 +94,7 @@ export function ProgramDetailScreen({ program, input, hasPlan, active, onApply }
 
     {fit.ok && <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.footer}>
       <View style={styles.footerContent}>
+        {!!error && <AppText accessibilityRole="alert" variant="caption">{error}</AppText>}
         {active
           ? <AppText variant="strong" tone="brand" style={styles.center}>Este es tu programa actual</AppText>
           : <AppButton label="Usar este programa" icon="checkmark-circle-outline" style={styles.confirm}

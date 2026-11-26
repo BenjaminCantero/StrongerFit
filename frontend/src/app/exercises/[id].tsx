@@ -2,11 +2,13 @@ import { contraindicated, exerciseById, weekdayLabels } from '@strongerfit/train
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ExerciseDetailScreen } from '../../features/training/ExerciseDetailScreen';
 import { useProfile } from '../../features/profile/useProfile';
+import { useUpdatePlanExercise } from '../../features/training/useTraining';
 
 export default function ExerciseDetailRoute() {
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { profile, dispatch } = useProfile();
+  const { profile } = useProfile();
+  const update = useUpdatePlanExercise();
   const exercise = exerciseById(id);
   const plan = profile.trainingPlan;
   const zones = profile.onboarding?.zones ?? [];
@@ -25,6 +27,7 @@ export default function ExerciseDetailRoute() {
     onOpen={(next) => router.push({ pathname: '/exercises/[id]', params: { id: next.id } })}
     onReplace={(target) => {
       const item = plan?.days[target.day]?.exercises[target.index];
-      if (item && exercise) dispatch({ type: 'update-plan-exercise', day: target.day, index: target.index, exercise: { ...item, exerciseId: exercise.id } });
+      const dayId = plan?.dayIds[target.day];
+      if (item && exercise && dayId) update.mutate({ dayId, index: target.index, exercise: { ...item, exerciseId: exercise.id } });
     }} />;
 }

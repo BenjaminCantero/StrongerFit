@@ -10,12 +10,14 @@ import { AppText } from '../../components/ui/AppText';
 import { Card } from '../../components/ui/Card';
 import { colors, layout, radius, spacing } from '../../theme';
 import { labels } from '../onboarding/domain/onboarding';
-import type { ProfileAction, ProfileData } from '../profile/domain/profile';
+import { dataErrorMessage, toDataError } from '../../lib/data/errors';
+import type { ProfileData } from '../profile/domain/profile';
 import { MovementPictogram } from './components/MovementPictogram';
 import { PlanExerciseEditor } from './components/PlanExerciseEditor';
 import type { SessionDraft } from './domain/draft';
 import { createPlan, estimatedMinutes } from './domain/plan';
 import { sessionSummary } from './domain/session';
+import { useSaveWorkoutPlan, useUpdatePlanExercise } from './useTraining';
 
 const reasons: Record<PlanChange['reason'], string> = { equipment: 'falta equipo', injury: 'zona con lesión declarada', time: 'no cabe en tu duración' };
 
@@ -38,28 +40,35 @@ function warningText(plan: Plan, warning: Plan['warnings'][number]) {
 }
 
 type Props = {
-  profile: ProfileData; dispatch: (action: ProfileAction) => void; onStart: (day: number) => void;
+  profile: ProfileData; onStart: (day: number) => void;
   draft: SessionDraft | null; onResume: () => void; onDiscard: () => void; onCatalog: () => void; onPrograms: () => void;
 };
 
-export function PlanScreen({ profile, dispatch, onStart, draft, onResume, onDiscard, onCatalog, onPrograms }: Props) {
+export function PlanScreen({ profile, onStart, draft, onResume, onDiscard, onCatalog, onPrograms }: Props) {
   const plan = profile.trainingPlan;
   const [selected, setSelected] = useState(0);
   const [editing, setEditing] = useState<number | null>(null);
   const [confirmRegenerate, setConfirmRegenerate] = useState(false);
   const [notice, setNotice] = useState('');
   const [confirmDiscard, setConfirmDiscard] = useState(false);
+  const savePlan = useSaveWorkoutPlan();
+  const updateExercise = useUpdatePlanExercise();
   const generate = () => {
     const next = createPlan(profile, new Date());
-    if (next) { dispatch({ type: 'set-training-plan', plan: next }); setSelected(0); setNotice('Rutina generada. Revísala y edítala antes de entrenar.'); }
     setConfirmRegenerate(false);
+    if (!next) return;
+    savePlan.mutate(next, {
+      onSuccess: () => { setSelected(0); setNotice('Rutina generada. Revísala y edítala antes de entrenar.'); },
+      onError: (error) => setNotice(dataErrorMessage(toDataError(error))),
+    });
   };
 
   if (!plan) return <Screen>
     <Card>
       <AppText variant="heading" accessibilityRole="header">Prepara tu rutina semanal</AppText>
       <AppText tone="muted">Usaremos tus días, minutos, equipamiento y perfil de deportista. Podrás editar cada ejercicio antes de entrenar.</AppText>
-      <AppButton label="Generar mi rutina" icon="sparkles-outline" onPress={generate} />
+      <AppButton label={savePlan.isPending ? 'Generando…' : 'Generar mi rutina'} icon="sparkles-outline" disabled={savePlan.isPending} onPress={generate} />
+      {!!notice && <AppText accessibilityRole="alert" variant="caption">{notice}</AppText>}
       <AppButton label="Elegir un programa clásico" icon="barbell-outline" variant="secondary" onPress={onPrograms} />
     </Card>
     <AppButton label="Ver catálogo de ejercicios" icon="library-outline" variant="secondary" onPress={onCatalog} />
@@ -163,7 +172,14 @@ export function PlanScreen({ profile, dispatch, onStart, draft, onResume, onDisc
     <AppDialog title="Editar ejercicio" visible={editing !== null} onClose={() => setEditing(null)}>
       {editing !== null && day.exercises[editing] && <PlanExerciseEditor item={day.exercises[editing]} equipment={plan.input.equipment} zones={plan.input.zones}
         onCancel={() => setEditing(null)}
-        onSave={(exercise) => { dispatch({ type: 'update-plan-exercise', day: selected, index: editing, exercise }); setEditing(null); setNotice('Ejercicio actualizado.'); }} />}
+        onSave={(exercise) => {
+          const dayId = plan.dayIds[selected];
+          if (!dayId) return;
+          updateExercise.mutate({ dayId, index: editing, exercise }, {
+            onSuccess: () => { setEditing(null); setNotice('Ejercicio actualizado.'); },
+            onError: (error) => setNotice(dataErrorMessage(toDataError(error))),
+          });
+        }} />}
     </AppDialog>
 
     <AppDialog title="¿Descartar la sesión en curso?" visible={confirmDiscard} onClose={() => setConfirmDiscard(false)}>

@@ -1,6 +1,7 @@
 import { DEFAULT_MEALS_PER_DAY, type MealPlan, type MealPreferences, type NutritionTargets, type StoredMealPlan } from '@strongerfit/nutrition-engine';
-import { environmentLabels, type Environment, type Equipment, type Plan, type PlannedExercise, type Zone } from '@strongerfit/training-engine';
+import { environmentLabels, type Environment, type Equipment, type Zone } from '@strongerfit/training-engine';
 import type { OnboardingRecord } from '../../onboarding/domain/onboarding';
+import type { StoredPlan } from '../../training/data/training.mappers';
 
 // Meta guardada con sus parámetros y versión de reglas (RF-19, RNF-08).
 export type NutritionPlan = { proteinPerKg: number; fatShare: number; result: NutritionTargets; savedAt: string };
@@ -25,7 +26,8 @@ export type ProfileData = {
   trainingDayTargets: boolean;
   onboarding: OnboardingRecord | null;
   nutritionPlan: NutritionPlan | null;
-  trainingPlan: (Plan & { createdAt: string }) | null;
+  // Rutina activa guardada en Supabase (SY-03).
+  trainingPlan: StoredPlan | null;
   mealPlan: SavedMealPlan | null;
   // Carga aceptada para la próxima sesión de cada ejercicio (BR-22).
   nextLoads: Record<string, number>;
@@ -56,12 +58,8 @@ export type ProfileAction =
   | { type: 'update-nutrition'; exclusions: string[]; dietFocus: string; preferences?: MealPreferences; trainingDayTargets?: boolean }
   | { type: 'set-photo'; photo: ProfilePhoto }
   | { type: 'set-nutrition-plan'; plan: NutritionPlan }
-  | { type: 'set-training-plan'; plan: Plan & { createdAt: string } }
   | { type: 'set-meal-plan'; plan: SavedMealPlan | null }
-  | { type: 'update-plan-exercise'; day: number; index: number; exercise: PlannedExercise }
   | { type: 'update-training-setup'; environment: Environment; equipment: Equipment[]; zones: Zone[] }
-  | { type: 'record-load-decision'; decision: LoadDecision }
-  | { type: 'consume-next-loads'; exerciseIds: string[] }
   | { type: 'complete-onboarding'; values: PersonalValues; exclusions: string[]; dietFocus: string; preferences: MealPreferences; onboarding: OnboardingRecord }
   | { type: 'reset' };
 
@@ -180,28 +178,12 @@ export function profileReducer(state: ProfileData, action: ProfileAction): Profi
       trainingDayTargets: action.trainingDayTargets ?? state.trainingDayTargets };
     case 'set-photo': return { ...state, photo: action.photo };
     case 'set-nutrition-plan': return { ...state, nutritionPlan: action.plan };
-    case 'set-training-plan': return { ...state, trainingPlan: action.plan };
     case 'set-meal-plan': return { ...state, mealPlan: action.plan };
-    case 'update-plan-exercise': {
-      const plan = state.trainingPlan;
-      if (!plan?.days[action.day]?.exercises[action.index]) return state;
-      return { ...state, trainingPlan: { ...plan, days: plan.days.map((day, dayIndex) => dayIndex !== action.day ? day
-        : { ...day, exercises: day.exercises.map((item, index) => index === action.index ? action.exercise : item) }) } };
-    }
     case 'update-training-setup': {
       if (!state.onboarding) return state;
       const { environment, equipment, zones } = action;
       return { ...state, equipment: environmentLabels[environment], onboarding: { ...state.onboarding, environment, equipment, zones } };
     }
-    case 'record-load-decision': {
-      const { decision } = action;
-      const nextLoads = { ...state.nextLoads };
-      if (decision.appliedKg !== null) nextLoads[decision.exerciseId] = decision.appliedKg;
-      else if (decision.decision === 'undone') delete nextLoads[decision.exerciseId];
-      return { ...state, nextLoads, loadDecisions: [...state.loadDecisions, decision] };
-    }
-    case 'consume-next-loads':
-      return { ...state, nextLoads: Object.fromEntries(Object.entries(state.nextLoads).filter(([id]) => !action.exerciseIds.includes(id))) };
     case 'complete-onboarding':
       return { ...state, ...action.values, exclusions: action.exclusions, dietFocus: action.dietFocus, mealPreferences: action.preferences, onboarding: action.onboarding };
     case 'reset': return createEmptyProfile();

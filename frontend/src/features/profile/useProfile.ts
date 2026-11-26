@@ -4,11 +4,12 @@ import { readValue, writeValue } from '../../storage/keyValue';
 import { createProfilePreview } from './data/profile.preview';
 import { createEmptyProfile, type ProfilePhoto } from './domain/profile';
 import { createProfileStore } from './state/profile-store';
+import { useActivePlan, useTrainingHistory } from '../training/useTraining';
 import { useIdentity } from './useIdentity';
 
 // La identidad (ficha, metas, preferencias, lesiones, cuestionario y consentimiento) viene de
-// Supabase (SY-02). Planes, minuta y cargas siguen en memoria hasta SY-03 y SY-04; en
-// desarrollo parten con datos de ejemplo.
+// Supabase (SY-02); la rutina y las cargas pendientes también (SY-03). Minuta y metas
+// nutricionales siguen en memoria hasta SY-04; en desarrollo parten con datos de ejemplo.
 const profileStore = createProfileStore(__DEV__ ? createProfilePreview() : createEmptyProfile());
 
 // La foto de perfil es un archivo local: solo su referencia se guarda en el teléfono.
@@ -26,7 +27,17 @@ export function useProfile(empty = false) {
   const [emptyStore] = useState(() => createProfileStore(createEmptyProfile()));
   const local = useStore(empty ? emptyStore : profileStore);
   const identity = useIdentity();
-  const profile = useMemo(() => !empty && identity.data ? { ...local.profile, ...identity.data } : local.profile, [empty, identity.data, local.profile]);
+  const plan = useActivePlan();
+  const history = useTrainingHistory();
+  const profile = useMemo(() => {
+    if (empty || !identity.data) return local.profile;
+    return {
+      ...local.profile, ...identity.data,
+      // SY-03: rutina y cargas pendientes vienen del servidor cuando ya respondió.
+      ...(plan.isSuccess ? { trainingPlan: plan.data } : {}),
+      ...(history.isSuccess ? { nextLoads: history.data.nextLoads } : {}),
+    };
+  }, [empty, identity.data, local.profile, plan.isSuccess, plan.data, history.isSuccess, history.data]);
   return { profile, dispatch: local.dispatch, identity };
 }
 

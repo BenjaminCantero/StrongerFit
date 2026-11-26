@@ -25,8 +25,11 @@ export const createProfilePreview = (): ProfileData => ({
   },
   nutritionPlan: null,
   mealPlan: null,
-  trainingPlan: { ...generatePlan({ days: 4, minutes: 50, environment: 'small-gym', equipment: ['bodyweight', 'dumbbells', 'barbell'],
-    level: 'intermediate', zones: [] }), createdAt: '2026-10-01T12:00:00.000Z' },
+  trainingPlan: (() => {
+    const plan = generatePlan({ days: 4, minutes: 50, environment: 'small-gym', equipment: ['bodyweight', 'dumbbells', 'barbell'],
+      level: 'intermediate', zones: [] });
+    return { ...plan, id: 'preview', createdAt: '2026-10-01T12:00:00.000Z', dayIds: plan.days.map((_, index) => `preview-${index}`) };
+  })(),
   nextLoads: {},
   loadDecisions: [],
 });

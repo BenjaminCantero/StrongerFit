@@ -1,4 +1,3 @@
-import { LOAD_RULE_VERSION } from '@strongerfit/training-engine';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, View } from 'react-native';
@@ -10,13 +9,15 @@ import type { SessionDraft } from '../features/training/domain/draft';
 import { sessionFromDay } from '../features/training/domain/plan';
 import type { SessionState } from '../features/training/domain/session';
 import { loadSessionDraft, persistSessionDraft } from '../features/training/useSessionDraft';
+import { useRecordLoadDecision } from '../features/training/useTraining';
 import { todayDateKey } from '../shared/calendar';
 import { colors } from '../theme';
 
 export default function SessionRoute() {
   const router = useRouter();
   const { day, preview, resume } = useLocalSearchParams<{ day?: string; preview?: string; resume?: string }>();
-  const { profile, dispatch } = useProfile();
+  const { profile } = useProfile();
+  const decide = useRecordLoadDecision();
   const [draft, setDraft] = useState<SessionDraft | null | undefined>(undefined);
   const requested: SessionDraft['source'] = __DEV__ && preview === 'sample' ? { kind: 'sample' } : { kind: 'plan', day: Number(day) || 0 };
 
@@ -48,11 +49,8 @@ export default function SessionRoute() {
     restored={draft ? { sessionId: draft.sessionId, state: draft.state } : undefined}
     onExit={() => router.navigate('/')} onViewHistory={() => router.navigate('/progress')}
     zones={profile.onboarding?.zones ?? []}
-    onLoadDecision={sample ? undefined : (decision) => dispatch({ type: 'record-load-decision',
-      decision: { ...decision, at: new Date().toISOString(), ruleVersion: LOAD_RULE_VERSION } })}
+    onLoadDecision={sample ? undefined : (decision) => decide.mutate(decision)}
     onRecord={(record) => {
       progressStore.getState().dispatch({ type: 'record-workout', record });
-      // La carga aceptada ya quedó en el historial; desde aquí manda el historial (BR-22).
-      dispatch({ type: 'consume-next-loads', exerciseIds: record.exercises.map((item) => item.exerciseId) });
     }} />;
 }

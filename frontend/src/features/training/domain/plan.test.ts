@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { createProfilePreview } from '../../profile/data/profile.preview';
-import { createEmptyProfile, profileReducer } from '../../profile/domain/profile';
+import { createEmptyProfile } from '../../profile/domain/profile';
 import type { WorkoutRecord } from '../../progress/domain/progress';
 import { createPlan, exerciseHistory, sessionFromDay } from './plan';
 import { createSession, sessionRecord, sessionReducer } from './session';
@@ -19,15 +19,6 @@ describe('plan semanal en el perfil', () => {
     const template = sessionFromDay(day);
     expect(template.exercises.map((item) => item.sets.length)).toEqual(day.exercises.map((item) => item.sets));
     expect(() => createSession(template, 0)).not.toThrow();
-  });
-
-  it('edita un ejercicio del plan sin tocar los demás', () => {
-    const profile = createProfilePreview();
-    const exercise = { ...profile.trainingPlan!.days[1]!.exercises[0]!, sets: 2 };
-    const next = profileReducer(profile, { type: 'update-plan-exercise', day: 1, index: 0, exercise });
-    expect(next.trainingPlan!.days[1]!.exercises[0]!.sets).toBe(2);
-    expect(next.trainingPlan!.days[0]).toBe(profile.trainingPlan!.days[0]);
-    expect(profileReducer(profile, { type: 'update-plan-exercise', day: 9, index: 0, exercise })).toBe(profile);
   });
 });
 
