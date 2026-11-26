@@ -10,7 +10,7 @@ import { sessionSummary, type SessionState } from '../features/training/domain/s
 import { sessionPayload } from '../features/training/data/training.mappers';
 import { usePendingSession } from '../features/training/usePendingSession';
 import { loadSessionDraft, persistSessionDraft } from '../features/training/useSessionDraft';
-import { useRecordLoadDecision, useTrainingHistory } from '../features/training/useTraining';
+import { useRecordLoadDecision, useSaveTimerPreset, useTimerPresets, useTrainingHistory } from '../features/training/useTraining';
 import { isUuid } from '../lib/data/ids';
 import { todayDateKey } from '../shared/calendar';
 import { colors } from '../theme';
@@ -21,6 +21,8 @@ export default function SessionRoute() {
   const { profile } = useProfile();
   const history = useTrainingHistory();
   const decide = useRecordLoadDecision();
+  const timers = useTimerPresets();
+  const saveTimer = useSaveTimerPreset();
   const { submit } = usePendingSession();
   const [draft, setDraft] = useState<SessionDraft | null | undefined>(undefined);
   const requested: SessionDraft['source'] = __DEV__ && preview === 'sample' ? { kind: 'sample' } : { kind: 'plan', day: Number(day) || 0 };
@@ -58,6 +60,9 @@ export default function SessionRoute() {
     onExit={() => router.navigate('/')} onViewHistory={() => router.navigate('/progress')}
     zones={profile.onboarding?.zones ?? []}
     onLoadDecision={sample ? undefined : (decision) => decide.mutate(decision)}
+    // Recordar el intervalo es una comodidad: si falla, no se interrumpe la sesión.
+    timerPresets={timers.data}
+    onTimerPreset={sample ? undefined : (exerciseId, restSeconds, spec) => saveTimer.mutate({ exerciseId, restSeconds, spec })}
     onRecord={(record, state) => {
       if (sample) return;
       // El plan de ejemplo de desarrollo no tiene ids reales: la sesión se envía sin vínculo.

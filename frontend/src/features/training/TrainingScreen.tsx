@@ -22,7 +22,7 @@ import type { WorkoutRecord } from '../progress/domain/progress';
 import { useTrainingSession } from './useTrainingSession';
 import { isUuid, newClientId } from '../../lib/data/ids';
 import { useTimerAlert } from './timerAlerts';
-import { pauseTimer, type TimerRun } from './domain/timers';
+import { pauseTimer, type TimerRun, type TimerSpec } from './domain/timers';
 
 type SessionRecord = NonNullable<ReturnType<typeof sessionRecord>>;
 type Props = {
@@ -36,6 +36,8 @@ type Props = {
   previous?: WorkoutRecord[];
   zones?: Zone[];
   onLoadDecision?: (decision: OverloadDecision) => void;
+  timerPresets?: Record<string, TimerSpec>;
+  onTimerPreset?: (exerciseId: string, restSeconds: number, spec: TimerSpec) => void;
 };
 
 export function TrainingScreen({ template, ...actions }: Props) {
@@ -52,7 +54,7 @@ export function TrainingScreen({ template, ...actions }: Props) {
   return <TrainingSession template={template} {...actions} />;
 }
 
-function TrainingSession({ template, sample = false, restored, onPersist, onExit, onViewHistory, onRecord, previous, zones = [], onLoadDecision }: Props & { template: SessionTemplate }) {
+function TrainingSession({ template, sample = false, restored, onPersist, onExit, onViewHistory, onRecord, previous, zones = [], onLoadDecision, timerPresets, onTimerPreset }: Props & { template: SessionTemplate }) {
   // Historial previo a esta sesión: los récords se comparan contra él, no contra la sesión recién registrada.
   const [before] = useState(() => previous ?? []);
   const { state, exercise, elapsedSeconds, restSeconds, send } = useTrainingSession(template, restored?.state);
@@ -115,7 +117,9 @@ function TrainingSession({ template, sample = false, restored, onPersist, onExit
       <ExerciseCard key={exercise.id} exercise={exercise} paused={paused} onDetails={() => setDialog('details')}
         onAddSet={() => send({ type: 'add-set' })}
         onComplete={(setId, weightKg, reps, reserve) => send({ type: 'complete-set', exerciseId: exercise.id, setId, weightKg, reps, reserve, now: Date.now() })} />
-      <ExerciseTimer exercise={exercise} paused={paused} run={timerRun} setRun={setTimerRun} />
+      <ExerciseTimer exercise={exercise} paused={paused} run={timerRun} setRun={setTimerRun}
+        preset={exercise.exerciseId ? timerPresets?.[exercise.exerciseId] : undefined}
+        onIntervalStart={exercise.exerciseId && onTimerPreset ? (spec) => onTimerPreset(exercise.exerciseId!, exercise.restSeconds, spec) : undefined} />
       <RestTimer seconds={restSeconds} durationSeconds={state.rest.durationMs / 1000} paused={paused}
         onAdd={() => send({ type: 'add-rest', now: Date.now() })} onSkip={() => send({ type: 'skip-rest' })} />
       {next ? <Card style={styles.nextCard}>

@@ -16,10 +16,14 @@ import { useTimerAlert } from '../timerAlerts';
 
 const phaseLabel = { hold: 'Sostén', work: 'Trabajo', rest: 'Descanso', done: 'Terminado' } as const;
 
-type Props = { exercise: SessionExercise; paused: boolean; run: TimerRun | null; setRun: (update: (current: TimerRun | null) => TimerRun | null) => void };
+type Props = {
+  exercise: SessionExercise; paused: boolean; run: TimerRun | null; setRun: (update: (current: TimerRun | null) => TimerRun | null) => void;
+  // Último intervalo usado en este ejercicio (RF-25) y aviso para recordarlo.
+  preset?: TimerSpec; onIntervalStart?: (spec: TimerSpec) => void;
+};
 
 // El estado vive en la sesión: pausarla también pausa este temporizador.
-export function ExerciseTimer({ exercise, paused, run, setRun }: Props) {
+export function ExerciseTimer({ exercise, paused, run, setRun, preset, onIntervalStart }: Props) {
   const [now, setNow] = useState(Date.now);
   const [configuring, setConfiguring] = useState(false);
   const running = run?.startedAtMs != null;
@@ -71,13 +75,14 @@ export function ExerciseTimer({ exercise, paused, run, setRun }: Props) {
     </AppText>
 
     <AppDialog title="Intervalos" visible={configuring} onClose={() => setConfiguring(false)}>
-      <IntervalForm onCancel={() => setConfiguring(false)} onStart={(spec) => { setConfiguring(false); start(spec); }} />
+      <IntervalForm initial={preset} onCancel={() => setConfiguring(false)} onStart={(spec) => { setConfiguring(false); onIntervalStart?.(spec); start(spec); }} />
     </AppDialog>
   </Card>;
 }
 
-function IntervalForm({ onStart, onCancel }: { onStart: (spec: TimerSpec) => void; onCancel: () => void }) {
-  const initial = defaultInterval.kind === 'interval' ? defaultInterval : null!;
+function IntervalForm({ initial: saved, onStart, onCancel }: { initial?: TimerSpec; onStart: (spec: TimerSpec) => void; onCancel: () => void }) {
+  const fallback = defaultInterval.kind === 'interval' ? defaultInterval : null!;
+  const initial = saved?.kind === 'interval' ? saved : fallback;
   const [form, setForm] = useState({ work: String(initial.workSeconds), rest: String(initial.restSeconds), rounds: String(initial.rounds) });
   const [error, setError] = useState('');
   const field = (name: keyof typeof form) => ({ value: form[name], onChange: (value: string) => { setForm((current) => ({ ...current, [name]: value })); setError(''); } });
