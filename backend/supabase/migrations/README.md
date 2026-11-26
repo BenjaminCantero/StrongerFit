@@ -10,6 +10,7 @@ Esquema versionado de Supabase (RNF-12). El diseño completo está en
 | `20261124000003_training.sql` | DB-02 | planes, días, ejercicios, sesiones, series, cargas, temporizadores, `submit_session()` |
 | `20261124000004_nutrition_progress.sql` | DB-03 | metas nutricionales, registro alimentario, minuta, mediciones, objetivo de peso, `data_requests` |
 | `20261124000005_complete_onboarding.sql` | AU-01 | RPC `complete_onboarding()` atómica e idempotente; `EXECUTE` revocado a `anon` |
+| `20261126000006_save_workout_plan.sql` | SY-03 | RPC `save_workout_plan()` atómica: archiva el plan activo e inserta el nuevo con días, ejercicios y traza |
 
 ## Convenciones
 

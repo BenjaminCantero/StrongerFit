@@ -414,6 +414,9 @@ isOneToOne: false
 "has_health_risk":
 { Args: Record<PropertyKey, never>; Returns: boolean
                            },
+"save_workout_plan":
+{ Args: { "payload": Json }; Returns: string
+                           },
 "submit_session":
 { Args: { "payload": Json }; Returns: string
                            }
