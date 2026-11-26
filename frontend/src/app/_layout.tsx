@@ -58,6 +58,14 @@ export default function RootLayout() {
   );
 }
 
+// Pantalla de entrada según el acceso: '/' está protegida y no lleva a Bienvenida sin sesión.
+function homeFor(access: ReturnType<typeof routeAccess>) {
+  if (access === 'signed-out') return '/welcome' as const;
+  if (access === 'needs-onboarding') return '/onboarding' as const;
+  if (access === 'needs-consent') return '/consent' as const;
+  return '/' as const;
+}
+
 // AU-01: sin sesión, Bienvenida y Cuenta; con sesión, onboarding o consentimiento si faltan;
 // el resto solo con la cuenta lista. Stack.Protected redirige cuando cambia el estado.
 function AppStack({ configured, userId }: { configured: boolean; userId: string | null }) {
@@ -130,7 +138,9 @@ function AppStack({ configured, userId }: { configured: boolean; userId: string 
           header: ({ options }) => <AppHeader title={options.title ?? 'Ficha del ejercicio'}
             backLabel="Volver" onBack={() => router.canGoBack() ? router.back() : router.navigate('/exercises')} /> }} />
       </Stack.Protected>
-      <Stack.Screen name="dev-status" options={{ headerShown: true, title: 'Conexión de desarrollo' }} />
+      <Stack.Screen name="dev-status" options={{ headerShown: true, title: 'Conexión de desarrollo',
+        header: ({ options }) => <AppHeader title={options.title ?? 'Conexión de desarrollo'}
+          backLabel="Volver" onBack={() => router.canGoBack() ? router.back() : router.replace(homeFor(access))} /> }} />
     </Stack>
   );
 }
