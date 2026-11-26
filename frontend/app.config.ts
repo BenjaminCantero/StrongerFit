@@ -13,7 +13,7 @@ const variantConfig = isDevelopment
 // ID del proyecto EAS: pegar aquí el ID que imprime `npx eas-cli@27.11.0 init`
 // (ver docs/operations/builds.md). No es secreto. `.env` no entra a los builds
 // locales, por eso va en el código; EAS_PROJECT_ID en el entorno tiene prioridad.
-const EAS_PROJECT_ID = '';
+const EAS_PROJECT_ID = '7dec98a1-f1f5-4526-aadf-edf2679a6406';
 const easProjectId = process.env.EAS_PROJECT_ID ?? EAS_PROJECT_ID;
 
 const config: ExpoConfig = {
