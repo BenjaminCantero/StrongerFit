@@ -15,6 +15,7 @@
     "lint": "npm run lint --workspaces --if-present",
     "test": "vitest run --coverage",
     "check": "npm run typecheck && npm run lint && npm test",
+    "scan:bundle": "node scripts/scan-bundle.mjs frontend/dist",
     "supabase:start": "supabase start --workdir backend",
     "supabase:stop": "supabase stop --workdir backend",
     "supabase:serve": "supabase functions serve api --workdir backend",

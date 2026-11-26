@@ -1,19 +1,19 @@
 import { useMemo, useState } from 'react';
 import { useStore } from 'zustand';
 import { readValue, writeValue } from '../../storage/keyValue';
-import { createProfilePreview } from './data/profile.preview';
 import { createEmptyProfile, type ProfilePhoto } from './domain/profile';
 import { createProfileStore } from './state/profile-store';
 import { useMealPlan, useNutritionPlan } from '../nutrition/useNutrition';
 import { useActivePlan, useTrainingHistory } from '../training/useTraining';
 import { usePreviewMode } from '../dev/previewMode';
+import { devPreview } from '../dev/devPreview';
 import { useIdentity } from './useIdentity';
 
 // La identidad (ficha, metas, preferencias, lesiones, cuestionario y consentimiento) viene de
 // Supabase (SY-02); la rutina y las cargas pendientes (SY-03), y la meta nutricional y la
 // minuta (SY-04), también. Los datos de ejemplo solo se ven con el modo vista previa.
 const profileStore = createProfileStore(createEmptyProfile());
-const previewProfile = createProfilePreview();
+const previewProfile = devPreview()?.createProfilePreview() ?? null;
 
 // La foto de perfil es un archivo local: solo su referencia se guarda en el teléfono.
 const PHOTO_KEY = 'profile-photo';
@@ -36,7 +36,7 @@ export function useProfile(empty = false) {
   const meals = useMealPlan();
   const history = useTrainingHistory();
   const profile = useMemo(() => {
-    if (preview && !empty) return { ...previewProfile, photo: local.profile.photo };
+    if (preview && previewProfile && !empty) return { ...previewProfile, photo: local.profile.photo };
     if (empty || !identity.data) return local.profile;
     return {
       ...local.profile, ...identity.data,

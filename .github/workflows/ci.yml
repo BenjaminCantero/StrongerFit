@@ -22,6 +22,8 @@ jobs:
       - run: npm run check
       - run: npx expo export --platform android --platform web
         working-directory: frontend
+      # El bundle de producción no lleva datos de ejemplo, IDs de tarea ni pantallas de desarrollo (CA-30).
+      - run: npm run scan:bundle
 
   database:
     runs-on: ubuntu-latest

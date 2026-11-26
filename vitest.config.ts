@@ -2,7 +2,7 @@ import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   test: {
-    include: ['backend/tests/**/*.test.ts', 'packages/**/*.test.ts', 'frontend/src/**/*.test.ts'],
+    include: ['backend/tests/**/*.test.ts', 'packages/**/*.test.ts', 'frontend/src/**/*.test.ts', 'scripts/**/*.test.mjs'],
     exclude: ['**/node_modules/**', '**/*.integration.test.ts'],
     environment: 'node',
     clearMocks: true,
@@ -13,7 +13,12 @@ export default defineConfig({
       include: ['packages/*/src/**/*.ts'],
       exclude: ['**/*.test.ts', 'packages/contracts/src/database.types.ts'],
       reporter: ['text-summary'],
-      thresholds: { statements: 80, branches: 80, functions: 80, lines: 80 },
+      // CA-07: cada motor cumple el mínimo por separado, además del total.
+      thresholds: {
+        statements: 80, branches: 80, functions: 80, lines: 80,
+        'packages/training-engine/src/**': { statements: 80, branches: 80, functions: 80, lines: 80 },
+        'packages/nutrition-engine/src/**': { statements: 80, branches: 80, functions: 80, lines: 80 },
+      },
     },
   },
 });

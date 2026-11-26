@@ -7,7 +7,8 @@ import { authErrorMessage, type AuthForm, type AuthMode, type AuthResult } from 
 export * from './domain';
 
 // RF-01: cuenta con Supabase Auth. Sin claves configuradas la app sigue funcionando solo en el dispositivo.
-export const isAuthConfigured = () => !!process.env.EXPO_PUBLIC_SUPABASE_URL && !!process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
+export const isAuthConfigured = () => !!process.env.EXPO_PUBLIC_SUPABASE_URL && !!process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY
+  && !!apiUrl;
 
 export async function submitAuth(mode: AuthMode, form: AuthForm): Promise<AuthResult> {
   const auth = getSupabase().auth;

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { catalog, difficultyLabels, equipmentLabels, muscleLabels, searchExercises, zoneLabels } from './catalog';
+import { CATALOG_SOURCE, CATALOG_VERSION, catalog, difficultyLabels, equipmentLabels, muscleLabels, searchExercises, zoneLabels } from './catalog';
 
 describe('catálogo de ejercicios', () => {
   it('tiene al menos 100 ejercicios con identificadores y nombres únicos (CA-24)', () => {
@@ -21,6 +21,26 @@ describe('catálogo de ejercicios', () => {
       expect(zones === 'none-validated' || (zones.length > 0 && zones.every((zone) => zone in zoneLabels)), exercise.id).toBe(true);
       expect(exercise.measure === 'duration', exercise.id).toBe(exercise.kind === 'isometric');
     }
+  });
+
+  it('patrón, tipo y sustitutos son válidos (SRS 8.11)', () => {
+    const ids = new Set(catalog.map((exercise) => exercise.id));
+    const patterns = ['squat', 'hinge', 'lunge', 'push-h', 'push-v', 'pull-h', 'pull-v', 'core', 'arms', 'calves'];
+    for (const exercise of catalog) {
+      expect(patterns, exercise.id).toContain(exercise.pattern);
+      expect(['compound', 'isolation', 'isometric'], exercise.id).toContain(exercise.kind);
+      expect(new Set(exercise.substitutes).size, exercise.id).toBe(exercise.substitutes.length);
+      expect(exercise.substitutes, exercise.id).not.toContain(exercise.id);
+      expect(exercise.substitutes.every((id) => ids.has(id)), exercise.id).toBe(true);
+    }
+  });
+
+  it('declara versión, fuente, licencia, fecha y estado de revisión (RNF-28)', () => {
+    expect(CATALOG_VERSION).toMatch(/^catalogo-\d+\.\d+$/);
+    expect(CATALOG_SOURCE.source.length).toBeGreaterThan(0);
+    expect(CATALOG_SOURCE.license.length).toBeGreaterThan(0);
+    expect(CATALOG_SOURCE.date).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    expect(typeof CATALOG_SOURCE.reviewed).toBe('boolean');
   });
 
   it('busca por nombre sin tildes y filtra por músculo, equipo y dificultad (RF-04)', () => {

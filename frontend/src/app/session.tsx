@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import { useProfile } from '../features/profile/useProfile';
 import { TrainingScreen } from '../features/training/TrainingScreen';
-import { sessionPreview } from '../features/training/data/session.preview';
+import { devPreview } from '../features/dev/devPreview';
 import type { SessionDraft } from '../features/training/domain/draft';
 import { sessionFromDay } from '../features/training/domain/plan';
 import { sessionSummary, type SessionState } from '../features/training/domain/session';
@@ -53,7 +53,7 @@ export default function SessionRoute() {
   const plan = profile.trainingPlan;
   const planDay = source.kind === 'plan' ? plan?.days[source.day] : undefined;
   // La sesión de ejemplo con historial solo existe en desarrollo.
-  const template = sample ? (__DEV__ ? sessionPreview : null)
+  const template = sample ? (devPreview()?.sessionPreview ?? null)
     : planDay ? sessionFromDay(planDay, workouts, todayDateKey(), profile.nextLoads) : null;
   return <TrainingScreen template={template} sample={sample} onPersist={persist} previous={workouts}
     restored={draft ? { sessionId: draft.sessionId, state: draft.state } : undefined}

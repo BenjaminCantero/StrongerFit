@@ -138,9 +138,9 @@ function AppStack({ configured, userId }: { configured: boolean; userId: string 
           header: ({ options }) => <AppHeader title={options.title ?? 'Ficha del ejercicio'}
             backLabel="Volver" onBack={() => router.canGoBack() ? router.back() : router.navigate('/exercises')} /> }} />
       </Stack.Protected>
-      <Stack.Screen name="dev-status" options={{ headerShown: true, title: 'Conexión de desarrollo',
+      {__DEV__ ? <Stack.Screen name="dev-status" options={{ headerShown: true, title: 'Conexión de desarrollo',
         header: ({ options }) => <AppHeader title={options.title ?? 'Conexión de desarrollo'}
-          backLabel="Volver" onBack={() => router.canGoBack() ? router.back() : router.replace(homeFor(access))} /> }} />
+          backLabel="Volver" onBack={() => router.canGoBack() ? router.back() : router.replace(homeFor(access))} /> }} /> : null}
     </Stack>
   );
 }

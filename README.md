@@ -105,7 +105,11 @@ npm run db:test            # migraciones desde cero, lint de SQL y pgTAP
 npm run test:integration   # repositorios contra Supabase local (RLS real)
 ```
 
-GitHub Actions repite los controles, aplica las migraciones desde cero y corre las pruebas
+Para revisar el bundle de producción (CA-30): `cd frontend && npm run export`, y luego
+`npm run scan:bundle` desde la raíz. Falla si encuentra datos de ejemplo, IDs de tarea, la
+pantalla de desarrollo o direcciones locales del backend.
+
+GitHub Actions repite los controles, exporta y escanea el bundle, aplica las migraciones desde cero y corre las pruebas
 de RLS.
 
 ## Documentación
