@@ -16,7 +16,7 @@ export function ExerciseDetails({ exercise, onClose }: { exercise: SessionExerci
         <AppText variant="strong">Puntos clave de ejecución</AppText>
         {exercise.technique.length ? <>
           {exercise.technique.map((point) => <AppText key={point}>{point}</AppText>)}
-          <AppText variant="caption" tone="muted">Contenido de ejemplo pendiente de revisión profesional.</AppText>
+          <AppText variant="caption" tone="muted">Indicaciones provisionales, pendientes de revisión profesional. Detente si sientes dolor.</AppText>
         </> : <AppText tone="muted">Aún no hay indicaciones de técnica revisadas para este ejercicio. Muévete con control y detente si aparece dolor.</AppText>}
       </View>
       <View style={styles.history}>

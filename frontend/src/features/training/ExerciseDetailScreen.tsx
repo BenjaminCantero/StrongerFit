@@ -1,6 +1,6 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import {
-  CATALOG_SOURCE, CATALOG_VERSION, catalog, difficultyLabels, equipmentLabels, measureLabels, muscleLabels, zoneLabels, type Exercise,
+  CATALOG_SOURCE, CATALOG_VERSION, catalog, difficultyLabels, equipmentLabels, measureLabels, muscleLabels, techniqueFor, zoneLabels, type Exercise,
 } from '@strongerfit/training-engine';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
@@ -36,6 +36,7 @@ export function ExerciseDetailScreen({ exercise, onOpen, targets, blocked, onRep
   </Screen>;
 
   const zones = exercise.contraindications;
+  const technique = techniqueFor(exercise.id);
   const similar = exercise.substitutes.slice(0, 4).map((id) => catalog.find((item) => item.id === id)!);
   return <Screen>
     <MovementPictogram pattern={exercise.pattern} size={132} style={styles.hero} />
@@ -44,6 +45,12 @@ export function ExerciseDetailScreen({ exercise, onOpen, targets, blocked, onRep
       <AppText variant="title" accessibilityRole="header">{exercise.name}</AppText>
       <AppText tone="muted">{exercise.description}</AppText>
     </View>
+
+    {technique.length > 0 && <Card>
+      <AppText variant="header" accessibilityRole="header">Puntos clave de ejecución</AppText>
+      {technique.map((point) => <AppText key={point}>{point}</AppText>)}
+      <AppText variant="caption" tone="muted">Indicaciones provisionales, pendientes de revisión profesional. Detente si sientes dolor.</AppText>
+    </Card>}
 
     <Card>
       <View style={styles.facts}>

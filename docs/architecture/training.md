@@ -130,3 +130,11 @@ Pendiente: las reglas propias de cada programa (porcentajes de 5/3/1, etapas de
 GZCLP, rampa semanal de Madcow) solo están en las notas; la sugerencia de carga
 sigue usando la doble progresión. En 5/3/1 la serie principal y la BBB comparten
 historial porque se identifican por ejercicio.
+
+## Indicaciones de técnica
+
+- Origen: `packages/training-engine/src/technique.ts` contiene, para los 120 ejercicios del catálogo, de 3 a 4 indicaciones cortas de elaboración propia (sin contenido de terceros, BR-26). Cada lista sigue el orden posición inicial, ejecución, respiración o ritmo, y error a evitar o señal para detenerse.
+- Versión `tecnica-0.1` (`TECHNIQUE_VERSION`) y procedencia en `TECHNIQUE_SOURCE`, con `reviewed: false`: son provisionales y están marcadas como pendientes de revisión profesional.
+- `techniqueFor(id)` devuelve las indicaciones o una lista vacía. La sesión las toma en `sessionFromDay` (`technique`) y la ficha del catálogo (`exercises/[id]`) las muestra bajo «Puntos clave de ejecución» con la nota provisional.
+- Las pruebas de `technique.test.ts` exigen cobertura total del catálogo, de 3 a 4 indicaciones, sin duplicados ni vacías y un máximo de 110 caracteres.
+- CO-02 (revisión del entrenador o kinesiólogo) las reemplaza o ajusta; al aprobarlas se sube la versión y `reviewed` pasa a `true`, y se retira la nota provisional de la interfaz.

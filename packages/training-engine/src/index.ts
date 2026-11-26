@@ -5,6 +5,7 @@ import {
 } from './templates';
 
 export * from './catalog';
+export * from './technique';
 export * from './loads';
 export * from './templates';
 export * from './programs';

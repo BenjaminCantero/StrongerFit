@@ -1,4 +1,4 @@
-import { estimatedMinutes as minutesFor, exerciseById, generatePlan, loadStep, type Plan, type PlanDay } from '@strongerfit/training-engine';
+import { estimatedMinutes as minutesFor, exerciseById, generatePlan, loadStep, techniqueFor, type Plan, type PlanDay } from '@strongerfit/training-engine';
 import type { ProfileData } from '../../profile/domain/profile';
 import type { WorkoutRecord } from '../../progress/domain/progress';
 import { topSet } from '../../progress/domain/records';
@@ -54,7 +54,7 @@ export function sessionFromDay(day: PlanDay, workouts: WorkoutRecord[] = [], tod
       return {
         id: `${item.exerciseId}-${index}`, exerciseId: item.exerciseId, name: exercise.name, muscleGroup: exercise.muscleGroup,
         restSeconds: item.restSeconds, measure: exercise.measure, repsMax: item.repsMax, loadStep: loadStep(exercise),
-        technique: [], history: history.map(({ all: _all, ...entry }) => entry),
+        technique: techniqueFor(item.exerciseId), history: history.map(({ all: _all, ...entry }) => entry),
         ...(exercise.kind === 'isometric' ? { timer: { kind: 'hold' as const, seconds: item.repsMax } } : {}),
         ...(item.tempo ? { tempo: item.tempo } : {}),
         sets: Array.from({ length: item.sets }, (_, set) => ({ id: set + 1, weightKg: load(set), reps: item.repsMax, completed: false,

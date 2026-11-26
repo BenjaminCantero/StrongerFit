@@ -1,3 +1,4 @@
+import { techniqueFor } from '@strongerfit/training-engine';
 import { describe, expect, it } from 'vitest';
 import { createProfilePreview } from '../../profile/data/profile.preview';
 import { createEmptyProfile } from '../../profile/domain/profile';
@@ -19,6 +20,13 @@ describe('plan semanal en el perfil', () => {
     const template = sessionFromDay(day);
     expect(template.exercises.map((item) => item.sets.length)).toEqual(day.exercises.map((item) => item.sets));
     expect(() => createSession(template, 0)).not.toThrow();
+  });
+
+  it('incluye las indicaciones de técnica provisionales de cada ejercicio', () => {
+    const day = createProfilePreview().trainingPlan!.days[0]!;
+    const template = sessionFromDay(day);
+    expect(template.exercises.map((item) => item.technique)).toEqual(day.exercises.map((item) => techniqueFor(item.exerciseId)));
+    expect(template.exercises.every((item) => item.technique.length >= 3)).toBe(true);
   });
 });
 
