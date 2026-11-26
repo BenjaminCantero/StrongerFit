@@ -4,7 +4,7 @@ import type { OnboardingRecord } from '../../onboarding/domain/onboarding';
 import type { StoredPlan } from '../../training/data/training.mappers';
 
 // Meta guardada con sus parámetros y versión de reglas (RF-19, RNF-08).
-export type NutritionPlan = { proteinPerKg: number; fatShare: number; result: NutritionTargets; savedAt: string };
+export type NutritionPlan = { id?: string; proteinPerKg: number; fatShare: number; result: NutritionTargets; savedAt: string };
 
 export type ProfilePhoto = { uri: string } | 'preview' | null;
 
@@ -35,7 +35,7 @@ export type ProfileData = {
 };
 
 // Puede venir de una versión anterior de reglas; se abre con readMealPlan.
-export type SavedMealPlan = StoredMealPlan & { createdAt: string };
+export type SavedMealPlan = StoredMealPlan & { createdAt: string; id?: string };
 // Minuta con las reglas vigentes: la que se genera o la que readMealPlan abrió.
 export type OpenMealPlan = MealPlan & { createdAt: string };
 

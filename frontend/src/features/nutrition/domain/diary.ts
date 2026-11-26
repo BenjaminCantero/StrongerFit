@@ -2,7 +2,8 @@ import { isMealId, sumNutrients, type FoodEntry, type MealId, type Nutrients } f
 import { isDateKey, todayDateKey } from '../../../shared/calendar';
 export { isDateKey, shiftDate, todayDateKey } from '../../../shared/calendar';
 
-export type DiaryEntry = FoodEntry & { date: string };
+// entryId: id del registro en la base (SY-04); los de vista previa no lo tienen.
+export type DiaryEntry = FoodEntry & { date: string; entryId?: string };
 export type DiaryState = {
   selectedDate: string;
   entries: DiaryEntry[];

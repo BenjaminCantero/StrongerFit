@@ -198,7 +198,7 @@ function portion(foods: CatalogFood[], targetKcal: number, targetProtein: number
 
 const ratio = (actual: number, target: number) => target > 0 ? (actual - target) / target : 0;
 
-function buildDay(index: number, type: DayType | null, meals: PlannedMeal[], targets: Nutrients): PlannedDay {
+export function buildDay(index: number, type: DayType | null, meals: PlannedMeal[], targets: Nutrients): PlannedDay {
   const totals = addNutrients(meals.map((meal) => meal.nutrients));
   return { index, type, targets, meals, totals, deviation: ratio(totals.kcal, targets.kcal), proteinDeviation: ratio(totals.protein, targets.protein) };
 }
