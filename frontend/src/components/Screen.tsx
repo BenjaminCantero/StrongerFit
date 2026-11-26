@@ -1,18 +1,19 @@
 import type { PropsWithChildren } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, layout, spacing } from '../theme';
+import { KeyboardAvoider, KeyboardAwareScrollView } from './KeyboardAware';
 import { AppText } from './ui/AppText';
 
 export function Screen({ title, children, safeBottom = false }: PropsWithChildren<{ title?: string; safeBottom?: boolean }>) {
   return (
     <SafeAreaView style={styles.safeArea} edges={safeBottom ? ['left', 'right', 'bottom'] : ['left', 'right']}>
-      <ScrollView keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+      <KeyboardAvoider><KeyboardAwareScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         <View style={styles.content}>
           {title && <AppText variant="title" accessibilityRole="header">{title}</AppText>}
           {children}
         </View>
-      </ScrollView>
+      </KeyboardAwareScrollView></KeyboardAvoider>
     </SafeAreaView>
   );
 }

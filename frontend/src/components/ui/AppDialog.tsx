@@ -1,8 +1,9 @@
 import { AppPressable } from './AppPressable';
 import type { PropsWithChildren } from 'react';
-import { Modal, ScrollView, StyleSheet, View } from 'react-native';
+import { Modal, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, radius, spacing } from '../../theme';
+import { KeyboardAwareScrollView, KeyboardAvoider } from '../KeyboardAware';
 import { AppText } from './AppText';
 
 export function AppDialog({ title, visible, onClose, children }: PropsWithChildren<{
@@ -10,15 +11,17 @@ export function AppDialog({ title, visible, onClose, children }: PropsWithChildr
 }>) {
   return (
     <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
-      <SafeAreaView style={styles.overlay}>
-        <AppPressable accessibilityRole="button" accessibilityLabel="Cerrar diálogo" onPress={onClose} style={StyleSheet.absoluteFill} />
-        <View accessibilityViewIsModal role="dialog" aria-label={title} style={styles.panel}>
-          <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={styles.content}>
-            <AppText variant="heading" accessibilityRole="header">{title}</AppText>
-            {children}
-          </ScrollView>
-        </View>
-      </SafeAreaView>
+      <KeyboardAvoider>
+        <SafeAreaView style={styles.overlay}>
+          <AppPressable accessibilityRole="button" accessibilityLabel="Cerrar diálogo" onPress={onClose} style={StyleSheet.absoluteFill} />
+          <View accessibilityViewIsModal role="dialog" aria-label={title} style={styles.panel}>
+            <KeyboardAwareScrollView contentContainerStyle={styles.content}>
+              <AppText variant="heading" accessibilityRole="header">{title}</AppText>
+              {children}
+            </KeyboardAwareScrollView>
+          </View>
+        </SafeAreaView>
+      </KeyboardAvoider>
     </Modal>
   );
 }

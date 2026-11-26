@@ -6,8 +6,15 @@ import { AppText } from '../../components/ui/AppText';
 import { colors, layout, radius, spacing } from '../../theme';
 
 const values = [
-  { icon: 'heart-outline', title: 'Salud primero', text: 'Metas conservadoras, sin dietas extremas ni culpas.' },
-  { icon: 'trending-up-outline', title: 'Progreso real', text: 'Registros simples y estimaciones rotuladas como tales.' },
+  { icon: 'barbell-outline', title: 'Tu rutina', text: 'Entrenamientos adaptados a tu nivel y a tus lesiones.' },
+  { icon: 'restaurant-outline', title: 'Tus comidas', text: 'Registro de lo que comes y una minuta para guiarte.' },
+  { icon: 'trending-up-outline', title: 'Tu progreso', text: 'Seguimiento de tu peso y de tus avances.' },
+] as const;
+
+const steps = [
+  { title: 'Crea tu cuenta', text: 'Con tu correo y una contraseña.' },
+  { title: 'Cuéntanos de ti', text: 'Perfil, objetivo, entrenamiento y salud. Toma unos 3 minutos.' },
+  { title: 'Recibe tu rutina y tus metas', text: 'Pensadas para ti, y tú decides si adoptarlas.' },
 ] as const;
 
 export function WelcomeScreen({ onStart, onSignIn }: { onStart: () => void; onSignIn: () => void }) {
@@ -29,21 +36,35 @@ export function WelcomeScreen({ onStart, onSignIn }: { onStart: () => void; onSi
           </View>
 
           <View style={styles.values}>
+            <AppText variant="heading" accessibilityRole="header">Qué puedes hacer</AppText>
             {values.map((item) => <View key={item.title} style={styles.value}>
               <View style={styles.valueIcon}><Ionicons name={item.icon} size={20} color={colors.brand} /></View>
-              <AppText variant="header">{item.title}</AppText>
-              <AppText variant="caption" tone="muted">{item.text}</AppText>
+              <View style={styles.flex}>
+                <AppText variant="header">{item.title}</AppText>
+                <AppText variant="caption" tone="muted">{item.text}</AppText>
+              </View>
             </View>)}
           </View>
 
-          <AppButton label="Crear cuenta" icon="arrow-forward-outline" onPress={onStart} />
+          <View style={styles.values}>
+            <AppText variant="heading" accessibilityRole="header">Cómo empezar</AppText>
+            {steps.map((item, index) => <View key={item.title} style={styles.value} accessible accessibilityLabel={`Paso ${index + 1}. ${item.title}. ${item.text}`}>
+              <View style={styles.valueIcon}><AppText variant="label" tone="brand">{index + 1}</AppText></View>
+              <View style={styles.flex}>
+                <AppText variant="header">{item.title}</AppText>
+                <AppText variant="caption" tone="muted">{item.text}</AppText>
+              </View>
+            </View>)}
+          </View>
+
+          <AppButton label="Crear cuenta y comenzar" icon="arrow-forward-outline" onPress={onStart} />
           <AppButton label="Ya tengo cuenta" variant="secondary" onPress={onSignIn} />
           <View style={styles.footer}>
             <AppText variant="caption" tone="muted" style={styles.center}>
               Tu cuenta guarda tus datos de forma privada: solo tú puedes verlos.
             </AppText>
             <AppText variant="caption" tone="muted" style={styles.center}>
-              Antes de crearlo verás el aviso de salud y el consentimiento de datos.
+              Antes de usarla verás el aviso de salud y el consentimiento de datos.
             </AppText>
           </View>
         </View>
@@ -61,8 +82,9 @@ const styles = StyleSheet.create({
   badge: { flexDirection: 'row', alignItems: 'center', alignSelf: 'flex-start', gap: spacing.xs, paddingHorizontal: spacing.md, paddingVertical: spacing.xs,
     borderRadius: radius.pill, backgroundColor: colors.canvas },
   center: { textAlign: 'center' },
-  values: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.md },
-  value: { flex: 1, minWidth: 140, gap: spacing.xs, padding: spacing.lg, borderRadius: radius.md, backgroundColor: colors.surfaceLow },
-  valueIcon: { width: 36, height: 36, borderRadius: radius.pill, backgroundColor: colors.brandSoft, alignItems: 'center', justifyContent: 'center', marginBottom: spacing.xs },
+  values: { gap: spacing.md },
+  value: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, padding: spacing.lg, borderRadius: radius.md, backgroundColor: colors.surfaceLow },
+  valueIcon: { width: 36, height: 36, borderRadius: radius.pill, backgroundColor: colors.brandSoft, alignItems: 'center', justifyContent: 'center' },
+  flex: { flex: 1, gap: spacing.xs },
   footer: { gap: spacing.sm },
 });

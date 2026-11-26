@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
-import { ScrollView, StyleSheet, View, type ScrollViewInstance } from 'react-native';
+import { StyleSheet, View, type ScrollViewInstance } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { KeyboardAvoider, KeyboardAwareScrollView } from '../../components/KeyboardAware';
 import { AppButton } from '../../components/ui/AppButton';
 import { AppText } from '../../components/ui/AppText';
 import { ProgressBar } from '../../components/ui/ProgressBar';
@@ -66,7 +67,7 @@ export function OnboardingScreen({ today, onComplete, onExit }: Props) {
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['left', 'right', 'bottom']}>
-      <ScrollView ref={scroll} keyboardShouldPersistTaps="handled" contentContainerStyle={styles.scroll}>
+      <KeyboardAvoider><KeyboardAwareScrollView ref={scroll} contentContainerStyle={styles.scroll}>
         <View style={styles.content}>
           <View style={styles.progress}>
             <AppText variant="label" tone="brand">Paso {index + 1} de {steps.length}</AppText>
@@ -92,7 +93,7 @@ export function OnboardingScreen({ today, onComplete, onExit }: Props) {
               onPress={() => index === 0 ? onExit() : goTo(index - 1)} />
           </View>
         </View>
-      </ScrollView>
+      </KeyboardAwareScrollView></KeyboardAvoider>
     </SafeAreaView>
   );
 }
