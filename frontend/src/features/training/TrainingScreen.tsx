@@ -20,6 +20,7 @@ import { TrainingSummaryScreen } from './TrainingSummaryScreen';
 import { newRecords } from '../progress/domain/records';
 import type { WorkoutRecord } from '../progress/domain/progress';
 import { useTrainingSession } from './useTrainingSession';
+import { isUuid, newClientId } from '../../lib/data/ids';
 import { useTimerAlert } from './timerAlerts';
 import { pauseTimer, type TimerRun } from './domain/timers';
 
@@ -31,7 +32,7 @@ type Props = {
   onPersist?: (sessionId: string, state: SessionState) => void;
   onExit: () => void;
   onViewHistory: () => void;
-  onRecord: (record: SessionRecord) => void;
+  onRecord: (record: SessionRecord, state: SessionState) => void;
   previous?: WorkoutRecord[];
   zones?: Zone[];
   onLoadDecision?: (decision: OverloadDecision) => void;
@@ -55,7 +56,8 @@ function TrainingSession({ template, sample = false, restored, onPersist, onExit
   // Historial previo a esta sesión: los récords se comparan contra él, no contra la sesión recién registrada.
   const [before] = useState(() => previous ?? []);
   const { state, exercise, elapsedSeconds, restSeconds, send } = useTrainingSession(template, restored?.state);
-  const [sessionId] = useState(() => restored?.sessionId ?? `session-${Date.now()}`);
+  // UUID: es la clave idempotente del envío (client_id). Borradores viejos reciben uno nuevo.
+  const [sessionId] = useState(() => restored?.sessionId && isUuid(restored.sessionId) ? restored.sessionId : newClientId());
   const [timerRun, setTimerRun] = useState<TimerRun | null>(null);
   const [dialog, setDialog] = useState<'details' | 'finish' | 'next' | null>(null);
   const paused = state.status === 'paused';
@@ -87,7 +89,7 @@ function TrainingSession({ template, sample = false, restored, onPersist, onExit
   useEffect(() => {
     // El id de la sesión evita duplicados si el efecto se repite.
     const record = sessionRecord(state, { id: sessionId, date: todayDateKey(), time: currentTimeLabel() });
-    if (record) onRecord(record);
+    if (record) onRecord(record, state);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.status]);
 

@@ -6,6 +6,7 @@ import { PreviewNotice } from '../../components/ui/PreviewNotice';
 import { colors, radius, spacing } from '../../theme';
 import { NutritionSummary } from './components/NutritionSummary';
 import { ResumeSession, type PendingSession } from './components/ResumeSession';
+import { UnsentSession, type UnsentSessionInfo } from './components/UnsentSession';
 import { SleepSummary, type SleepOverview } from './components/SleepSummary';
 import { features } from '../../shared/features';
 import { WeeklyAdherence } from './components/WeeklyAdherence';
@@ -17,6 +18,9 @@ type Props = {
   overview: HomeOverview;
   today: string;
   pending: PendingSession | null;
+  // Sesión terminada que el servidor aún no confirmó (RNF-06).
+  unsent: UnsentSessionInfo | null;
+  onRetryUnsent: () => void;
   isPreview?: boolean;
   onTrainingPress: () => void;
   onResume: () => void;
@@ -27,7 +31,7 @@ type Props = {
   onSleep: () => void;
 };
 
-export function HomeScreen({ overview, today, pending, isPreview, onTrainingPress, onResume, onNutritionPress, onWeightPress, onHistory, sleep, onSleep }: Props) {
+export function HomeScreen({ overview, today, pending, unsent, onRetryUnsent, isPreview, onTrainingPress, onResume, onNutritionPress, onWeightPress, onHistory, sleep, onSleep }: Props) {
   const formattedDate = new Intl.DateTimeFormat('es-CL', {
     weekday: 'long', day: 'numeric', month: 'long', timeZone: 'America/Santiago',
   }).format(overview.date);
@@ -50,6 +54,7 @@ export function HomeScreen({ overview, today, pending, isPreview, onTrainingPres
         </View>}
       </View>
       {isPreview && <PreviewNotice>Vista previa · Datos de ejemplo</PreviewNotice>}
+      {unsent && <UnsentSession session={unsent} onRetry={onRetryUnsent} />}
       {pending ? <ResumeSession session={pending} onPress={onResume} />
         : <WorkoutSummary workout={overview.workout} onPress={onTrainingPress} />}
       <NutritionSummary nutrition={overview.nutrition} onPress={onNutritionPress} />

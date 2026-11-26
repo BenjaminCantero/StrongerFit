@@ -7,6 +7,7 @@ import { useProfile } from '../../features/profile/useProfile';
 import { useProgressStore } from '../../features/progress/useProgress';
 import { sessionSummary } from '../../features/training/domain/session';
 import { useSessionDraft } from '../../features/training/useSessionDraft';
+import { usePendingSession } from '../../features/training/usePendingSession';
 import { cycles, latestSleep, sleepMinutes, sleepWeek, timeOf } from '../../features/sleep/domain/sleep';
 import { useSleep } from '../../features/sleep/useSleep';
 import { todayDateKey } from '../../shared/calendar';
@@ -19,6 +20,9 @@ export default function HomeRoute() {
   const progress = useProgressStore(empty);
   const diary = useNutritionDiary();
   const { draft } = useSessionDraft();
+  const unsentSession = usePendingSession();
+  const unsent = unsentSession.pending && !empty ? { title: unsentSession.pending.title, completedSets: unsentSession.pending.completedSets,
+    submitting: unsentSession.submitting, error: unsentSession.error } : null;
   const today = todayDateKey();
   const overview = homeOverview({
     profile, progress, today, now: new Date(),
@@ -33,7 +37,7 @@ export default function HomeRoute() {
   const sleep = { pendingSince: !empty && sleepState.pendingBed ? timeOf(sleepState.pendingBed) : null, lastMinutes,
     lastCycles: lastMinutes === null ? null : cycles(lastMinutes, sleepState.cycleMinutes).complete, averageMinutes: week.averageMinutes, logged: week.logged };
 
-  return <HomeScreen overview={overview} today={today} pending={pending} isPreview={__DEV__ && !empty}
+  return <HomeScreen overview={overview} today={today} pending={pending} unsent={unsent} onRetryUnsent={unsentSession.retry} isPreview={__DEV__ && !empty}
     onTrainingPress={() => day === undefined ? router.navigate('/training') : router.push({ pathname: '/session', params: { day: String(day) } })}
     onResume={() => router.push({ pathname: '/session', params: { resume: '1' } })}
     onNutritionPress={() => overview.nutrition ? router.push({ pathname: '/food-entry', params: { date: today } }) : router.navigate('/nutrition')}

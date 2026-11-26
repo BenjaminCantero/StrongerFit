@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { queryPersister } from '../../lib/data/query';
 import { getSupabase } from '../../lib/supabase';
 import { clearValues, readValue, writeValue } from '../../storage/keyValue';
+import { clearPendingSession } from '../../storage/pendingSession';
 import { clearSessionDraft } from '../../storage/sessionDraft';
 import { resetNutritionDiary } from '../nutrition/useNutritionDiary';
 import { resetProfile } from '../profile/useProfile';
@@ -20,7 +21,7 @@ export async function purgeLocalData(queryClient: QueryClient) {
   resetNutritionDiary();
   resetProgress();
   resetSleep();
-  const tasks = [queryPersister?.removeClient(), clearValues(), clearSessionDraft()];
+  const tasks = [queryPersister?.removeClient(), clearValues(), clearSessionDraft(), clearPendingSession()];
   await Promise.all(tasks.map((task) => Promise.resolve(task).catch(() => undefined)));
 }
 
