@@ -8,6 +8,7 @@ import { AppText } from '../../components/ui/AppText';
 import { QueryState } from '../../lib/data/QueryState';
 import { profileAvatar } from '../../features/profile/presentation';
 import { useProfile } from '../../features/profile/useProfile';
+import { useOptionalUserId } from '../../features/account/SessionContext';
 import { colors, fontFamily, layout } from '../../theme';
 
 const screens: { name: string; title: string; icon: ComponentProps<typeof Ionicons>['name'] }[] = [
@@ -23,9 +24,10 @@ export default function TabLayout() {
   const { width, fontScale } = useWindowDimensions();
   const compact = width < 360 || fontScale > 1.2;
   const { profile, identity } = useProfile();
+  const userId = useOptionalUserId();
   const avatar = profileAvatar(profile.photo);
   // Las pestañas leen la identidad guardada (SY-02): se espera antes de mostrarlas.
-  if (!identity.data) {
+  if (userId && !identity.data) {
     return <View style={{ flex: 1, justifyContent: 'center', padding: 24, paddingTop: insets.top + 24, backgroundColor: colors.canvas }}>
       <QueryState isPending={identity.isPending} error={identity.error} onRetry={() => identity.refetch()} loadingLabel="Cargando tu perfil" />
     </View>;

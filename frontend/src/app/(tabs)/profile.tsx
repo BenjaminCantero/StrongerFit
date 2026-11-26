@@ -8,7 +8,7 @@ import { ProfileScreen } from '../../features/profile/ProfileScreen';
 import { useProfile } from '../../features/profile/useProfile';
 import { useSaveNutrition, useSavePersonal, useSaveTrainingSetup } from '../../features/profile/useIdentity';
 import { useRecordConsent } from '../../features/account/useAccount';
-import { useUserId } from '../../features/account/SessionContext';
+import { useOptionalUserId } from '../../features/account/SessionContext';
 import { CONSENT_VERSION } from '../../features/onboarding/domain/onboarding';
 import { dataErrorMessage, toDataError } from '../../lib/data/errors';
 import { nutritionDiarySnapshot, resetNutritionDiary } from '../../features/nutrition/useNutritionDiary';
@@ -25,11 +25,11 @@ export default function ProfileRoute() {
   const savePersonal = useSavePersonal();
   const saveNutrition = useSaveNutrition();
   const saveTraining = useSaveTrainingSetup();
-  const recordConsent = useRecordConsent(useUserId());
+  const userId = useOptionalUserId();
+  const recordConsent = useRecordConsent(userId ?? 'local');
   const current = identity.data;
   // Cada guardado devuelve null o el mensaje de error para mostrarlo en el diálogo.
   const attempt = (task: () => Promise<unknown>) => task().then(() => null, (error: unknown) => dataErrorMessage(toDataError(error)));
-  const missing = async () => 'Tu perfil aún no termina de cargar. Inténtalo de nuevo.';
   const previewMode = usePreviewMode();
   const isPreview = previewMode && !empty;
   const router = useRouter();
@@ -38,10 +38,14 @@ export default function ProfileRoute() {
 
   return <ProfileScreen profile={profile} dispatch={dispatch}
     save={{
-      personal: (input) => current ? attempt(() => savePersonal.mutateAsync({ current, ...input })) : missing(),
-      nutrition: (values) => attempt(() => saveNutrition.mutateAsync(values)),
-      training: (setup) => current ? attempt(() => saveTraining.mutateAsync({ current, setup })) : missing(),
-      withdrawConsent: () => attempt(() => recordConsent.mutateAsync({ action: 'withdrawn', version: CONSENT_VERSION })),
+      personal: (input) => current ? attempt(() => savePersonal.mutateAsync({ current, ...input }))
+        : (dispatch({ type: 'update-personal', values: input.values }), Promise.resolve(null)),
+      nutrition: (values) => userId ? attempt(() => saveNutrition.mutateAsync(values))
+        : (dispatch({ type: 'update-nutrition', ...values }), Promise.resolve(null)),
+      training: (setup) => current ? attempt(() => saveTraining.mutateAsync({ current, setup }))
+        : (dispatch({ type: 'update-training-setup', ...setup }), Promise.resolve(null)),
+      withdrawConsent: () => userId ? attempt(() => recordConsent.mutateAsync({ action: 'withdrawn', version: CONSENT_VERSION }))
+        : Promise.resolve('Esta opción requiere una cuenta.'),
     }}
     account={{ configured: auth.configured, email: auth.session?.user.email ?? null }}
     onSignIn={() => router.push({ pathname: '/account', params: { mode: 'signin' } })} onSignUp={() => router.push({ pathname: '/account', params: { mode: 'signup' } })}

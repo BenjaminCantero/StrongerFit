@@ -1,4 +1,4 @@
-import type { Ref } from 'react';
+import { useImperativeHandle, useRef, type Ref } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, type ScrollViewInstance, type ScrollViewProps } from 'react-native';
 
 // Usar KeyboardAvoider como padre de KeyboardAwareScrollView (o de un diálogo).
@@ -15,8 +15,21 @@ export function KeyboardAvoider({ children, style }: Pick<ScrollViewProps, 'chil
 }
 
 export function KeyboardAwareScrollView({ ref, ...props }: ScrollViewProps & { ref?: Ref<ScrollViewInstance> }) {
-  return <ScrollView ref={ref} keyboardShouldPersistTaps="handled" keyboardDismissMode={Platform.OS === 'ios' ? 'interactive' : 'on-drag'}
-    automaticallyAdjustKeyboardInsets={Platform.OS === 'ios'} {...props} />;
+  const scroll = useRef<ScrollViewInstance>(null);
+  useImperativeHandle(ref, () => scroll.current!, []);
+  const { onFocus, ...rest } = props;
+
+  return <ScrollView ref={scroll} keyboardShouldPersistTaps="handled" keyboardDismissMode={Platform.OS === 'ios' ? 'interactive' : 'on-drag'}
+    automaticallyAdjustKeyboardInsets={Platform.OS === 'ios'} onFocus={(event) => {
+      onFocus?.(event);
+      const target = event.target;
+      // En Android el ajuste de la ventana no desplaza siempre el campo activo.
+      // Esperamos a que el teclado y KeyboardAvoidingView terminen de acomodarse
+      // antes de llevar el control por encima de él.
+      if (Platform.OS === 'android' && target !== undefined) setTimeout(() => {
+        scroll.current?.scrollResponderScrollNativeHandleToKeyboard(target, 24, true);
+      }, 250);
+    }} {...rest} />;
 }
 
 const styles = StyleSheet.create({ fill: { flex: 1 } });

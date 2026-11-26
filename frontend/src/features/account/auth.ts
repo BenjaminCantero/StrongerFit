@@ -2,6 +2,7 @@ import type { Session } from '@supabase/supabase-js';
 import { useEffect, useState } from 'react';
 import { apiUrl } from '../../lib/env';
 import { getSupabase } from '../../lib/supabase';
+import { bindPendingOnboardingEmail } from './pendingOnboarding';
 import { authErrorMessage, type AuthForm, type AuthMode, type AuthResult } from './domain';
 
 export * from './domain';
@@ -13,6 +14,9 @@ export const isAuthConfigured = () => !!process.env.EXPO_PUBLIC_SUPABASE_URL && 
 export async function submitAuth(mode: AuthMode, form: AuthForm): Promise<AuthResult> {
   const auth = getSupabase().auth;
   const email = form.email.trim().toLowerCase();
+  // El onboarding pendiente se liga al correo con que se CREA la cuenta en este teléfono: solo esa cuenta
+  // podrá guardarlo. En signin no se liga, para que otra persona no lo reclame con una cuenta existente.
+  if (mode === 'signup') await bindPendingOnboardingEmail(email).catch(() => undefined);
   if (mode === 'signin') {
     const { error } = await auth.signInWithPassword({ email, password: form.password });
     return error ? { ok: false, message: authErrorMessage(error) } : { ok: true, signedIn: true };

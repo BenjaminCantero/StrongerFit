@@ -12,8 +12,8 @@ const values = [
 ] as const;
 
 const steps = [
-  { title: 'Crea tu cuenta', text: 'Con tu correo y una contraseña.' },
   { title: 'Cuéntanos de ti', text: 'Perfil, objetivo, entrenamiento y salud. Toma unos 3 minutos.' },
+  { title: 'Elige cómo usarla', text: 'Puedes empezar sin cuenta o crear una para sincronizar tus datos.' },
   { title: 'Recibe tu rutina y tus metas', text: 'Pensadas para ti, y tú decides si adoptarlas.' },
 ] as const;
 
@@ -57,14 +57,14 @@ export function WelcomeScreen({ onStart, onSignIn }: { onStart: () => void; onSi
             </View>)}
           </View>
 
-          <AppButton label="Crear cuenta y comenzar" icon="arrow-forward-outline" onPress={onStart} />
+          <AppButton label="Comenzar" icon="arrow-forward-outline" onPress={onStart} />
           <AppButton label="Ya tengo cuenta" variant="secondary" onPress={onSignIn} />
           <View style={styles.footer}>
             <AppText variant="caption" tone="muted" style={styles.center}>
-              Tu cuenta guarda tus datos de forma privada: solo tú puedes verlos.
+              Puedes usar StrongerFit sin crear una cuenta. Una cuenta te permite guardar y sincronizar tus datos de forma privada.
             </AppText>
             <AppText variant="caption" tone="muted" style={styles.center}>
-              Antes de usarla verás el aviso de salud y el consentimiento de datos.
+              Al final del cuestionario verás el aviso de salud y el consentimiento de datos.
             </AppText>
           </View>
         </View>

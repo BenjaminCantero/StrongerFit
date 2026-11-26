@@ -4,8 +4,8 @@ import { routeAccess, shouldPurge } from './access';
 describe('routeAccess', () => {
   const base = { configured: true, sessionReady: true, userId: 'u1', status: 'ready' as const, statusError: false };
 
-  it('sin claves de Supabase muestra la configuración faltante', () => {
-    expect(routeAccess({ ...base, configured: false })).toBe('missing-config');
+  it('sin claves de Supabase permite usar la app localmente', () => {
+    expect(routeAccess({ ...base, configured: false, userId: null, status: undefined })).toBe('signed-out');
   });
 
   it('espera la sesión y el estado de la cuenta', () => {
@@ -13,7 +13,7 @@ describe('routeAccess', () => {
     expect(routeAccess({ ...base, status: undefined })).toBe('loading');
   });
 
-  it('sin sesión solo permite Bienvenida y Cuenta', () => {
+  it('sin sesión usa el modo local', () => {
     expect(routeAccess({ ...base, userId: null, status: undefined })).toBe('signed-out');
   });
 

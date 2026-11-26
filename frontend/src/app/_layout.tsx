@@ -12,14 +12,22 @@ import { appFonts } from '../theme/fonts';
 import { AppHeader } from '../components/AppHeader';
 import { routeAccess } from '../features/account/access';
 import { useAuthSession } from '../features/account/auth';
-import { AccountStatusErrorScreen, MissingConfigScreen } from '../features/account/GateScreens';
+import { AccountStatusErrorScreen, PendingOnboardingErrorScreen } from '../features/account/GateScreens';
 import { signOutAndPurge, useSessionLifecycle } from '../features/account/session';
+import { useFinishPendingOnboarding } from '../features/account/useFinishPendingOnboarding';
 import { SessionContext } from '../features/account/SessionContext';
 import { useAccountStatus } from '../features/account/useAccount';
 import { dataErrorMessage, toDataError } from '../lib/data/errors';
 import { cacheBuster } from '../lib/data/keys';
 import { CACHE_MAX_AGE, createQueryClient, listenToConnectivity, queryPersister } from '../lib/data/query';
 import { getSupabase } from '../lib/supabase';
+
+// Al abrir la app sin una URL concreta, la primera pantalla es Bienvenida.
+// Las guardas de Stack.Protected redirigen a onboarding, consentimiento o Inicio
+// cuando ya hay una sesión activa.
+export const unstable_settings = {
+  anchor: 'welcome',
+};
 
 function Splash({ label }: { label: string }) {
   return <View style={{ flex: 1, backgroundColor: colors.canvas, alignItems: 'center', justifyContent: 'center' }}>
@@ -66,7 +74,8 @@ function homeFor(access: ReturnType<typeof routeAccess>) {
   return '/' as const;
 }
 
-// AU-01: sin sesión, Bienvenida y Cuenta; con sesión, onboarding o consentimiento si faltan;
+// AU-01: sin sesión, Bienvenida, onboarding y Cuenta (onboarding primero, cuenta al final); con sesión,
+// onboarding o consentimiento si faltan;
 // el resto solo con la cuenta lista. Stack.Protected redirige cuando cambia el estado.
 function AppStack({ configured, userId }: { configured: boolean; userId: string | null }) {
   const router = useRouter();
@@ -74,6 +83,7 @@ function AppStack({ configured, userId }: { configured: boolean; userId: string 
   useSessionLifecycle(queryClient, userId);
   const status = useAccountStatus(userId);
   const access = routeAccess({ configured, sessionReady: true, userId, status: status.data, statusError: status.isError });
+  const finish = useFinishPendingOnboarding(userId, status.data);
   const sessionExpired = status.isError && toDataError(status.error).kind === 'session';
 
   // Sesión revocada o vencida: se cierra sin borrar el borrador (puede tener una sesión sin enviar).
@@ -81,10 +91,13 @@ function AppStack({ configured, userId }: { configured: boolean; userId: string 
     if (sessionExpired) getSupabase().auth.signOut().catch(() => undefined);
   }, [sessionExpired]);
 
-  if (access === 'missing-config') return <MissingConfigScreen />;
   if (access === 'loading') return <Splash label="Abriendo tu cuenta" />;
   if (access === 'status-error') return <AccountStatusErrorScreen message={dataErrorMessage(toDataError(status.error))}
     onRetry={() => status.refetch()} onSignOut={() => signOutAndPurge(queryClient)} />;
+  // Guardando el perfil hecho antes de crear la cuenta (sin <Redirect>: al quedar lista, las guardas llevan a Inicio).
+  if (finish.phase === 'checking') return <Splash label="Abriendo tu cuenta" />;
+  if (finish.phase === 'saving') return <Splash label="Guardando tu perfil" />;
+  if (finish.phase === 'error') return <PendingOnboardingErrorScreen onRetry={finish.retry} onRedo={() => { void finish.discard(); }} />;
 
   return (
     <Stack screenOptions={{ headerShown: false }}>
@@ -94,7 +107,7 @@ function AppStack({ configured, userId }: { configured: boolean; userId: string 
           header: ({ options }) => <AppHeader title={options.title ?? 'Cuenta'}
             backLabel="Volver" onBack={() => router.canGoBack() ? router.back() : router.navigate('/welcome')} /> }} />
       </Stack.Protected>
-      <Stack.Protected guard={access === 'needs-onboarding'}>
+      <Stack.Protected guard={access === 'signed-out' || access === 'needs-onboarding'}>
         <Stack.Screen name="onboarding" options={{ headerShown: true, title: 'Crear tu perfil',
           header: ({ options }) => <AppHeader title={options.title ?? 'Crear tu perfil'} /> }} />
       </Stack.Protected>
@@ -102,7 +115,7 @@ function AppStack({ configured, userId }: { configured: boolean; userId: string 
         <Stack.Screen name="consent" options={{ headerShown: true, title: 'Consentimiento',
           header: ({ options }) => <AppHeader title={options.title ?? 'Consentimiento'} /> }} />
       </Stack.Protected>
-      <Stack.Protected guard={access === 'ready'}>
+      <Stack.Protected guard={access === 'ready' || access === 'signed-out'}>
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="food-entry" options={{ headerShown: true, title: 'Registro de alimento',
           header: ({ options }) => <AppHeader title={options.title ?? 'Registro de alimento'}

@@ -63,3 +63,22 @@ describe('repositorio de cuenta contra Supabase local', () => {
     expect(await fetchAccountStatus()).toBe('ready');
   });
 });
+
+describe('onboarding pendiente guardado tras crear la cuenta (AU-01)', () => {
+  it('guarda el perfil en la cuenta nueva y un segundo guardado no cambia nada', async () => {
+    const user = await signedInUser();
+    current = user.client;
+    expect(await fetchAccountStatus()).toBe('needs-onboarding');
+
+    const pending = payload();
+    expect(await saveOnboarding(pending)).toBe(true);
+    expect(await fetchAccountStatus()).toBe('ready');
+
+    const other = completeOnboarding({ ...draft(), name: 'Otra' }, new Date(), '2026-11-24');
+    if (!other.ok) throw new Error('borrador inválido');
+    expect(await saveOnboarding(onboardingPayload(other, '2026-11-24'))).toBe(false);
+    const { data } = await user.client.from('profiles').select('display_name').single();
+    expect(data?.display_name).toBe('Ana');
+    expect(await fetchAccountStatus()).toBe('ready');
+  });
+});

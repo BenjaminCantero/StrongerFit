@@ -1,13 +1,12 @@
 import type { AccountStatus } from './data/account.mappers';
 
-export type RouteAccess = 'missing-config' | 'loading' | 'status-error' | 'signed-out' | AccountStatus;
+export type RouteAccess = 'loading' | 'status-error' | 'signed-out' | AccountStatus;
 
-// Qué grupo de rutas puede ver la persona (AU-01): Bienvenida y Cuenta sin sesión;
-// onboarding o consentimiento si faltan; el resto de la app solo con cuenta lista.
+// Sin sesión se puede usar la app en el dispositivo. Con sesión, el estado de la
+// cuenta decide si falta onboarding o consentimiento antes de abrir las pantallas.
 export function routeAccess(input: {
   configured: boolean; sessionReady: boolean; userId: string | null; status: AccountStatus | undefined; statusError: boolean;
 }): RouteAccess {
-  if (!input.configured) return 'missing-config';
   if (!input.sessionReady) return 'loading';
   if (!input.userId) return 'signed-out';
   if (input.status) return input.status;

@@ -28,6 +28,21 @@ export function AccountStatusErrorScreen({ message, onRetry, onSignOut }: { mess
   </Screen>;
 }
 
+// AU-01: el perfil hecho antes de crear la cuenta no se pudo guardar. Se puede reintentar o rehacer.
+export function PendingOnboardingErrorScreen({ onRetry, onRedo }: { onRetry: () => void; onRedo: () => void }) {
+  return <Screen safeBottom>
+    <AppText variant="title" accessibilityRole="header">No pudimos guardar tu perfil</AppText>
+    <AppText accessibilityRole="alert">
+      Tu cuenta ya está lista, pero el perfil que completaste no se guardó. Revisa tu conexión y reintenta,
+      o complétalo de nuevo.
+    </AppText>
+    <View style={styles.actions}>
+      <AppButton label="Reintentar" icon="refresh" onPress={onRetry} />
+      <AppButton label="Completar de nuevo" variant="secondary" onPress={onRedo} />
+    </View>
+  </Screen>;
+}
+
 // CA-11: con el consentimiento retirado no se tratan datos nuevos hasta volver a otorgarlo.
 export function ConsentScreen({ onAccept, onSignOut }: { onAccept: () => Promise<string | null>; onSignOut: () => void }) {
   const [checked, setChecked] = useState(false);

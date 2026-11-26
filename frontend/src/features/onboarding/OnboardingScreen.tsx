@@ -19,10 +19,10 @@ const titles: Record<Step, { title: string; lead: string }> = {
 
 export type CompletedOnboarding = Extract<ReturnType<typeof completeOnboarding>, { ok: true }>;
 
-// onComplete guarda el perfil y devuelve un mensaje de error o null. onExit cierra la sesión.
-type Props = { today: string; onComplete: (result: CompletedOnboarding) => Promise<string | null>; onExit: () => void };
+// onComplete guarda el perfil y devuelve un mensaje de error o null. onExit sale del onboarding (cierra la sesión, o vuelve a Bienvenida si no hay cuenta aún).
+type Props = { today: string; onComplete: (result: CompletedOnboarding) => Promise<string | null>; onExit: () => void; exitLabel?: string };
 
-export function OnboardingScreen({ today, onComplete, onExit }: Props) {
+export function OnboardingScreen({ today, onComplete, onExit, exitLabel = 'Cerrar sesión' }: Props) {
   const [draft, setDraft] = useState<Draft>(createDraft);
   const [index, setIndex] = useState(0);
   const [errors, setErrors] = useState<Partial<Record<DraftField, string>>>({});
@@ -89,7 +89,7 @@ export function OnboardingScreen({ today, onComplete, onExit }: Props) {
             {saveError && <AppText accessibilityRole="alert" variant="caption" style={styles.error}>{saveError}</AppText>}
             <AppButton label={saving ? 'Guardando…' : last ? 'Crear mi perfil' : 'Continuar'} icon={last ? 'checkmark-outline' : 'arrow-forward-outline'}
               disabled={saving} onPress={next} />
-            <AppButton label={index === 0 ? 'Cerrar sesión' : 'Paso anterior'} variant="secondary"
+            <AppButton label={index === 0 ? exitLabel : 'Paso anterior'} variant="secondary"
               onPress={() => index === 0 ? onExit() : goTo(index - 1)} />
           </View>
         </View>

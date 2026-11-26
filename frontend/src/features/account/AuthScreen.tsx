@@ -7,6 +7,7 @@ import { AppPressable } from '../../components/ui/AppPressable';
 import { AppText } from '../../components/ui/AppText';
 import { FormField } from '../../components/ui/FormField';
 import { colors, layout, radius, spacing } from '../../theme';
+import { useHasPendingOnboarding } from './pendingOnboarding';
 import { MIN_PASSWORD, validateAuthForm, type AuthField, type AuthForm, type AuthMode, type AuthResult } from './domain';
 
 const copy: Record<AuthMode, { title: string; lead: string; action: string }> = {
@@ -29,6 +30,7 @@ export function AuthScreen({ initialMode, onSubmit }: Props) {
   const [message, setMessage] = useState<{ tone: 'info' | 'error'; text: string } | null>(null);
   const [busy, setBusy] = useState(false);
   const text = copy[mode];
+  const hasPending = useHasPendingOnboarding();
 
   const field = (name: AuthField) => ({
     value: form[name], error: errors[name],
@@ -45,7 +47,7 @@ export function AuthScreen({ initialMode, onSubmit }: Props) {
     try {
       const result = await onSubmit(mode, form);
       if (!result.ok) setMessage({ tone: 'error', text: result.message });
-      else if (!result.signedIn) setMessage({ tone: 'info', text: result.message ?? '' });
+      else if (!result.signedIn) setMessage({ tone: 'info', text: `${result.message ?? ''}${mode === 'signup' && hasPending ? ' Al iniciar sesión guardaremos tu perfil.' : ''}` });
     } finally {
       setBusy(false);
     }
@@ -56,6 +58,11 @@ export function AuthScreen({ initialMode, onSubmit }: Props) {
       <AppText variant="title" accessibilityRole="header">{text.title}</AppText>
       <AppText tone="muted">{text.lead}</AppText>
     </View>
+
+    {mode === 'signup' && hasPending && <View style={styles.note} accessibilityLiveRegion="polite">
+      <Ionicons name="checkmark-circle-outline" size={20} color={colors.brand} />
+      <AppText variant="caption" style={styles.flex}>Tu perfil está listo. Crea tu cuenta para guardarlo.</AppText>
+    </View>}
 
     {mode !== 'reset' && <View role="tablist" style={styles.tabs}>
       {(['signin', 'signup'] as const).map((item) => <AppPressable key={item} role="tab" accessibilityState={{ selected: mode === item }}

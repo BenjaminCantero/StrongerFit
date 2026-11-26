@@ -5,6 +5,7 @@ import { getSupabase } from '../../lib/supabase';
 import { clearValues, readValue, writeValue } from '../../storage/keyValue';
 import { clearPendingSession } from '../../storage/pendingSession';
 import { clearSessionDraft } from '../../storage/sessionDraft';
+import { clearPendingOnboarding } from '../../storage/pendingOnboarding';
 import { resetNutritionDiary } from '../nutrition/useNutritionDiary';
 import { resetProfile } from '../profile/useProfile';
 import { resetProgress } from '../progress/useProgress';
@@ -15,6 +16,9 @@ const LAST_USER_KEY = 'last-user-id';
 
 // Borra todo lo que la app guarda de una persona en el teléfono (RNF-05): caché de datos,
 // borrador de sesión, valores locales y los estados en memoria.
+// NO borra el onboarding pendiente (pendingOnboarding): se crea justo antes de iniciar sesión y
+// esta purga corre al entrar la cuenta, así que lo perdería. Ese pendiente se borra al guardarse,
+// al descartarse, al caducar (7 días), al salir del onboarding sin cuenta y en signOutAndPurge.
 export async function purgeLocalData(queryClient: QueryClient) {
   queryClient.clear();
   resetProfile();
@@ -25,9 +29,10 @@ export async function purgeLocalData(queryClient: QueryClient) {
   await Promise.all(tasks.map((task) => Promise.resolve(task).catch(() => undefined)));
 }
 
-// Cierre de sesión elegido por la persona: limpia primero y luego revoca la sesión.
+// Cierre de sesión elegido por la persona: limpia primero (incluido el onboarding pendiente) y luego revoca la sesión.
 export async function signOutAndPurge(queryClient: QueryClient) {
   await purgeLocalData(queryClient);
+  await clearPendingOnboarding().catch(() => undefined);
   await getSupabase().auth.signOut().catch(() => undefined);
 }
 
