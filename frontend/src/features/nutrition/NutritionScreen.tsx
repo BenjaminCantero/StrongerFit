@@ -1,6 +1,7 @@
 import { AppPressable } from '../../components/ui/AppPressable';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useState, type ReactNode } from 'react';
+import { features } from '../../shared/features';
 import { StyleSheet, View } from 'react-native';
 import { Screen } from '../../components/Screen';
 import { AppButton } from '../../components/ui/AppButton';
@@ -50,20 +51,20 @@ export function NutritionScreen({ date, entries, targets, isPreview, onMoveDate,
         </View>
         <Ionicons name="chevron-forward" size={20} color={colors.muted} />
       </AppPressable>
-      <View style={styles.quick}>
-        <AppPressable accessibilityRole="button" accessibilityLabel="Escanear código de barras de un producto" onPress={onBarcode}
+      {(features.barcode || features.foodPhoto) && <View style={styles.quick}>
+        {features.barcode && <AppPressable accessibilityRole="button" accessibilityLabel="Escanear código de barras de un producto" onPress={onBarcode}
           style={({ pressed }) => [styles.tile, pressed && styles.pressed]}>
           <View style={styles.planIcon}><Ionicons name="barcode-outline" size={22} color={colors.brand} /></View>
           <AppText variant="header">Código de barras</AppText>
           <AppText variant="caption" tone="muted">Productos envasados</AppText>
-        </AppPressable>
-        <AppPressable accessibilityRole="button" accessibilityLabel="Registrar comida con una foto" onPress={onPhoto}
+        </AppPressable>}
+        {features.foodPhoto && <AppPressable accessibilityRole="button" accessibilityLabel="Registrar comida con una foto" onPress={onPhoto}
           style={({ pressed }) => [styles.tile, pressed && styles.pressed]}>
           <View style={styles.planIcon}><Ionicons name="camera-outline" size={22} color={colors.brand} /></View>
           <AppText variant="header">Foto del plato</AppText>
           <AppText variant="caption" tone="muted">Estimación de calorías</AppText>
-        </AppPressable>
-      </View>
+        </AppPressable>}
+      </View>}
       <DiaryBalance consumed={consumed} targets={targets} onAdjust={onAdjustGoals} />
       {!!notice && <AppText accessibilityLiveRegion="polite" variant="label" tone="brand">{notice}</AppText>}
       {meals.map((meal) => <DiaryMealCard key={`${date}-${meal}`} meal={meal} entries={entries.filter((entry) => entry.meal === meal)}

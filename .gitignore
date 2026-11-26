@@ -18,3 +18,8 @@ test-results/
 FoodData_Central*/
 FoodData_Central*.zip
 __pycache__/
+
+# Material de trabajo fuera del repositorio (P-01): maquetas exportadas y SRS anteriores a la v1.3.
+Sin título.pdf
+SRS_Entrenamiento_Nutricion_MVP_v1.1.docx
+SRS_Entrenamiento_Nutricion_MVP_v1.2.docx

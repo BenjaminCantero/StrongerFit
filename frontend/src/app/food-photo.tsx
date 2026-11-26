@@ -1,4 +1,5 @@
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { Redirect, useLocalSearchParams, useRouter } from 'expo-router';
+import { features } from '../shared/features';
 import { FoodPhotoScreen } from '../features/nutrition/FoodPhotoScreen';
 import { isDateKey } from '../features/nutrition/domain/diary';
 import { isMealId, type FoodEntry } from '../features/nutrition/domain/food-entry';
@@ -7,7 +8,7 @@ import { pickFoodPhoto } from '../features/nutrition/photo-picker';
 import { useNutritionDiary } from '../features/nutrition/useNutritionDiary';
 import { useDiaryWrite } from '../features/nutrition/useNutrition';
 
-export default function FoodPhotoRoute() {
+function FoodPhotoRouteContent() {
   const router = useRouter();
   const params = useLocalSearchParams<{ date?: string; meal?: string }>();
   const diary = useNutritionDiary();
@@ -24,4 +25,9 @@ export default function FoodPhotoRoute() {
   // Hasta conectar el backend, solo desarrollo usa el analizador simulado.
   return <FoodPhotoScreen analyzer={__DEV__ ? previewFoodPhotoAnalyzer : null} pickPhoto={pickFoodPhoto}
     initialMeal={isMealId(params.meal) ? params.meal : undefined} isPreview={__DEV__} onExit={exit} onSave={save} />;
+}
+
+// Oculta en la v0 (SRS 1.3): el código se conserva tras el flag.
+export default function FoodPhotoRoute() {
+  return features.foodPhoto ? <FoodPhotoRouteContent /> : <Redirect href="/nutrition" />;
 }

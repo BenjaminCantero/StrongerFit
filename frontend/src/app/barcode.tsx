@@ -1,4 +1,5 @@
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { Redirect, useLocalSearchParams, useRouter } from 'expo-router';
+import { features } from '../shared/features';
 import { BarcodeScreen } from '../features/nutrition/BarcodeScreen';
 import { isDateKey } from '../features/nutrition/domain/diary';
 import { isMealId, type FoodEntry } from '../features/nutrition/domain/food-entry';
@@ -6,7 +7,7 @@ import { lookupProduct } from '../features/nutrition/openfoodfacts';
 import { useNutritionDiary } from '../features/nutrition/useNutritionDiary';
 import { useDiaryWrite } from '../features/nutrition/useNutrition';
 
-export default function BarcodeRoute() {
+function BarcodeRouteContent() {
   const router = useRouter();
   const params = useLocalSearchParams<{ date?: string; meal?: string }>();
   const diary = useNutritionDiary();
@@ -22,4 +23,9 @@ export default function BarcodeRoute() {
 
   return <BarcodeScreen lookup={lookupProduct} initialMeal={isMealId(params.meal) ? params.meal : 'snack'} onSave={save} onExit={exit}
     onManual={(meal) => router.replace({ pathname: '/food-entry', params: { meal, date } })} />;
+}
+
+// Oculta en la v0 (SRS 1.3): el código se conserva tras el flag.
+export default function BarcodeRoute() {
+  return features.barcode ? <BarcodeRouteContent /> : <Redirect href="/nutrition" />;
 }

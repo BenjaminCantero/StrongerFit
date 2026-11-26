@@ -1,137 +1,115 @@
 # StrongerFit
 
-Base inicial del MVP descrito en `SRS_Entrenamiento_Nutricion_MVP_v1.1.docx`.
-App móvil Android-first y API TypeScript, con una estructura extensible a iOS.
+App móvil de entrenamiento y nutrición descrita en `SRS_Entrenamiento_Nutricion_MVP_v1.3.docx`.
+Android-first, con Expo, Supabase (Auth, PostgreSQL con RLS y Edge Functions) y una API Hono.
 
 ## Requisitos
 
-- Node.js 24 LTS y npm (versión fijada de Node en `.nvmrc`).
+- Node.js 24 LTS y npm (versión fijada en `.nvmrc`).
 - Deno 2.9.6 para ejecutar y verificar la API.
-- Android Studio/emulador o dispositivo compatible con Expo SDK 57 para probar Android.
-- Docker solo para ejecutar Supabase local; no hace falta para la API inicial.
+- Docker para el stack local de Supabase (`npm run supabase:start`), necesario para las
+  pruebas de base de datos y de integración.
+- Expo Go compatible con Expo SDK 58, o Android Studio con un emulador, para probar la app.
 
 ## Arranque rápido
 
-Desde la raíz:
+Todos los comandos se ejecutan desde la raíz del repositorio.
 
 ```sh
 npm ci
-cp backend/.env.example backend/.env
-npm run dev:backend
+npm start
 ```
 
-En otra terminal:
+`npm start` abre Expo para el frontend. No ejecutar `npx expo start` en la raíz: allí no
+hay app Expo; usar `cd frontend` antes de cualquier comando `npx expo`. La vista web de
+desarrollo se abre con `npm run dev:web`.
 
-```sh
-npm run dev:frontend
-```
+La cuenta es obligatoria. `frontend/.env` define a qué Supabase se conecta la app:
 
-La API escucha en `http://localhost:8000`. Expo muestra las opciones para abrir
-Android. `npm start` en la raíz hace lo mismo. No ejecutar `npx expo start` en la
-raíz: allí no hay app Expo y falla con `Unable to resolve "../../App"`; usar
-`cd frontend` antes de cualquier comando `npx expo`. Para la vista web de desarrollo, usar `npm run dev:web`.
+- Nube: `EXPO_PUBLIC_SUPABASE_URL` y `EXPO_PUBLIC_SUPABASE_ANON_KEY` del proyecto, y
+  `EXPO_PUBLIC_API_URL` apuntando a la Edge Function `api`
+  (`https://<proyecto>.supabase.co/functions/v1/api`). Funciona desde Expo Go en cualquier red.
+- Local: los valores de `frontend/.env.example` con `npm run supabase:start`. Los correos de
+  confirmación se leen en Mailpit (`http://127.0.0.1:54324`).
 
-Para abrir la app en Expo Go desde otra red con internet, iniciar un túnel:
+Solo van claves públicas (anon o publishable); nunca `service_role` en el frontend.
+Reiniciar Expo con `npx expo start -c` (desde `frontend`) al cambiar variables.
 
-```sh
-cd frontend
-npx expo start --go --tunnel
-```
+Para abrir la app en Expo Go desde otra red contra un backend local, iniciar un túnel con
+`cd frontend && npx expo start --go --tunnel`.
 
-Escanear el QR desde Expo Go compatible con SDK 57 y mantener el computador y el
-celular conectados a internet. `@expo/ngrok` es una dependencia de desarrollo local
-del frontend y se instala con `npm ci`.
-
-Sin archivo `.env` del frontend, la API apunta a `10.0.2.2:8000` en el emulador
-Android y a `localhost:8000` en web/iOS. En un teléfono físico, copiar
-`frontend/.env.example` a `frontend/.env` y cambiar `EXPO_PUBLIC_API_URL` por la IP
-LAN del computador, conectado a la misma red. Reiniciar Expo al cambiar variables.
-
-En Perfil → Comprobar conexión de desarrollo se puede probar la comunicación con
-la API y reintentar. Esa pantalla solo está habilitada en desarrollo.
-
-Los builds propios de desarrollo que usen HTTP local necesitan
-`APP_VARIANT=development`; por ejemplo `APP_VARIANT=development npx expo run:android`
-desde `frontend`. Los builds normales bloquean tráfico HTTP. Expo Go utiliza su
-propia configuración nativa, por lo que no sirve para verificar esas restricciones.
+En desarrollo, la pantalla Conexión de desarrollo (`/dev-status`) comprueba la API y permite
+mostrar u ocultar datos de ejemplo. Los builds propios que usen HTTP local necesitan
+`APP_VARIANT=development` (por ejemplo `APP_VARIANT=development npx expo run:android` desde
+`frontend`); los builds normales bloquean tráfico HTTP.
 
 ## Estructura
 
 ```text
 frontend/src/app/             Rutas y navegación con Expo Router
-frontend/src/components/      Componentes de interfaz
-frontend/src/lib/             Clientes de API y Supabase
-frontend/src/storage/         Apertura de SQLite
+frontend/src/features/        Pantallas, dominio y datos por funcionalidad
+frontend/src/lib/data/        Capa de datos: cliente Supabase, errores, caché, ids
+frontend/src/storage/         SQLite (borrador y sesión pendiente) y valores locales
 backend/src/                  API Hono, validación y autenticación
-backend/supabase/functions/   Adaptador de Supabase Edge Functions
-backend/supabase/migrations/  Futuras migraciones SQL y RLS
-backend/tests/                Pruebas de API y autorización
-packages/contracts/           Esquemas Zod compartidos
-packages/training-engine/     Ubicación reservada para reglas de entrenamiento
-packages/nutrition-engine/    Ubicación reservada para reglas de nutrición
-docs/architecture/            Decisiones y alcance
+backend/supabase/functions/   Edge Function `api` (adaptador de la API Hono)
+backend/supabase/migrations/  Esquema SQL con RLS y RPC
+backend/supabase/tests/       Pruebas pgTAP de RLS y RPC
+packages/contracts/           Esquemas Zod y tipos generados de la base
+packages/training-engine/     Reglas de entrenamiento: catálogo, plantillas, cargas
+packages/nutrition-engine/    Reglas de nutrición: metas, catálogo de alimentos, minuta
+docs/                         Arquitectura, specs, planes y cronograma
 ```
 
-TanStack Query está conectado a la comprobación remota. Zustand está instalado para
-el estado local de los futuros flujos. SecureStore es el adaptador de sesión nativa;
-SQLite tiene un punto de apertura preparado, sin tablas de dominio todavía.
+Los datos de la persona viven en Supabase. TanStack Query es la fuente del estado del
+servidor y su caché se persiste en el teléfono para leer sin conexión. La sesión de
+entrenamiento se guarda como borrador en SQLite y se envía al terminar; si no hay conexión,
+queda pendiente y se reintenta.
+
+Funciones pospuestas a la versión 1.1 (sueño, escáner de códigos y foto de comida) siguen en
+el código detrás de `frontend/src/shared/features.ts`.
 
 ## API
 
-| Ruta local | Resultado |
+| Ruta | Resultado |
 | --- | --- |
 | `GET /v1/health` | Disponibilidad del proceso, sin consultar PostgreSQL |
 | `GET /openapi.json` | Contrato OpenAPI 3.1 generado a partir de los esquemas |
 | `GET /v1/me` | Identidad `{ id }` verificada con Supabase Auth |
+| `DELETE /v1/me` | Elimina la cuenta propia (requiere `SUPABASE_SERVICE_ROLE_KEY` en el servidor) |
 
-`/v1/me` devuelve 401 sin sesión, o 503 cuando se envía un token y Supabase aún no
-está configurado. Los errores usan `application/problem+json`. Para habilitarlo,
-completar `SUPABASE_URL` y `SUPABASE_ANON_KEY` en `backend/.env` (y `SUPABASE_SERVICE_ROLE_KEY`, solo en el servidor, para `DELETE /v1/me`). Las variables
-equivalentes `EXPO_PUBLIC_SUPABASE_*` preparan el cliente móvil para el futuro login.
-Nunca colocar claves `service_role` en el frontend.
+Los errores usan `application/problem+json`. La verificación de JWT del gateway está
+desactivada (`config.toml`) para que health y OpenAPI sean públicos; cada ruta privada usa
+`requireAuth`, que valida el token con Supabase Auth.
+
+Para correr la API fuera de Supabase: `cp backend/.env.example backend/.env`, completar las
+variables y ejecutar `npm run dev:backend` (escucha en `http://localhost:8000`).
 
 ## Supabase local
 
 ```sh
-npm run supabase:start
-npm run supabase:serve
+npm run supabase:start   # stack local
+npm run supabase:serve   # Edge Function api
+npm run db:types         # regenera packages/contracts/src/database.types.ts
+npm run supabase:stop
 ```
 
-Health estará en `http://127.0.0.1:54321/functions/v1/api/v1/health` y OpenAPI en
-`http://127.0.0.1:54321/functions/v1/api/openapi.json`. El gateway proporciona las
-variables de Supabase a la función. Para conectar el frontend, usar como base
-`http://10.0.2.2:54321/functions/v1/api` en el emulador, o su equivalente local/LAN.
-
-La comprobación de JWT del gateway se desactiva para permitir health y OpenAPI
-públicos. Cada ruta privada debe usar `requireAuth`, que valida el token con
-Supabase Auth. Esta configuración no autoriza acceso anónimo a datos privados.
-
-No hay tablas de aplicación todavía. Las primeras migraciones deben incluir RLS y
-pruebas de aislamiento. `npm run supabase:stop` detiene los servicios locales.
+Cada tabla nueva lleva RLS, su prueba de acceso cruzado en `backend/supabase/tests/database/`
+y su entrada en el manifiesto `99_coverage.test.sql`. Detalle en
+[migraciones](backend/supabase/migrations/README.md).
 
 ## Verificación
 
 ```sh
-npm run check
-npm run export --workspace @strongerfit/frontend
-cd frontend
-npx expo-doctor
+npm run check              # TypeScript, Deno, lint y Vitest
+npm run db:test            # migraciones desde cero, lint de SQL y pgTAP
+npm run test:integration   # repositorios contra Supabase local (RLS real)
 ```
 
-`check` ejecuta TypeScript, Deno, lint y Vitest. Las pruebas cubren contratos, prefijo
-de Edge Functions, autorización, errores, límite de cuerpo, CORS y consumo de la API
-por el cliente móvil. La autenticación en estas pruebas usa un mock de Supabase;
-no constituye una prueba de integración con una cuenta real ni de RLS.
+GitHub Actions repite los controles, aplica las migraciones desde cero y corre las pruebas
+de RLS.
 
-La exportación genera bundles Android y web; no genera un APK ni verifica ejecución
-en un dispositivo. GitHub Actions repite los controles y la exportación.
+## Documentación
 
-## Alcance de esta entrega
-
-Navegación inicial en español y pantallas explícitas de funciones pendientes.
-Registro/login, onboarding, perfil persistido, consentimiento, rutinas, alimentación,
-motores, sincronización, RLS y pruebas Maestro/RTL se implementarán en los siguientes
-cortes. El esquema de navegación `strongerfit` no debe usarse para recuperación de
-cuenta: el SRS requiere App Links HTTPS verificados para ese flujo.
-
-Decisiones: [arquitectura inicial](docs/architecture/initial.md).
+- [Arquitectura inicial](docs/architecture/initial.md)
+- Specs y planes de implementación en `docs/superpowers/`
+- Cronograma en `docs/planning/Cronograma_StrongerFit.xlsx`
