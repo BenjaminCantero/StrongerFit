@@ -7,7 +7,7 @@ const options = { auth: { persistSession: false, autoRefreshToken: false } };
 
 // Crea una persona confirmada y devuelve un cliente con su sesión (clave pública + JWT),
 // igual que la app en el teléfono.
-export async function signedInUser(): Promise<{ id: string; client: SupabaseClient<Database> }> {
+export async function signedInUser(): Promise<{ id: string; email: string; password: string; client: SupabaseClient<Database> }> {
   const { url, anonKey, serviceKey } = inject('supabase');
   const admin = createClient(url, serviceKey, options);
   const email = `test-${randomUUID()}@strongerfit.test`;
@@ -17,5 +17,14 @@ export async function signedInUser(): Promise<{ id: string; client: SupabaseClie
   const client = createClient<Database>(url, anonKey, options);
   const signedIn = await client.auth.signInWithPassword({ email, password });
   if (signedIn.error) throw signedIn.error;
-  return { id: created.data.user.id, client };
+  return { id: created.data.user.id, email, password, client };
+}
+
+// Simula reinstalar la app: cliente nuevo, sin sesión ni caché local, que vuelve a iniciar sesión.
+export async function signIn(email: string, password: string): Promise<SupabaseClient<Database>> {
+  const { url, anonKey } = inject('supabase');
+  const client = createClient<Database>(url, anonKey, options);
+  const signedIn = await client.auth.signInWithPassword({ email, password });
+  if (signedIn.error) throw signedIn.error;
+  return client;
 }
