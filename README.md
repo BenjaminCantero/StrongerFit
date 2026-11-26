@@ -33,6 +33,7 @@ La cuenta es obligatoria. `frontend/.env` define a qué Supabase se conecta la a
   confirmación se leen en Mailpit (`http://127.0.0.1:54324`).
 
 Solo van claves públicas (anon o publishable); nunca `service_role` en el frontend.
+Para generar APK/AAB de Android con EAS (builds locales), ver [docs/operations/builds.md](docs/operations/builds.md).
 Reiniciar Expo con `npx expo start -c` (desde `frontend`) al cambiar variables.
 
 Para abrir la app en Expo Go desde otra red contra un backend local, iniciar un túnel con

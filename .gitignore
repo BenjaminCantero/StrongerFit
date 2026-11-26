@@ -23,3 +23,11 @@ __pycache__/
 Sin título.pdf
 SRS_Entrenamiento_Nutricion_MVP_v1.1.docx
 SRS_Entrenamiento_Nutricion_MVP_v1.2.docx
+
+# Builds locales de EAS (BL-01) y material de firma: nunca se versionan.
+dist-builds/
+*.apk
+*.aab
+*.jks
+*.keystore
+credentials.json

@@ -18,6 +18,7 @@
     "expo-build-properties": "~58.0.12",
     "expo-camera": "~58.0.14",
     "expo-constants": "~58.0.15",
+    "expo-dev-client": "~58.0.22",
     "expo-file-system": "~58.0.13",
     "expo-font": "~58.0.11",
     "expo-image-picker": "~58.0.10",
@@ -58,7 +59,10 @@
     "web": "expo start --web",
     "typecheck": "tsc --noEmit",
     "lint": "expo lint",
-    "export": "expo export --platform android --platform web"
+    "export": "expo export --platform android --platform web",
+    "build:android:dev": "npx --yes eas-cli@27.11.0 build --local --platform android --profile development --output ../dist-builds/strongerfit-development.apk",
+    "build:android:preview": "npx --yes eas-cli@27.11.0 build --local --platform android --profile preview --output ../dist-builds/strongerfit-preview.apk",
+    "build:android:prod": "npx --yes eas-cli@27.11.0 build --local --platform android --profile production --output ../dist-builds/strongerfit-production.aab"
   },
   "private": true
 }

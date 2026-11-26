@@ -28,7 +28,8 @@ ve datos de otra persona). Esta guía cubre la app real en un teléfono.
 
 ### Requisitos
 
-- Teléfono Android 10 o superior con Expo Go o un dev build de StrongerFit.
+- Teléfono Android 10 o superior con Expo Go o un build de StrongerFit
+  (guía de builds: [builds.md](builds.md)).
 - Backend Supabase accesible desde el teléfono: el stack local en la misma red
   (`npm run supabase:start`, URL `http://IP_LAN_DE_TU_PC:54321`) o un proyecto
   alojado.
@@ -86,3 +87,8 @@ ve datos de otra persona). Esta guía cubre la app real en un teléfono.
 | Resultado (aprobada / con defectos) | |
 | Pasos fallidos | |
 | Defectos encontrados | |
+
+## BL-01 · Builds de Android
+
+Procedimiento de builds locales con EAS y checklist en teléfono real (incluye la
+medición del aviso del temporizador, CA-20): [builds.md](builds.md).
