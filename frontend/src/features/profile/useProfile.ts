@@ -6,12 +6,14 @@ import { createEmptyProfile, type ProfilePhoto } from './domain/profile';
 import { createProfileStore } from './state/profile-store';
 import { useMealPlan, useNutritionPlan } from '../nutrition/useNutrition';
 import { useActivePlan, useTrainingHistory } from '../training/useTraining';
+import { usePreviewMode } from '../dev/previewMode';
 import { useIdentity } from './useIdentity';
 
 // La identidad (ficha, metas, preferencias, lesiones, cuestionario y consentimiento) viene de
 // Supabase (SY-02); la rutina y las cargas pendientes (SY-03), y la meta nutricional y la
-// minuta (SY-04), también. En desarrollo parten con datos de ejemplo.
-const profileStore = createProfileStore(__DEV__ ? createProfilePreview() : createEmptyProfile());
+// minuta (SY-04), también. Los datos de ejemplo solo se ven con el modo vista previa.
+const profileStore = createProfileStore(createEmptyProfile());
+const previewProfile = createProfilePreview();
 
 // La foto de perfil es un archivo local: solo su referencia se guarda en el teléfono.
 const PHOTO_KEY = 'profile-photo';
@@ -28,11 +30,13 @@ export function useProfile(empty = false) {
   const [emptyStore] = useState(() => createProfileStore(createEmptyProfile()));
   const local = useStore(empty ? emptyStore : profileStore);
   const identity = useIdentity();
+  const preview = usePreviewMode();
   const plan = useActivePlan();
   const nutrition = useNutritionPlan();
   const meals = useMealPlan();
   const history = useTrainingHistory();
   const profile = useMemo(() => {
+    if (preview && !empty) return { ...previewProfile, photo: local.profile.photo };
     if (empty || !identity.data) return local.profile;
     return {
       ...local.profile, ...identity.data,
@@ -43,7 +47,7 @@ export function useProfile(empty = false) {
       ...(nutrition.isSuccess ? { nutritionPlan: nutrition.data } : {}),
       ...(meals.isSuccess ? { mealPlan: meals.data } : {}),
     };
-  }, [empty, identity.data, local.profile, plan.isSuccess, plan.data, history.isSuccess, history.data,
+  }, [preview, empty, identity.data, local.profile, plan.isSuccess, plan.data, history.isSuccess, history.data,
     nutrition.isSuccess, nutrition.data, meals.isSuccess, meals.data]);
   return { profile, dispatch: local.dispatch, identity };
 }

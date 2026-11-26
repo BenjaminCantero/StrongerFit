@@ -15,6 +15,7 @@ import { nutritionDiarySnapshot, resetNutritionDiary } from '../../features/nutr
 import { progressSnapshot, resetProgress } from '../../features/progress/useProgress';
 import { resetSleep, sleepStore } from '../../features/sleep/useSleep';
 import { todayDateKey } from '../../shared/calendar';
+import { usePreviewMode } from '../../features/dev/previewMode';
 import { clearSessionDraft } from '../../storage/sessionDraft';
 
 export default function ProfileRoute() {
@@ -29,7 +30,8 @@ export default function ProfileRoute() {
   // Cada guardado devuelve null o el mensaje de error para mostrarlo en el diálogo.
   const attempt = (task: () => Promise<unknown>) => task().then(() => null, (error: unknown) => dataErrorMessage(toDataError(error)));
   const missing = async () => 'Tu perfil aún no termina de cargar. Inténtalo de nuevo.';
-  const isPreview = __DEV__ && !empty;
+  const previewMode = usePreviewMode();
+  const isPreview = previewMode && !empty;
   const router = useRouter();
   const auth = useAuthSession();
   const queryClient = useQueryClient();

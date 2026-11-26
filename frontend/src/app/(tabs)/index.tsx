@@ -4,6 +4,7 @@ import { homeOverview } from '../../features/home/domain/overview';
 import { diaryTotals, entriesForDate } from '../../features/nutrition/domain/diary';
 import { useNutritionDiary } from '../../features/nutrition/useNutritionDiary';
 import { useProfile } from '../../features/profile/useProfile';
+import { usePreviewMode } from '../../features/dev/previewMode';
 import { useProgressStore } from '../../features/progress/useProgress';
 import { sessionSummary } from '../../features/training/domain/session';
 import { useSessionDraft } from '../../features/training/useSessionDraft';
@@ -16,6 +17,7 @@ export default function HomeRoute() {
   const router = useRouter();
   const { preview } = useLocalSearchParams<{ preview?: string }>();
   const empty = __DEV__ && preview === 'empty';
+  const previewMode = usePreviewMode();
   const { profile } = useProfile(empty);
   const progress = useProgressStore(empty);
   const diary = useNutritionDiary();
@@ -37,7 +39,7 @@ export default function HomeRoute() {
   const sleep = { pendingSince: !empty && sleepState.pendingBed ? timeOf(sleepState.pendingBed) : null, lastMinutes,
     lastCycles: lastMinutes === null ? null : cycles(lastMinutes, sleepState.cycleMinutes).complete, averageMinutes: week.averageMinutes, logged: week.logged };
 
-  return <HomeScreen overview={overview} today={today} pending={pending} unsent={unsent} onRetryUnsent={unsentSession.retry} isPreview={__DEV__ && !empty}
+  return <HomeScreen overview={overview} today={today} pending={pending} unsent={unsent} onRetryUnsent={unsentSession.retry} isPreview={previewMode && !empty}
     onTrainingPress={() => day === undefined ? router.navigate('/training') : router.push({ pathname: '/session', params: { day: String(day) } })}
     onResume={() => router.push({ pathname: '/session', params: { resume: '1' } })}
     onNutritionPress={() => overview.nutrition ? router.push({ pathname: '/food-entry', params: { date: today } }) : router.navigate('/nutrition')}

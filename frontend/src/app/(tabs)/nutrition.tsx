@@ -7,6 +7,7 @@ import { formatKcal } from '../../features/nutrition/presentation';
 import { useNutritionDiary } from '../../features/nutrition/useNutritionDiary';
 import { useDiaryWrite } from '../../features/nutrition/useNutrition';
 import { DiaryWriteError } from '../../features/nutrition/components/DiaryWriteError';
+import { usePreviewMode } from '../../features/dev/previewMode';
 import { useProfile } from '../../features/profile/useProfile';
 
 export default function NutritionRoute() {
@@ -14,6 +15,7 @@ export default function NutritionRoute() {
   const { preview } = useLocalSearchParams<{ preview?: string }>();
   const diary = useNutritionDiary();
   const write = useDiaryWrite();
+  const previewMode = usePreviewMode();
   const empty = preview === 'empty';
   const { profile } = useProfile(empty);
   const todayPlan = profile.mealPlan?.days[weekdayIndex(todayDateKey())];
@@ -24,7 +26,7 @@ export default function NutritionRoute() {
     router.push({ pathname: '/food-entry', params: { entryId: String(entry.id), date: entry.date } });
   }
   return <NutritionScreen date={diary.selectedDate} entries={empty ? [] : entriesForDate(diary)} targets={empty ? null : diary.targets}
-    isPreview={__DEV__} onAdd={add} onEdit={edit}
+    isPreview={previewMode && !empty} onAdd={add} onEdit={edit}
     writeNotice={<DiaryWriteError />}
     onDelete={(meal) => write.mutate({ kind: 'delete-meal', date: diary.selectedDate, meal })}
     onMoveDate={(direction) => diary.dispatch({ type: 'select-date', date: shiftDate(diary.selectedDate, direction) })}
