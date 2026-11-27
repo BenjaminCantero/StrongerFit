@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { userKey } from '../../lib/data/keys';
-import { cancelAccountDeletion, fetchAccountDeletion, fetchAccountStatus, recordConsent, saveOnboarding } from './data/account.repository';
+import { fetchAccountStatus, recordConsent, saveOnboarding } from './data/account.repository';
+import { cancelAccountDeletion, fetchAccountDeletion } from './data/deletion.api';
 import type { OnboardingPayload } from './data/account.mappers';
 
 export const accountStatusKey = (userId: string) => userKey(userId, 'account-status');
