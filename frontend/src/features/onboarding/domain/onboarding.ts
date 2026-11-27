@@ -10,11 +10,36 @@ export type Goal = 'strength' | 'muscle' | 'fat-loss' | 'health';
 export type { Environment, Equipment, Zone };
 export type HealthFlag = 'injury' | 'cardiovascular' | 'pregnancy' | 'eating-disorder';
 
+// Preferencias adicionales para el armado y sugerencia de rutinas.
+export type PreferredSplit = 'auto' | 'full-body' | 'upper-lower' | 'push-pull-legs';
+export type FocusMuscle = 'legs-glutes' | 'chest-push' | 'back-pull' | 'arms' | 'core';
+export type TrainingStyle = 'balanced' | 'strength-heavy' | 'hypertrophy' | 'metabolic';
+export type CardioPreference = 'none' | 'warmup' | 'finisher';
+
+export type RoutinePreferences = {
+  preferredSplit: PreferredSplit;
+  focusMuscles: FocusMuscle[];
+  trainingStyle: TrainingStyle;
+  cardioPreference: CardioPreference;
+  trainingNotes: string;
+};
+
+export const createRoutinePreferences = (): RoutinePreferences => ({
+  preferredSplit: 'auto',
+  focusMuscles: [],
+  trainingStyle: 'balanced',
+  cardioPreference: 'warmup',
+  trainingNotes: '',
+});
+
+export const MAX_FOCUS_MUSCLES = 3;
+
 export type WeightGoal = { startKg: number; targetKg: number; startDate: string; endDate: string };
 export type OnboardingRecord = {
   // El perfil de deportista llega en la versión 1.1 (RF-28); en la v0 la plantilla define los parámetros.
   sex: Sex; activity: ActivityLevel; level: Level; goal: Goal; environment: Environment; equipment: Equipment[]; zones: Zone[];
   weightGoal: WeightGoal | null; healthFlags: HealthFlag[]; consent: { version: string; acceptedAt: string }; completedAt: string;
+  routinePreferences?: RoutinePreferences;
 };
 
 export const steps = ['basics', 'training', 'weight', 'nutrition', 'health'] as const;
@@ -31,6 +56,30 @@ export const labels = {
   environment: environmentLabels,
   equipment: equipmentLabels,
   zones: zoneLabels,
+  preferredSplit: {
+    auto: 'Automática (según mis días)',
+    'full-body': 'Cuerpo completo',
+    'upper-lower': 'Torso / Pierna',
+    'push-pull-legs': 'Empuje / Tirón / Pierna',
+  },
+  focusMuscles: {
+    'legs-glutes': 'Piernas y glúteos',
+    'chest-push': 'Pecho y hombros',
+    'back-pull': 'Espalda y postura',
+    arms: 'Brazos',
+    core: 'Core y abdomen',
+  },
+  trainingStyle: {
+    balanced: 'Equilibrado',
+    'strength-heavy': 'Fuerza (3–6 reps)',
+    hypertrophy: 'Hipertrofia (8–12 reps)',
+    metabolic: 'Dinámico (12–15+ reps)',
+  },
+  cardioPreference: {
+    none: 'Solo fuerza',
+    warmup: 'Activación inicial',
+    finisher: 'Cardio corto al final',
+  },
 } as const;
 
 // Las plantillas cubren 3 a 5 días; fuera de eso se usa la más cercana con aviso (SRS 8.11).
@@ -42,6 +91,7 @@ export const optionalEquipment = (environment: Environment) => environmentEquipm
 export type Draft = {
   name: string; age: string; sex: Sex | null; height: string; weight: string; activity: ActivityLevel | null;
   goal: Goal | null; level: Level | null; environment: Environment | null; days: string; minutes: string; equipment: Equipment[]; zones: Zone[];
+  routinePreferences: RoutinePreferences;
   setWeightGoal: boolean; targetWeight: string; weeks: string; paceConfirmed: boolean;
   exclusions: string; dietFocus: string; preferences: MealPreferences;
   healthFlags: HealthFlag[]; noHealthFlags: boolean; disclaimerRead: boolean; consent: boolean;
@@ -50,6 +100,7 @@ export type Draft = {
 export const createDraft = (): Draft => ({
   name: '', age: '', sex: null, height: '', weight: '', activity: null,
   goal: null, level: null, environment: null, days: '', minutes: '', equipment: [], zones: [],
+  routinePreferences: createRoutinePreferences(),
   setWeightGoal: true, targetWeight: '', weeks: '', paceConfirmed: false,
   exclusions: '', dietFocus: '', preferences: createMealPreferences(), healthFlags: [], noHealthFlags: false, disclaimerRead: false, consent: false,
 });
@@ -59,6 +110,12 @@ export const environmentDraft = (environment: Environment) => ({ environment, eq
 
 export function toggle<T>(list: T[], item: T): T[] {
   return list.includes(item) ? list.filter((value) => value !== item) : [...list, item];
+}
+
+export function toggleFocusMuscle(list: FocusMuscle[], item: FocusMuscle): FocusMuscle[] {
+  if (list.includes(item)) return list.filter((value) => value !== item);
+  if (list.length >= MAX_FOCUS_MUSCLES) return [...list.slice(1), item];
+  return [...list, item];
 }
 
 function personal(draft: Draft) {
@@ -159,6 +216,10 @@ export function completeOnboarding(draft: Draft, now: Date, today: string):
       zones: draft.healthFlags.includes('injury') ? draft.zones : [], healthFlags: draft.healthFlags,
       weightGoal: goal ? { startKg, targetKg: goal.targetKg, startDate: today, endDate: shiftDate(today, goal.weeks * 7) } : null,
       consent: { version: CONSENT_VERSION, acceptedAt: now.toISOString() }, completedAt: now.toISOString(),
+      routinePreferences: {
+        ...draft.routinePreferences,
+        trainingNotes: draft.routinePreferences.trainingNotes.trim().replace(/\s+/g, ' ').slice(0, 160),
+      },
     },
   };
 }

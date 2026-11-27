@@ -132,6 +132,9 @@ function AppStack({ configured, userId }: { configured: boolean; userId: string 
         <Stack.Screen name="programs/[id]" options={{ headerShown: true, title: 'Programa',
           header: ({ options }) => <AppHeader title={options.title ?? 'Programa'}
             backLabel="Volver a programas" onBack={() => router.canGoBack() ? router.back() : router.navigate('/programs')} /> }} />
+        <Stack.Screen name="routine-suggestions" options={{ headerShown: true, title: 'Sugerencias de rutinas',
+          header: ({ options }) => <AppHeader title={options.title ?? 'Sugerencias de rutinas'}
+            backLabel="Volver a Entrenar" onBack={() => router.canGoBack() ? router.back() : router.navigate('/training')} /> }} />
         <Stack.Screen name="session" options={{ headerShown: true, title: 'Sesión de entrenamiento',
           header: ({ options }) => <AppHeader title={options.title ?? 'Sesión de entrenamiento'}
             backLabel="Volver" onBack={() => router.canGoBack() ? router.back() : router.navigate('/')} /> }} />

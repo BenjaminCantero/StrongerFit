@@ -39,19 +39,22 @@ export function HomeScreen({ overview, today, pending, unsent, onRetryUnsent, is
 
   return (
     <Screen>
-      <View style={styles.greeting}>
-        <View style={styles.greetingText}>
-          <AppText variant="title" accessibilityRole="header">{overview.firstName ? `¡Hola, ${overview.firstName}!` : '¡Bienvenido a StrongerFit!'}</AppText>
-          <View style={styles.date}>
-            <View style={styles.dateDot} />
-            <AppText variant="caption" tone="muted">{date}</AppText>
+      <View style={styles.greetingCard}>
+        <View style={styles.greeting}>
+          <View style={styles.greetingText}>
+            <AppText variant="label" tone="brand">Resumen de hoy</AppText>
+            <AppText variant="title" accessibilityRole="header">{overview.firstName ? `¡Hola, ${overview.firstName}!` : '¡Bienvenido a StrongerFit!'}</AppText>
+            <View style={styles.date}>
+              <View style={styles.dateDot} />
+              <AppText variant="caption" tone="muted">{date}</AppText>
+            </View>
           </View>
+          {overview.activeWeeks > 1 && <View style={styles.streak} accessible
+            accessibilityLabel={`${overview.activeWeeks} semanas seguidas con al menos un entrenamiento`}>
+            <Ionicons name="flame" size={15} color={colors.gold} />
+            <AppText variant="label" style={styles.streakText}>{overview.activeWeeks} sem. activas</AppText>
+          </View>}
         </View>
-        {overview.activeWeeks > 1 && <View style={styles.streak} accessible
-          accessibilityLabel={`${overview.activeWeeks} semanas seguidas con al menos un entrenamiento`}>
-          <Ionicons name="flame" size={15} color={colors.gold} />
-          <AppText variant="label">{overview.activeWeeks} semanas activas</AppText>
-        </View>}
       </View>
       {isPreview && <PreviewNotice>Vista previa · Datos de ejemplo</PreviewNotice>}
       {unsent && <UnsentSession session={unsent} onRetry={onRetryUnsent} />}
@@ -66,9 +69,25 @@ export function HomeScreen({ overview, today, pending, unsent, onRetryUnsent, is
 }
 
 const styles = StyleSheet.create({
+  greetingCard: {
+    padding: spacing.lg,
+    borderRadius: radius.lg,
+    backgroundColor: colors.white,
+    borderWidth: 1,
+    borderColor: colors.surfaceHigh,
+  },
   greeting: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: spacing.sm },
-  greetingText: { flexShrink: 1 },
-  date: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs, marginTop: 2 },
-  dateDot: { width: 5, height: 5, borderRadius: radius.pill, backgroundColor: colors.brand },
-  streak: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs, paddingHorizontal: spacing.md, paddingVertical: spacing.sm, backgroundColor: colors.surfaceLow, borderRadius: radius.pill },
+  greetingText: { flexShrink: 1, gap: 2 },
+  date: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs, marginTop: 4 },
+  dateDot: { width: 6, height: 6, borderRadius: radius.pill, backgroundColor: colors.brand },
+  streak: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs,
+    backgroundColor: colors.goldSoft,
+    borderRadius: radius.pill,
+  },
+  streakText: { color: colors.gold },
 });

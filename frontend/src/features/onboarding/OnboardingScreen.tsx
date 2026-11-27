@@ -1,3 +1,4 @@
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRef, useState } from 'react';
 import { StyleSheet, View, type ScrollViewInstance } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -5,16 +6,16 @@ import { KeyboardAvoider, KeyboardAwareScrollView } from '../../components/Keybo
 import { AppButton } from '../../components/ui/AppButton';
 import { AppText } from '../../components/ui/AppText';
 import { ProgressBar } from '../../components/ui/ProgressBar';
-import { colors, layout, spacing } from '../../theme';
+import { colors, layout, radius, spacing } from '../../theme';
 import { BasicsStep, HealthStep, NutritionStep, TrainingStep, WeightStep } from './components/Steps';
 import { completeOnboarding, createDraft, labels, paceSummary, steps, validateStep, type Draft, type DraftField, type Step } from './domain/onboarding';
 
-const titles: Record<Step, { title: string; lead: string }> = {
-  basics: { title: 'Sobre ti', lead: 'Datos básicos para estimar tus metas de energía.' },
-  training: { title: 'Tu entrenamiento', lead: 'Con esto preparamos una rutina que calce con tu semana.' },
-  weight: { title: 'Objetivo de peso', lead: 'Opcional. Define una meta y un plazo realistas.' },
-  nutrition: { title: 'Alimentación', lead: 'Lo que nunca debe aparecer en tus sugerencias.' },
-  health: { title: 'Salud y confirmación', lead: 'Último paso antes de crear tu perfil.' },
+const titles: Record<Step, { title: string; lead: string; icon: 'person-outline' | 'barbell-outline' | 'scale-outline' | 'restaurant-outline' | 'shield-checkmark-outline' }> = {
+  basics: { title: 'Sobre ti', lead: 'Datos básicos para estimar tus metas de energía.', icon: 'person-outline' },
+  training: { title: 'Tu entrenamiento', lead: 'Con esto armamos y sugerimos rutinas que calcen contigo.', icon: 'barbell-outline' },
+  weight: { title: 'Objetivo de peso', lead: 'Opcional. Define una meta y un plazo realistas.', icon: 'scale-outline' },
+  nutrition: { title: 'Alimentación', lead: 'Lo que nunca debe aparecer en tus sugerencias.', icon: 'restaurant-outline' },
+  health: { title: 'Salud y confirmación', lead: 'Último paso antes de crear tu perfil.', icon: 'shield-checkmark-outline' },
 };
 
 export type CompletedOnboarding = Extract<ReturnType<typeof completeOnboarding>, { ok: true }>;
@@ -54,37 +55,60 @@ export function OnboardingScreen({ today, onComplete, onExit, exitLabel = 'Cerra
   }
 
   const pace = paceSummary(draft);
+  const focusMusclesText = draft.routinePreferences.focusMuscles.length
+    ? draft.routinePreferences.focusMuscles.map((item) => labels.focusMuscles[item]).join(', ')
+    : 'Equilibrado en todo el cuerpo';
   const summary = [
     { label: 'Objetivo principal', value: draft.goal ? labels.goal[draft.goal] : '—' },
     { label: 'Disponibilidad', value: `${draft.days || '—'} días por semana · ${draft.minutes || '—'} min por sesión` },
     { label: 'Entorno', value: draft.environment ? labels.environment[draft.environment] : '—' },
+    { label: 'División y estilo', value: `${labels.preferredSplit[draft.routinePreferences.preferredSplit]} · ${labels.trainingStyle[draft.routinePreferences.trainingStyle]}` },
+    { label: 'Prioridad muscular', value: focusMusclesText },
     { label: 'Objetivo de peso', value: pace ? `${draft.weight} → ${draft.targetWeight} kg en ${pace.weeks} semanas` : 'Sin definir' },
     { label: 'Exclusiones', value: draft.exclusions.trim() || 'Ninguna' },
     { label: 'Comidas al día', value: String(draft.preferences.mealsPerDay) },
   ];
   const props = { draft, errors, set };
   const errorCount = Object.values(errors).filter(Boolean).length;
+  const meta = titles[step];
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['left', 'right', 'bottom']}>
       <KeyboardAvoider><KeyboardAwareScrollView ref={scroll} contentContainerStyle={styles.scroll}>
         <View style={styles.content}>
-          <View style={styles.progress}>
-            <AppText variant="label" tone="brand">Paso {index + 1} de {steps.length}</AppText>
+          <View style={styles.headerCard}>
+            <View style={styles.progressRow}>
+              <View style={styles.stepPill}>
+                <AppText variant="label" tone="brand">Paso {index + 1} de {steps.length}</AppText>
+              </View>
+              <View style={styles.dots}>
+                {steps.map((item, idx) => (
+                  <View key={item} style={[styles.dot, idx <= index && styles.dotActive, idx === index && styles.dotCurrent]} />
+                ))}
+              </View>
+            </View>
             <ProgressBar value={index + 1} target={steps.length} label={`Paso ${index + 1} de ${steps.length}`} />
+            <View style={styles.headingRow}>
+              <View style={styles.stepIcon}>
+                <Ionicons name={meta.icon} size={22} color={colors.white} />
+              </View>
+              <View style={styles.heading}>
+                <AppText variant="title" accessibilityRole="header">{meta.title}</AppText>
+                <AppText tone="muted">{meta.lead}</AppText>
+              </View>
+            </View>
           </View>
-          <View style={styles.heading}>
-            <AppText variant="title" accessibilityRole="header">{titles[step].title}</AppText>
-            <AppText tone="muted">{titles[step].lead}</AppText>
-          </View>
+
           {step === 'basics' && <BasicsStep {...props} />}
           {step === 'training' && <TrainingStep {...props} />}
           {step === 'weight' && <WeightStep {...props} today={today} />}
           {step === 'nutrition' && <NutritionStep {...props} />}
           {step === 'health' && <HealthStep {...props} summary={summary} />}
+
           {errorCount > 0 && <AppText accessibilityRole="alert" variant="caption" style={styles.error}>
             {errorCount === 1 ? 'Revisa el campo marcado.' : `Revisa los ${errorCount} campos marcados.`}
           </AppText>}
+
           <View style={styles.actions}>
             {saveError && <AppText accessibilityRole="alert" variant="caption" style={styles.error}>{saveError}</AppText>}
             <AppButton label={saving ? 'Guardando…' : last ? 'Crear mi perfil' : 'Continuar'} icon={last ? 'checkmark-outline' : 'arrow-forward-outline'}
@@ -101,9 +125,24 @@ export function OnboardingScreen({ today, onComplete, onExit, exitLabel = 'Cerra
 const styles = StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: colors.canvas },
   scroll: { flexGrow: 1 },
-  content: { width: '100%', maxWidth: layout.contentWidth, alignSelf: 'center', padding: spacing.lg, paddingBottom: spacing.section, gap: spacing.xl },
-  progress: { gap: spacing.sm },
-  heading: { gap: spacing.xs },
+  content: { width: '100%', maxWidth: layout.contentWidth, alignSelf: 'center', padding: spacing.lg, paddingBottom: spacing.section, gap: spacing.lg },
+  headerCard: {
+    gap: spacing.md,
+    padding: spacing.lg,
+    borderRadius: radius.lg,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.surfaceHigh,
+  },
+  progressRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.sm },
+  stepPill: { paddingHorizontal: spacing.md, paddingVertical: spacing.xs, borderRadius: radius.pill, backgroundColor: colors.brandSoft },
+  dots: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+  dot: { width: 8, height: 8, borderRadius: radius.pill, backgroundColor: colors.surfaceHigh },
+  dotActive: { backgroundColor: colors.brandMedium },
+  dotCurrent: { width: 18, backgroundColor: colors.brand },
+  headingRow: { flexDirection: 'row', alignItems: 'flex-start', gap: spacing.md, marginTop: spacing.xs },
+  stepIcon: { width: 44, height: 44, borderRadius: radius.md, backgroundColor: colors.brandStrong, alignItems: 'center', justifyContent: 'center' },
+  heading: { flex: 1, gap: 2 },
   actions: { gap: spacing.md, marginTop: spacing.sm },
   error: { color: colors.error },
 });

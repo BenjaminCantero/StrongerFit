@@ -10,10 +10,25 @@ import { colors, layout, radius, spacing } from '../../theme';
 import { useHasPendingOnboarding } from './pendingOnboarding';
 import { MIN_PASSWORD, validateAuthForm, type AuthField, type AuthForm, type AuthMode, type AuthResult } from './domain';
 
-const copy: Record<AuthMode, { title: string; lead: string; action: string }> = {
-  signin: { title: 'Iniciar sesión', lead: 'Entra con el correo y la contraseña de tu cuenta.', action: 'Iniciar sesión' },
-  signup: { title: 'Crear cuenta', lead: 'Tu cuenta guarda tu perfil, entrenamientos y comidas para que no los pierdas al cambiar de teléfono.', action: 'Crear cuenta' },
-  reset: { title: 'Recuperar acceso', lead: 'Te enviaremos un enlace para crear una nueva contraseña.', action: 'Enviar enlace' },
+const copy: Record<AuthMode, { title: string; lead: string; action: string; icon: 'log-in-outline' | 'person-add-outline' | 'key-outline' }> = {
+  signin: {
+    title: 'Iniciar sesión',
+    lead: 'Retoma tu rutina, tus comidas y tu progreso donde los dejaste.',
+    action: 'Entrar a mi cuenta',
+    icon: 'log-in-outline',
+  },
+  signup: {
+    title: 'Crear cuenta',
+    lead: 'Guarda tu perfil, entrenamientos y comidas de forma privada en la nube.',
+    action: 'Crear mi cuenta',
+    icon: 'person-add-outline',
+  },
+  reset: {
+    title: 'Recuperar acceso',
+    lead: 'Te enviaremos un enlace seguro para crear una nueva contraseña.',
+    action: 'Enviar enlace',
+    icon: 'key-outline',
+  },
 };
 
 type Props = {
@@ -54,49 +69,124 @@ export function AuthScreen({ initialMode, onSubmit }: Props) {
   }
 
   return <Screen safeBottom>
-    <View style={styles.heading}>
-      <AppText variant="title" accessibilityRole="header">{text.title}</AppText>
-      <AppText tone="muted">{text.lead}</AppText>
+    <View style={styles.heroHeader}>
+      <View style={styles.heroIcon}>
+        <Ionicons name={text.icon} size={24} color={colors.white} />
+      </View>
+      <View style={styles.heading}>
+        <AppText variant="label" tone="brand">StrongerFit</AppText>
+        <AppText variant="title" accessibilityRole="header">{text.title}</AppText>
+        <AppText tone="muted">{text.lead}</AppText>
+      </View>
     </View>
 
-    {mode === 'signup' && hasPending && <View style={styles.note} accessibilityLiveRegion="polite">
-      <Ionicons name="checkmark-circle-outline" size={20} color={colors.brand} />
-      <AppText variant="caption" style={styles.flex}>Tu perfil está listo. Crea tu cuenta para guardarlo.</AppText>
+    {mode === 'signup' && hasPending && <View style={styles.pendingBanner} accessibilityLiveRegion="polite">
+      <Ionicons name="checkmark-circle" size={20} color={colors.brandText} />
+      <AppText variant="caption" style={styles.flex}>
+        Tu cuestionario está listo. Crea tu cuenta para guardar tu perfil y generar tus rutinas.
+      </AppText>
     </View>}
 
     {mode !== 'reset' && <View role="tablist" style={styles.tabs}>
-      {(['signin', 'signup'] as const).map((item) => <AppPressable key={item} role="tab" accessibilityState={{ selected: mode === item }}
-        aria-selected={mode === item} onPress={() => switchTo(item)} style={[styles.tab, mode === item && styles.tabSelected]}>
-        <AppText variant="label" tone={mode === item ? 'white' : 'muted'}>{copy[item].title}</AppText>
-      </AppPressable>)}
+      {(['signin', 'signup'] as const).map((item) => (
+        <AppPressable
+          key={item}
+          role="tab"
+          accessibilityState={{ selected: mode === item }}
+          aria-selected={mode === item}
+          onPress={() => switchTo(item)}
+          style={({ pressed }) => [styles.tab, mode === item && styles.tabSelected, pressed && styles.pressed]}
+        >
+          <AppText variant="label" tone={mode === item ? 'white' : 'muted'}>{copy[item].title}</AppText>
+        </AppPressable>
+      ))}
     </View>}
 
-    <View style={styles.form}>
-      <FormField label="Correo" {...field('email')} keyboardType="email-address" autoCapitalize="none" autoComplete="email" autoCorrect={false} maxLength={254} />
-      {mode !== 'reset' && <FormField label="Contraseña" {...field('password')} secureTextEntry autoCapitalize="none"
-        autoComplete={mode === 'signup' ? 'new-password' : 'current-password'} maxLength={72}
-        hint={mode === 'signup' ? `Al menos ${MIN_PASSWORD} caracteres.` : undefined} />}
-      {mode === 'signup' && <FormField label="Repite la contraseña" {...field('confirm')} secureTextEntry autoCapitalize="none" autoComplete="new-password" maxLength={72} />}
+    <View style={styles.formCard}>
+      <View style={styles.form}>
+        <FormField label="Correo electrónico" {...field('email')} placeholder="tu@correo.com" keyboardType="email-address" autoCapitalize="none" autoComplete="email" autoCorrect={false} maxLength={254} />
+        {mode !== 'reset' && <FormField label="Contraseña" {...field('password')} placeholder="••••••••" secureTextEntry autoCapitalize="none"
+          autoComplete={mode === 'signup' ? 'new-password' : 'current-password'} maxLength={72}
+          hint={mode === 'signup' ? `Al menos ${MIN_PASSWORD} caracteres.` : undefined} />}
+        {mode === 'signup' && <FormField label="Confirma tu contraseña" {...field('confirm')} placeholder="••••••••" secureTextEntry autoCapitalize="none" autoComplete="new-password" maxLength={72} />}
+      </View>
+
+      {message && <View style={[styles.note, message.tone === 'error' && styles.error]} accessibilityLiveRegion="polite">
+        <Ionicons name={message.tone === 'error' ? 'alert-circle-outline' : 'mail-outline'} size={20} color={message.tone === 'error' ? colors.error : colors.brandText} />
+        <AppText variant="caption" style={styles.flex}>{message.text}</AppText>
+      </View>}
+
+      <AppButton label={busy ? 'Un momento…' : text.action} icon="arrow-forward-outline" disabled={busy} onPress={submit} />
+      {mode === 'signin' && <AppButton label="Olvidé mi contraseña" variant="ghost" onPress={() => switchTo('reset')} />}
+      {mode === 'reset' && <AppButton label="Volver a iniciar sesión" variant="secondary" onPress={() => switchTo('signin')} />}
     </View>
 
-    {message && <View style={[styles.note, message.tone === 'error' && styles.error]} accessibilityLiveRegion="polite">
-      <Ionicons name={message.tone === 'error' ? 'alert-circle-outline' : 'mail-outline'} size={20} color={message.tone === 'error' ? colors.error : colors.brand} />
-      <AppText variant="caption" style={styles.flex}>{message.text}</AppText>
-    </View>}
-
-    <AppButton label={busy ? 'Un momento…' : text.action} icon="arrow-forward-outline" disabled={busy} onPress={submit} />
-    {mode === 'signin' && <AppButton label="Olvidé mi contraseña" variant="ghost" onPress={() => switchTo('reset')} />}
-    {mode === 'reset' && <AppButton label="Volver a iniciar sesión" variant="secondary" onPress={() => switchTo('signin')} />}
+    <View style={styles.trustNote}>
+      <Ionicons name="lock-closed-outline" size={16} color={colors.muted} />
+      <AppText variant="caption" tone="muted" style={styles.flex}>
+        Tu sesión y datos de salud se protegen de forma privada y puedes exportarlos o eliminarlos cuando quieras.
+      </AppText>
+    </View>
   </Screen>;
 }
 
 const styles = StyleSheet.create({
-  heading: { gap: spacing.xs },
-  tabs: { flexDirection: 'row', gap: spacing.sm, padding: spacing.xs, borderRadius: radius.pill, backgroundColor: colors.surface },
+  heroHeader: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: spacing.md,
+    padding: spacing.lg,
+    borderRadius: radius.lg,
+    backgroundColor: colors.surface,
+  },
+  heroIcon: {
+    width: 48,
+    height: 48,
+    borderRadius: radius.md,
+    backgroundColor: colors.brandStrong,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 2,
+  },
+  heading: { flex: 1, gap: spacing.xs },
+  pendingBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+    padding: spacing.md,
+    borderRadius: radius.md,
+    backgroundColor: colors.brandSoft,
+    borderWidth: 1,
+    borderColor: colors.brandMedium,
+  },
+  tabs: {
+    flexDirection: 'row',
+    gap: spacing.xs,
+    padding: spacing.xs,
+    borderRadius: radius.pill,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.surfaceHigh,
+  },
   tab: { flex: 1, minHeight: layout.touchTarget, borderRadius: radius.pill, alignItems: 'center', justifyContent: 'center' },
   tabSelected: { backgroundColor: colors.brand },
+  pressed: { opacity: 0.75 },
+  formCard: {
+    gap: spacing.lg,
+    padding: spacing.xl,
+    borderRadius: radius.lg,
+    backgroundColor: colors.white,
+    borderWidth: 1,
+    borderColor: colors.surfaceHigh,
+  },
   form: { gap: spacing.lg },
   note: { flexDirection: 'row', alignItems: 'flex-start', gap: spacing.sm, padding: spacing.md, borderRadius: radius.md, backgroundColor: colors.sand },
   error: { backgroundColor: '#FFDAD8' },
+  trustNote: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+    paddingHorizontal: spacing.sm,
+  },
   flex: { flex: 1 },
 });

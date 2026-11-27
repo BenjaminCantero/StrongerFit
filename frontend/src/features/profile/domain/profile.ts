@@ -1,6 +1,6 @@
 import { DEFAULT_MEALS_PER_DAY, type MealPlan, type MealPreferences, type NutritionTargets, type StoredMealPlan } from '@strongerfit/nutrition-engine';
 import { environmentLabels, type Environment, type Equipment, type Zone } from '@strongerfit/training-engine';
-import type { OnboardingRecord } from '../../onboarding/domain/onboarding';
+import { createRoutinePreferences, type OnboardingRecord, type RoutinePreferences } from '../../onboarding/domain/onboarding';
 import type { StoredPlan } from '../../training/data/training.mappers';
 
 // Meta guardada con sus parámetros y versión de reglas (RF-19, RNF-08).
@@ -58,6 +58,8 @@ export type ProfileAction =
   | { type: 'update-nutrition'; exclusions: string[]; dietFocus: string; preferences?: MealPreferences; trainingDayTargets?: boolean }
   | { type: 'set-photo'; photo: ProfilePhoto }
   | { type: 'update-training-setup'; environment: Environment; equipment: Equipment[]; zones: Zone[] }
+  | { type: 'update-routine-preferences'; routinePreferences: RoutinePreferences; daysPerWeek?: number; sessionMinutes?: number }
+  | { type: 'set-training-plan'; trainingPlan: StoredPlan | null }
   | { type: 'complete-onboarding'; values: PersonalValues; exclusions: string[]; dietFocus: string; preferences: MealPreferences; onboarding: OnboardingRecord }
   | { type: 'reset' };
 
@@ -180,10 +182,28 @@ export function profileReducer(state: ProfileData, action: ProfileAction): Profi
       const { environment, equipment, zones } = action;
       return { ...state, equipment: environmentLabels[environment], onboarding: { ...state.onboarding, environment, equipment, zones } };
     }
+    case 'update-routine-preferences': {
+      const daysPerWeek = action.daysPerWeek ?? state.daysPerWeek;
+      const sessionMinutes = action.sessionMinutes ?? state.sessionMinutes;
+      return {
+        ...state,
+        daysPerWeek,
+        sessionMinutes,
+        onboarding: state.onboarding
+          ? { ...state.onboarding, routinePreferences: action.routinePreferences }
+          : null,
+      };
+    }
+    case 'set-training-plan':
+      return { ...state, trainingPlan: action.trainingPlan };
     case 'complete-onboarding':
       return { ...state, ...action.values, exclusions: action.exclusions, dietFocus: action.dietFocus, mealPreferences: action.preferences, onboarding: action.onboarding };
     case 'reset': return createEmptyProfile();
   }
+}
+
+export function routinePreferencesOf(profile: ProfileData): RoutinePreferences {
+  return profile.onboarding?.routinePreferences ?? createRoutinePreferences();
 }
 
 // Exportación estructurada de lo que existe en este dispositivo (RF-16). La foto se

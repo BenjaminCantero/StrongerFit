@@ -30,10 +30,17 @@ export function RestTimer({ seconds, durationSeconds, paused, onAdd, onSkip }: {
 }
 
 const styles = StyleSheet.create({
-  card: { padding: spacing.lg, gap: spacing.md, backgroundColor: colors.surfaceHigh },
+  card: {
+    padding: spacing.md,
+    gap: spacing.sm,
+    backgroundColor: colors.white,
+    borderWidth: 1,
+    borderColor: colors.brandMedium,
+    borderRadius: radius.md,
+  },
   top: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
   icon: { width: 40, height: 40, borderRadius: radius.pill, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.brandSoft },
   heading: { flex: 1 },
   actions: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
-  button: { flexGrow: 1, backgroundColor: colors.canvas, borderRadius: radius.sm },
+  button: { flexGrow: 1, backgroundColor: colors.surfaceLow, borderRadius: radius.sm },
 });

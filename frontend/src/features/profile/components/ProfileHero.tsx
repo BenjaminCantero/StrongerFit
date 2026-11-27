@@ -36,7 +36,8 @@ export function ProfileHero({ name, photo, summary, onPhoto }: Props) {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: spacing.lg,
-    backgroundColor: colors.surface, borderRadius: radius.lg, padding: spacing.xl,
+    backgroundColor: colors.white, borderRadius: radius.lg, padding: spacing.xl,
+    borderWidth: 1, borderColor: colors.surfaceHigh,
   },
   avatarWrap: { position: 'relative' },
   avatar: { width: 72, height: 72, borderRadius: radius.pill, borderWidth: 3, borderColor: colors.canvas },

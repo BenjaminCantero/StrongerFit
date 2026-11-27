@@ -115,13 +115,13 @@ function TrainingSession({ template, sample = false, restored, onPersist, onExit
       <SessionControls title={state.title} elapsedSeconds={elapsedSeconds} paused={paused}
         onPause={togglePause} onFinish={() => setDialog('finish')} />
       <ExerciseCard key={exercise.id} exercise={exercise} paused={paused} onDetails={() => setDialog('details')}
+        rest={restSeconds > 0 ? <RestTimer seconds={restSeconds} durationSeconds={state.rest.durationMs / 1000} paused={paused}
+          onAdd={() => send({ type: 'add-rest', now: Date.now() })} onSkip={() => send({ type: 'skip-rest' })} /> : undefined}
         onAddSet={() => send({ type: 'add-set' })}
         onComplete={(setId, weightKg, reps, reserve) => send({ type: 'complete-set', exerciseId: exercise.id, setId, weightKg, reps, reserve, now: Date.now() })} />
       <ExerciseTimer exercise={exercise} paused={paused} run={timerRun} setRun={setTimerRun}
         preset={exercise.exerciseId ? timerPresets?.[exercise.exerciseId] : undefined}
         onIntervalStart={exercise.exerciseId && onTimerPreset ? (spec) => onTimerPreset(exercise.exerciseId!, exercise.restSeconds, spec) : undefined} />
-      <RestTimer seconds={restSeconds} durationSeconds={state.rest.durationMs / 1000} paused={paused}
-        onAdd={() => send({ type: 'add-rest', now: Date.now() })} onSkip={() => send({ type: 'skip-rest' })} />
       {next ? <Card style={styles.nextCard}>
         <AppText variant="label" tone="brand">Siguiente ejercicio</AppText>
         <AppText variant="header">{next.name}</AppText>

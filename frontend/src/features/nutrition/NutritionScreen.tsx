@@ -40,6 +40,10 @@ export function NutritionScreen({ date, entries, targets, isPreview, onMoveDate,
   return (
     <Screen>
       {writeNotice}
+      <View style={styles.header}>
+        <AppText variant="title" accessibilityRole="header">Alimentación</AppText>
+        <AppText variant="caption" tone="muted">Registra tus comidas, revisa tus macros y organiza tu semana.</AppText>
+      </View>
       <DiaryDateSelector date={date} onPrevious={() => moveDate(-1)} onNext={() => moveDate(1)} onToday={() => { setNotice(''); onToday(); }} />
       {isPreview && <PreviewNotice>Vista previa · Diario de ejemplo y cambios solo en memoria</PreviewNotice>}
       <AppPressable accessibilityRole="button" accessibilityLabel="Abrir minuta semanal" onPress={onMealPlan}
@@ -84,13 +88,32 @@ export function NutritionScreen({ date, entries, targets, isPreview, onMoveDate,
 }
 
 const styles = StyleSheet.create({
-  plan: { backgroundColor: colors.surfaceLow, borderRadius: radius.md, padding: spacing.lg, minHeight: layout.touchTarget,
-    flexDirection: 'row', alignItems: 'center', gap: spacing.md },
-  planIcon: { width: 40, height: 40, borderRadius: radius.sm, backgroundColor: colors.brandSoft, alignItems: 'center', justifyContent: 'center' },
+  header: { gap: 2 },
+  plan: {
+    backgroundColor: colors.white,
+    borderWidth: 1,
+    borderColor: colors.surfaceHigh,
+    borderRadius: radius.lg,
+    padding: spacing.lg,
+    minHeight: layout.touchTarget,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+  },
+  planIcon: { width: 42, height: 42, borderRadius: radius.md, backgroundColor: colors.brandSoft, alignItems: 'center', justifyContent: 'center' },
   planText: { flex: 1, gap: spacing.xs },
   quick: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.md },
-  tile: { flexGrow: 1, flexBasis: 140, backgroundColor: colors.surfaceLow, borderRadius: radius.md, padding: spacing.lg, gap: spacing.xs,
-    minHeight: layout.touchTarget },
+  tile: {
+    flexGrow: 1,
+    flexBasis: 140,
+    backgroundColor: colors.white,
+    borderWidth: 1,
+    borderColor: colors.surfaceHigh,
+    borderRadius: radius.lg,
+    padding: spacing.lg,
+    gap: spacing.xs,
+    minHeight: layout.touchTarget,
+  },
   pressed: { opacity: 0.8 },
   deleteButton: { backgroundColor: colors.error },
 });

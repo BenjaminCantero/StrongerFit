@@ -3,6 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { Screen } from '../../components/Screen';
 import { AppButton } from '../../components/ui/AppButton';
 import { AppText } from '../../components/ui/AppText';
+import { Card } from '../../components/ui/Card';
 import { PreviewNotice } from '../../components/ui/PreviewNotice';
 import { spacing } from '../../theme';
 import type { WeightGoal } from '../onboarding/domain/onboarding';
@@ -22,6 +23,10 @@ export function ProgressScreen({ state, dispatch, today, isPreview, goal }: Prop
   const map = consistencyMap(state, state.period, today);
   const [exportInfo, setExportInfo] = useState(false);
   return <Screen>
+    <View style={styles.header}>
+      <AppText variant="title" accessibilityRole="header">Tu progreso</AppText>
+      <AppText variant="caption" tone="muted">Consistencia, volumen movilizado y evolución de peso.</AppText>
+    </View>
     <PeriodSelector selected={state.period} onSelect={(period) => { dispatch({ type: 'select-period', period }); setExportInfo(false); }} />
     <PreviewNotice local={!isPreview}>{isPreview ? 'Vista previa · Datos de ejemplo y cambios solo en memoria' : 'Registro temporal · Los cambios se borran al cerrar la app'}</PreviewNotice>
     <ConsistencyHero completed={summary.completed} planned={summary.planned} adherence={summary.adherence} from={summary.from}
@@ -31,14 +36,15 @@ export function ProgressScreen({ state, dispatch, today, isPreview, goal }: Prop
     <WeightCheckIn record={summary.latestWeight} weights={summary.weights} allWeights={state.weights} goal={goal} today={today} onSave={(value) => dispatch({ type: 'record-weight', date: today, value })} />
     <WorkoutHistory records={summary.history} />
 
-    <View style={styles.export}>
+    <Card tone="low" style={styles.export}>
       <AppButton label="Exportar resumen personal (PDF)" icon="download-outline" variant="secondary" onPress={() => setExportInfo((visible) => !visible)} />
       <AppText variant="caption" tone="muted">Exportación PDF próximamente.</AppText>
       {exportInfo && <AppText accessibilityLiveRegion="polite" variant="caption" tone="brand">La descarga de tu resumen todavía no está disponible. Puedes revisar los datos del período en esta pantalla.</AppText>}
-    </View>
+    </Card>
   </Screen>;
 }
 
 const styles = StyleSheet.create({
+  header: { gap: 2 },
   export: { gap: spacing.sm },
 });

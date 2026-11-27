@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { useStore } from 'zustand';
 import { readValue, writeValue } from '../../storage/keyValue';
 import { createEmptyProfile, type ProfilePhoto } from './domain/profile';
+import type { RoutinePreferences } from '../onboarding/domain/onboarding';
 import { createProfileStore } from './state/profile-store';
 import { useMealPlan, useNutritionPlan } from '../nutrition/useNutrition';
 import { useActivePlan, useTrainingHistory } from '../training/useTraining';
@@ -17,12 +18,23 @@ const previewProfile = devPreview()?.createProfilePreview() ?? null;
 
 // La foto de perfil es un archivo local: solo su referencia se guarda en el teléfono.
 const PHOTO_KEY = 'profile-photo';
+const ROUTINE_PREFS_KEY = 'routine-preferences';
 readValue(PHOTO_KEY).then((value) => {
   if (value) profileStore.getState().dispatch({ type: 'set-photo', photo: JSON.parse(value) as ProfilePhoto });
+}).catch(() => undefined);
+readValue(ROUTINE_PREFS_KEY).then((value) => {
+  if (value) {
+    profileStore.getState().dispatch({ type: 'update-routine-preferences', routinePreferences: JSON.parse(value) as RoutinePreferences });
+  }
 }).catch(() => undefined);
 profileStore.subscribe((state, previous) => {
   if (state.profile.photo !== previous.profile.photo) {
     writeValue(PHOTO_KEY, state.profile.photo ? JSON.stringify(state.profile.photo) : null).catch(() => undefined);
+  }
+  const prevPrefs = previous.profile.onboarding?.routinePreferences;
+  const nextPrefs = state.profile.onboarding?.routinePreferences;
+  if (nextPrefs && nextPrefs !== prevPrefs) {
+    writeValue(ROUTINE_PREFS_KEY, JSON.stringify(nextPrefs)).catch(() => undefined);
   }
 });
 
@@ -38,8 +50,15 @@ export function useProfile(empty = false) {
   const profile = useMemo(() => {
     if (preview && previewProfile && !empty) return { ...previewProfile, photo: local.profile.photo };
     if (empty || !identity.data) return local.profile;
+    const mergedOnboarding = identity.data.onboarding ? {
+      ...identity.data.onboarding,
+      ...(local.profile.onboarding?.routinePreferences
+        ? { routinePreferences: local.profile.onboarding.routinePreferences }
+        : {}),
+    } : null;
     return {
       ...local.profile, ...identity.data,
+      onboarding: mergedOnboarding,
       // SY-03: rutina y cargas pendientes vienen del servidor cuando ya respondió.
       ...(plan.isSuccess ? { trainingPlan: plan.data } : {}),
       ...(history.isSuccess ? { nextLoads: history.data.nextLoads } : {}),

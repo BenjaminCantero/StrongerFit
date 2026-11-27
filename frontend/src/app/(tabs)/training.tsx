@@ -8,6 +8,7 @@ export default function TrainingRoute() {
   const { profile } = useProfile();
   const { draft, discard } = useSessionDraft();
   return <PlanScreen profile={profile} draft={draft} onDiscard={discard} onCatalog={() => router.push('/exercises')} onPrograms={() => router.push('/programs')}
+    onSuggestions={() => router.push('/routine-suggestions')}
     onResume={() => router.push({ pathname: '/session', params: { resume: '1' } })}
     onStart={(day) => router.push({ pathname: '/session', params: { day: String(day) } })} />;
 }

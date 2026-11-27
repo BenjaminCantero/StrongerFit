@@ -41,10 +41,10 @@ function warningText(plan: Plan, warning: Plan['warnings'][number]) {
 
 type Props = {
   profile: ProfileData; onStart: (day: number) => void;
-  draft: SessionDraft | null; onResume: () => void; onDiscard: () => void; onCatalog: () => void; onPrograms: () => void;
+  draft: SessionDraft | null; onResume: () => void; onDiscard: () => void; onCatalog: () => void; onPrograms: () => void; onSuggestions: () => void;
 };
 
-export function PlanScreen({ profile, onStart, draft, onResume, onDiscard, onCatalog, onPrograms }: Props) {
+export function PlanScreen({ profile, onStart, draft, onResume, onDiscard, onCatalog, onPrograms, onSuggestions }: Props) {
   const plan = profile.trainingPlan;
   const [selected, setSelected] = useState(0);
   const [editing, setEditing] = useState<number | null>(null);
@@ -69,6 +69,7 @@ export function PlanScreen({ profile, onStart, draft, onResume, onDiscard, onCat
       <AppText tone="muted">Usaremos tus días, minutos, equipamiento y perfil de deportista. Podrás editar cada ejercicio antes de entrenar.</AppText>
       <AppButton label={savePlan.isPending ? 'Generando…' : 'Generar mi rutina'} icon="sparkles-outline" disabled={savePlan.isPending} onPress={generate} />
       {!!notice && <AppText accessibilityRole="alert" variant="caption">{notice}</AppText>}
+      <AppButton label="Sugerencias según tus preferencias" icon="options-outline" variant="secondary" onPress={onSuggestions} />
       <AppButton label="Elegir un programa clásico" icon="barbell-outline" variant="secondary" onPress={onPrograms} />
     </Card>
     <AppButton label="Ver catálogo de ejercicios" icon="library-outline" variant="secondary" onPress={onCatalog} />
@@ -79,11 +80,15 @@ export function PlanScreen({ profile, onStart, draft, onResume, onDiscard, onCat
   const dayChanges = plan.changes.filter((change) => change.day === Math.min(selected, plan.days.length - 1));
   const program = programById(plan.templateId);
   return <Screen>
-    <View style={styles.heading}>
+    <View style={styles.headingCard}>
+      <View style={styles.planBadge}>
+        <Ionicons name="barbell-outline" size={14} color={colors.brandText} />
+        <AppText variant="label" tone="brand">{program ? 'Programa clásico' : 'Plan semanal activo'}</AppText>
+      </View>
       <AppText variant="title" accessibilityRole="header">{program ? program.name : 'Tu plan semanal'}</AppText>
       <AppText variant="caption" tone="muted">
         {program
-          ? `Programa clásico · ${program.perWeek} días por semana${program.perWeek > plan.days.length ? `, alternando ${plan.days.length} sesiones` : ''}`
+          ? `${program.perWeek} días por semana${program.perWeek > plan.days.length ? `, alternando ${plan.days.length} sesiones` : ''}`
           : `${plan.days.length} días · ${environmentLabels[plan.environment]} · ${labels.level[plan.input.level]}`}
       </AppText>
     </View>
@@ -158,6 +163,7 @@ export function PlanScreen({ profile, onStart, draft, onResume, onDiscard, onCat
     </Card>
 
     {!!notice && <AppText accessibilityLiveRegion="polite" variant="caption" tone="brand">{notice}</AppText>}
+    <AppButton label="Sugerencias según tus preferencias" icon="options-outline" variant="secondary" onPress={onSuggestions} />
     <AppButton label="Ver catálogo de ejercicios" icon="library-outline" variant="secondary" onPress={onCatalog} />
     <AppButton label={program ? 'Volver a una rutina generada' : 'Regenerar rutina'} icon="refresh-outline" variant="secondary" onPress={() => setConfirmRegenerate(true)} />
     {program ? <AppText variant="caption" tone="muted">
@@ -197,22 +203,40 @@ export function PlanScreen({ profile, onStart, draft, onResume, onDiscard, onCat
 }
 
 const styles = StyleSheet.create({
-  heading: { gap: spacing.xs },
+  headingCard: {
+    gap: spacing.xs,
+    padding: spacing.lg,
+    borderRadius: radius.lg,
+    backgroundColor: colors.white,
+    borderWidth: 1,
+    borderColor: colors.surfaceHigh,
+  },
+  planBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'flex-start',
+    gap: spacing.xs,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs,
+    borderRadius: radius.pill,
+    backgroundColor: colors.brandSoft,
+    marginBottom: 2,
+  },
   resume: { gap: spacing.md, borderWidth: 1, borderColor: colors.brandMedium },
   resumeTop: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
   days: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
   day: { minHeight: layout.touchTarget, minWidth: 72, paddingHorizontal: spacing.md, borderRadius: radius.pill, alignItems: 'center', justifyContent: 'center',
-    backgroundColor: colors.surface },
-  daySelected: { backgroundColor: colors.brand },
+    backgroundColor: colors.white, borderWidth: 1, borderColor: colors.surfaceHigh },
+  daySelected: { backgroundColor: colors.brand, borderColor: colors.brand },
   pressed: { opacity: 0.7 },
   note: { flexDirection: 'row', alignItems: 'flex-start', gap: spacing.sm, padding: spacing.md, borderRadius: radius.md, backgroundColor: colors.sand },
   noteText: { flex: 1 },
   dayHeader: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
   dayTitle: { flex: 1, gap: 2 },
-  exercise: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, padding: spacing.md, borderRadius: radius.md, backgroundColor: colors.surfaceLow,
-    minHeight: layout.touchTarget },
+  exercise: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, padding: spacing.md, borderRadius: radius.md, backgroundColor: colors.white,
+    borderWidth: 1, borderColor: colors.surfaceHigh, minHeight: layout.touchTarget },
   exerciseText: { flex: 1, gap: 2 },
-  programs: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, padding: spacing.md, borderRadius: radius.md, backgroundColor: colors.brand,
+  programs: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, padding: spacing.md, borderRadius: radius.lg, backgroundColor: colors.brand,
     minHeight: layout.touchTarget },
   programsIcons: { flexDirection: 'row', gap: 4 },
   changes: { gap: spacing.xs, padding: spacing.md, borderRadius: radius.md, backgroundColor: colors.surfaceLow },

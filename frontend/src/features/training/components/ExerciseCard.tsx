@@ -1,5 +1,6 @@
 import { AppPressable } from '../../../components/ui/AppPressable';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { Fragment, type ReactNode } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { AppButton } from '../../../components/ui/AppButton';
 import { AppText } from '../../../components/ui/AppText';
@@ -11,8 +12,8 @@ import { SetEditor } from './SetEditor';
 import { exerciseById } from '@strongerfit/training-engine';
 import { MovementPictogram } from './MovementPictogram';
 
-export function ExerciseCard({ exercise, paused, onDetails, onComplete, onAddSet }: {
-  exercise: SessionExercise; paused: boolean; onDetails: () => void;
+export function ExerciseCard({ exercise, paused, rest, onDetails, onComplete, onAddSet }: {
+  exercise: SessionExercise; paused: boolean; rest?: ReactNode; onDetails: () => void;
   onComplete: (setId: number, weight: number, reps: number, reserve?: number) => void; onAddSet: () => void;
 }) {
   const current = activeSet(exercise);
@@ -52,24 +53,30 @@ export function ExerciseCard({ exercise, paused, onDetails, onComplete, onAddSet
           <AppText variant="label" tone="muted" style={styles.valueColumn}>Reps</AppText>
           <AppText variant="label" tone="muted" style={styles.statusColumn}>Estado</AppText>
         </View>
-        {exercise.sets.map((set) => set.id === current?.id
-          ? <SetEditor key={`${set.id}-${set.weightKg}`} set={set} weighted={weighted} step={exercise.loadStep ?? 2.5} disabled={paused}
-            onComplete={(weight, reps, reserve) => onComplete(set.id, weight, reps, reserve)} />
-          : <View key={set.id} style={[styles.row, styles.set, !set.completed && styles.pending]}>
-            <AppText variant="header" tone="muted" style={styles.setColumn}>{set.id}</AppText>
-            <View style={styles.valueColumn}>
-              <AppText variant="strong" style={styles.center}>{weighted ? formatWeight(set.weightKg) : 'Sin carga'}</AppText>
-              {weighted && (set.estimated || set.calibration) && <AppText variant="caption" tone="muted" style={styles.center}>
-                {set.calibration ? 'calibración' : 'estimada'}
-              </AppText>}
-            </View>
-            <AppText variant="strong" style={styles.valueColumn}>{set.reps}</AppText>
-            <View style={styles.statusColumn} accessible accessibilityLabel={`Serie ${set.id}: ${set.completed ? 'completada' : 'pendiente'}`}>
-              <View style={[styles.status, set.completed && styles.completed]}>
-                <Ionicons name={set.completed ? 'checkmark' : 'hourglass-outline'} size={19} color={set.completed ? colors.white : colors.muted} />
-              </View>
-            </View>
-          </View>)}
+        {exercise.sets.map((set) => (
+          <Fragment key={set.id}>
+            {set.id === current?.id && rest}
+            {set.id === current?.id
+              ? <SetEditor key={`${set.id}-${set.weightKg}`} set={set} weighted={weighted} step={exercise.loadStep ?? 2.5} disabled={paused}
+                onComplete={(weight, reps, reserve) => onComplete(set.id, weight, reps, reserve)} />
+              : <View style={[styles.row, styles.set, !set.completed && styles.pending]}>
+                <AppText variant="header" tone="muted" style={styles.setColumn}>{set.id}</AppText>
+                <View style={styles.valueColumn}>
+                  <AppText variant="strong" style={styles.center}>{weighted ? formatWeight(set.weightKg) : 'Sin carga'}</AppText>
+                  {weighted && (set.estimated || set.calibration) && <AppText variant="caption" tone="muted" style={styles.center}>
+                    {set.calibration ? 'calibración' : 'estimada'}
+                  </AppText>}
+                </View>
+                <AppText variant="strong" style={styles.valueColumn}>{set.reps}</AppText>
+                <View style={styles.statusColumn} accessible accessibilityLabel={`Serie ${set.id}: ${set.completed ? 'completada' : 'pendiente'}`}>
+                  <View style={[styles.status, set.completed && styles.completed]}>
+                    <Ionicons name={set.completed ? 'checkmark' : 'hourglass-outline'} size={19} color={set.completed ? colors.white : colors.muted} />
+                  </View>
+                </View>
+              </View>}
+          </Fragment>
+        ))}
+        {!current && rest}
       </View>
       {!current && <AppText variant="label" tone="brand" accessibilityLiveRegion="polite">Todas las series de este ejercicio están completas.</AppText>}
       <AppButton label="Añadir serie" icon="add-circle-outline" variant="secondary" disabled={paused}
