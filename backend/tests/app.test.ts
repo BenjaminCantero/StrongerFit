@@ -1,13 +1,16 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { HealthResponseSchema, IdentityResponseSchema } from '@strongerfit/contracts';
+import { AccountDeletionSchema, HealthResponseSchema, IdentityResponseSchema } from '@strongerfit/contracts';
 import { createApp } from '../src/app';
 
-const { getUser, deleteUser } = vi.hoisted(() => ({ getUser: vi.fn(), deleteUser: vi.fn() }));
-vi.mock('@supabase/supabase-js', () => ({
-  createClient: () => ({ auth: { getUser, admin: { deleteUser } } }),
+const { getUser, deleteUser, rpc, maybeSingle } = vi.hoisted(() => ({
+  getUser: vi.fn(), deleteUser: vi.fn(), rpc: vi.fn(), maybeSingle: vi.fn(),
 }));
+vi.mock('@supabase/supabase-js', () => {
+  const query = { select: () => query, eq: () => query, in: () => query, maybeSingle };
+  return { createClient: () => ({ auth: { getUser, admin: { deleteUser } }, rpc, from: () => query }) };
+});
 
-beforeEach(() => { getUser.mockReset(); deleteUser.mockReset(); });
+beforeEach(() => { getUser.mockReset(); deleteUser.mockReset(); rpc.mockReset(); maybeSingle.mockReset(); });
 
 describe('API inicial', () => {
   it('sirve health con el contrato compartido sin depender de Supabase', async () => {
@@ -58,22 +61,76 @@ describe('API inicial', () => {
     expect(body).not.toHaveProperty('email');
   });
 
-  it('elimina solo la cuenta del token validado (CU-08)', async () => {
-    const id = 'dca740c0-b831-4e58-9009-a83cec248109';
-    getUser.mockResolvedValue({ data: { user: { id } }, error: null });
-    deleteUser.mockResolvedValue({ data: {}, error: null });
-    const config = { supabaseUrl: 'https://example.supabase.co', supabaseAnonKey: 'public-key', supabaseServiceRoleKey: 'service-key' };
-    const response = await createApp(config).request('/v1/me', { method: 'DELETE', headers: { Authorization: 'Bearer valid-token' } });
-    expect(response.status).toBe(204);
-    expect(deleteUser).toHaveBeenCalledWith(id);
+  const id = 'dca740c0-b831-4e58-9009-a83cec248109';
+  const config = { supabaseUrl: 'https://example.supabase.co', supabaseAnonKey: 'public-key' };
+  const auth = { Authorization: 'Bearer valid-token' };
+  const signedIn = () => getUser.mockResolvedValue({ data: { user: { id } }, error: null });
+
+  it('programa la eliminación con plazo de gracia sin borrar la cuenta (CU-08)', async () => {
+    signedIn();
+    rpc.mockResolvedValue({ data: '2026-12-01T10:00:00+00:00', error: null });
+    const response = await createApp(config).request('/v1/me', { method: 'DELETE', headers: auth });
+    expect(response.status).toBe(202);
+    expect(AccountDeletionSchema.parse(await response.json())).toEqual({ status: 'pending', scheduledFor: '2026-12-01T10:00:00.000Z' });
+    expect(rpc).toHaveBeenCalledWith('request_account_deletion');
+    expect(deleteUser).not.toHaveBeenCalled();
   });
 
-  it('no elimina sin token ni sin clave de servicio', async () => {
+  it('no solicita la eliminación sin token ni con Supabase sin configurar', async () => {
     expect((await createApp().request('/v1/me', { method: 'DELETE' })).status).toBe(401);
-    getUser.mockResolvedValue({ data: { user: { id: 'dca740c0-b831-4e58-9009-a83cec248109' } }, error: null });
-    const app = createApp({ supabaseUrl: 'https://example.supabase.co', supabaseAnonKey: 'public-key' });
-    expect((await app.request('/v1/me', { method: 'DELETE', headers: { Authorization: 'Bearer valid-token' } })).status).toBe(503);
+    expect((await createApp().request('/v1/me', { method: 'DELETE', headers: auth })).status).toBe(503);
+    expect(rpc).not.toHaveBeenCalled();
     expect(deleteUser).not.toHaveBeenCalled();
+  });
+
+  it('responde 502 si la base falla al solicitar', async () => {
+    signedIn();
+    rpc.mockResolvedValue({ data: null, error: new Error('boom') });
+    expect((await createApp(config).request('/v1/me', { method: 'DELETE', headers: auth })).status).toBe(502);
+  });
+
+  it('consulta el estado de la eliminación', async () => {
+    signedIn();
+    const app = createApp(config);
+    maybeSingle.mockResolvedValueOnce({ data: null, error: null });
+    let response = await app.request('/v1/me/deletion', { headers: auth });
+    expect(response.status).toBe(200);
+    expect(AccountDeletionSchema.parse(await response.json())).toEqual({ status: 'none' });
+    maybeSingle.mockResolvedValueOnce({ data: { scheduled_for: '2026-12-01T10:00:00+00:00' }, error: null });
+    response = await app.request('/v1/me/deletion', { headers: auth });
+    expect(AccountDeletionSchema.parse(await response.json())).toEqual({ status: 'pending', scheduledFor: '2026-12-01T10:00:00.000Z' });
+    maybeSingle.mockResolvedValueOnce({ data: null, error: new Error('boom') });
+    expect((await app.request('/v1/me/deletion', { headers: auth })).status).toBe(502);
+  });
+
+  it('cancela la eliminación o responde 404 si no había solicitud', async () => {
+    signedIn();
+    const app = createApp(config);
+    rpc.mockResolvedValueOnce({ data: true, error: null });
+    let response = await app.request('/v1/me/deletion/cancel', { method: 'POST', headers: auth });
+    expect(response.status).toBe(200);
+    expect(AccountDeletionSchema.parse(await response.json())).toEqual({ status: 'none' });
+    expect(rpc).toHaveBeenCalledWith('cancel_account_deletion');
+    rpc.mockResolvedValueOnce({ data: false, error: null });
+    response = await app.request('/v1/me/deletion/cancel', { method: 'POST', headers: auth });
+    expect(response.status).toBe(404);
+    expect(response.headers.get('content-type')).toContain('application/problem+json');
+    rpc.mockResolvedValueOnce({ data: null, error: new Error('boom') });
+    expect((await app.request('/v1/me/deletion/cancel', { method: 'POST', headers: auth })).status).toBe(502);
+  });
+
+  it('exige sesión para consultar y cancelar la eliminación', async () => {
+    const app = createApp(config);
+    expect((await app.request('/v1/me/deletion')).status).toBe(401);
+    expect((await app.request('/v1/me/deletion/cancel', { method: 'POST' })).status).toBe(401);
+    expect(rpc).not.toHaveBeenCalled();
+  });
+
+  it('documenta los endpoints de eliminación', async () => {
+    const spec = await (await createApp().request('/openapi.json')).json();
+    expect(spec.paths['/v1/me'].delete.responses['202']).toBeDefined();
+    expect(spec.paths['/v1/me/deletion'].get.security).toEqual([{ bearerAuth: [] }]);
+    expect(spec.paths['/v1/me/deletion/cancel'].post.responses['404']).toBeDefined();
   });
 
   it('limita el tamaño del cuerpo y entrega errores problem+json', async () => {

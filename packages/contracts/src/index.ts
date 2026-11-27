@@ -15,5 +15,13 @@ export const ProblemSchema = z.object({
   detail: z.string(),
 });
 
+// Eliminación de cuenta con plazo de gracia (CU-08): 'none' sin solicitud abierta,
+// 'pending' con la fecha en que se ejecutará (ISO 8601).
+export const AccountDeletionSchema = z.discriminatedUnion('status', [
+  z.object({ status: z.literal('none') }),
+  z.object({ status: z.literal('pending'), scheduledFor: z.iso.datetime({ offset: true }) }),
+]);
+
 export type HealthResponse = z.infer<typeof HealthResponseSchema>;
 export type IdentityResponse = z.infer<typeof IdentityResponseSchema>;
+export type AccountDeletion = z.infer<typeof AccountDeletionSchema>;

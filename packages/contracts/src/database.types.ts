@@ -49,14 +49,14 @@ export type Database = {
                   ]
                 },"data_requests": {
                   Row: {
-                    "completed_at": string | null,"id": string,"kind": string,"requested_at": string,"status": string,"user_id": string | null
+                    "completed_at": string | null,"id": string,"kind": string,"requested_at": string,"scheduled_for": string | null,"status": string,"user_id": string | null
                   }
                   ComputedFields: never
                   Insert: {
-                    "completed_at"?: string | null,"id"?: string,"kind": string,"requested_at"?: string,"status"?: string,"user_id"?: string | null
+                    "completed_at"?: string | null,"id"?: string,"kind": string,"requested_at"?: string,"scheduled_for"?: string | null,"status"?: string,"user_id"?: string | null
                   }
                   Update: {
-                    "completed_at"?: string | null,"id"?: string,"kind"?: string,"requested_at"?: string,"status"?: string,"user_id"?: string | null
+                    "completed_at"?: string | null,"id"?: string,"kind"?: string,"requested_at"?: string,"scheduled_for"?: string | null,"status"?: string,"user_id"?: string | null
                   }
                   Relationships: [
                     
@@ -405,7 +405,10 @@ isOneToOne: false
                 }
           }
           Functions: {
-            "complete_onboarding":
+            "cancel_account_deletion":
+{ Args: Record<PropertyKey, never>; Returns: boolean
+                           },
+"complete_onboarding":
 { Args: { "payload": Json }; Returns: boolean
                            },
 "has_health_consent":
@@ -413,6 +416,12 @@ isOneToOne: false
                            },
 "has_health_risk":
 { Args: Record<PropertyKey, never>; Returns: boolean
+                           },
+"process_account_deletions":
+{ Args: Record<PropertyKey, never>; Returns: number
+                           },
+"request_account_deletion":
+{ Args: Record<PropertyKey, never>; Returns: string
                            },
 "save_meal_plan":
 { Args: { "payload": Json }; Returns: string

@@ -12,6 +12,7 @@ Esquema versionado de Supabase (RNF-12). El diseño completo está en
 | `20261124000005_complete_onboarding.sql` | AU-01 | RPC `complete_onboarding()` atómica e idempotente; `EXECUTE` revocado a `anon` |
 | `20261126000006_save_workout_plan.sql` | SY-03 | RPC `save_workout_plan()` atómica: archiva el plan activo e inserta el nuevo con días, ejercicios y traza |
 | `20261126000007_nutrition_writes.sql` | SY-04 | `food_logs.position` y RPC `save_meal_plan()` atómica |
+| `20261127000001_account_deletion_grace.sql` | CU-08 | eliminación de cuenta con plazo de 4 días: `scheduled_for`, estado `cancelled`, RPC `request_/cancel_account_deletion()` y `process_account_deletions()` con cron |
 
 ## Convenciones
 

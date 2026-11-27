@@ -1,5 +1,5 @@
 import { createRoute, OpenAPIHono } from '@hono/zod-openapi';
-import { HealthResponseSchema, IdentityResponseSchema, ProblemSchema } from '@strongerfit/contracts';
+import { AccountDeletionSchema, HealthResponseSchema, IdentityResponseSchema, ProblemSchema } from '@strongerfit/contracts';
 import { createClient } from '@supabase/supabase-js';
 import { cors } from 'hono/cors';
 import { bodyLimit } from 'hono/body-limit';
@@ -46,27 +46,71 @@ export function createApp(config: ApiConfig = {}) {
     },
   }), (c) => c.json({ id: c.get('userId') }, 200));
 
-  // CU-08: elimina la cuenta del usuario autenticado. Aún no hay tablas propias; al crearlas,
-  // sus filas se borran en cascada desde auth.users.
+  // CU-08: la eliminación de la cuenta se programa con un plazo de gracia de 4 días y se puede
+  // cancelar. Todo pasa por el cliente del usuario (RLS); el borrado real lo hace solo
+  // process_account_deletions() desde el cron, nunca esta API.
+  app.use('/v1/me/deletion', requireAuth(config));
+  app.use('/v1/me/deletion/cancel', requireAuth(config));
+  const userClient = (authorization: string | undefined) => createClient(config.supabaseUrl ?? '', config.supabaseAnonKey ?? '', {
+    auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
+    global: { headers: { Authorization: authorization ?? '' } },
+  });
+  // @hono/zod-openapi solo tipa las respuestas 'application/json'; las de error se documentan
+  // como problem+json, así que se devuelven como `never` para no chocar con el tipo del handler.
+  const fail = (c: Parameters<typeof problem>[0], status: Parameters<typeof problem>[1], title: string, detail: string): never =>
+    problem(c, status, title, detail) as never;
+  const failure = (c: Parameters<typeof problem>[0]) =>
+    fail(c, 502, 'No se pudo completar la solicitud', 'Inténtalo de nuevo más tarde.');
+  const errorResponses = {
+    401: { description: 'Sesión inválida', content: { 'application/problem+json': { schema: ProblemSchema } } },
+    502: { description: 'Fallo al consultar la base de datos', content: { 'application/problem+json': { schema: ProblemSchema } } },
+    503: { description: 'Servicio no configurado', content: { 'application/problem+json': { schema: ProblemSchema } } },
+  } as const;
+
   app.openapi(createRoute({
     method: 'delete', path: '/v1/me', tags: ['Identidad'],
-    summary: 'Eliminar la cuenta propia',
+    summary: 'Solicitar la eliminación de la cuenta propia (se ejecuta en 4 días y se puede cancelar)',
     security: [{ bearerAuth: [] }],
     responses: {
-      204: { description: 'Cuenta eliminada' },
-      401: { description: 'Sesión inválida', content: { 'application/problem+json': { schema: ProblemSchema } } },
-      503: { description: 'Eliminación no configurada', content: { 'application/problem+json': { schema: ProblemSchema } } },
+      202: { description: 'Eliminación programada', content: { 'application/json': { schema: AccountDeletionSchema } } },
+      ...errorResponses,
     },
   }), async (c) => {
-    if (!config.supabaseUrl || !config.supabaseServiceRoleKey) {
-      return problem(c, 503, 'Servicio no disponible', 'La eliminación de cuentas aún no está configurada.');
-    }
-    const admin = createClient(config.supabaseUrl, config.supabaseServiceRoleKey, {
-      auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
-    });
-    const { error } = await admin.auth.admin.deleteUser(c.get('userId'));
-    if (error) return problem(c, 502, 'No se pudo eliminar la cuenta', 'Inténtalo de nuevo más tarde.');
-    return c.body(null, 204);
+    const { data, error } = await userClient(c.req.header('Authorization')).rpc('request_account_deletion');
+    if (error || typeof data !== 'string') return failure(c);
+    return c.json({ status: 'pending' as const, scheduledFor: new Date(data).toISOString() }, 202);
+  });
+
+  app.openapi(createRoute({
+    method: 'get', path: '/v1/me/deletion', tags: ['Identidad'],
+    summary: 'Estado de la solicitud de eliminación de la cuenta',
+    security: [{ bearerAuth: [] }],
+    responses: {
+      200: { description: 'Sin solicitud abierta o pendiente', content: { 'application/json': { schema: AccountDeletionSchema } } },
+      ...errorResponses,
+    },
+  }), async (c) => {
+    const { data, error } = await userClient(c.req.header('Authorization')).from('data_requests')
+      .select('scheduled_for').eq('kind', 'delete').in('status', ['pending', 'processing']).maybeSingle();
+    if (error) return failure(c);
+    if (!data?.scheduled_for) return c.json({ status: 'none' as const }, 200);
+    return c.json({ status: 'pending' as const, scheduledFor: new Date(data.scheduled_for).toISOString() }, 200);
+  });
+
+  app.openapi(createRoute({
+    method: 'post', path: '/v1/me/deletion/cancel', tags: ['Identidad'],
+    summary: 'Cancelar la eliminación de la cuenta dentro del plazo',
+    security: [{ bearerAuth: [] }],
+    responses: {
+      200: { description: 'Eliminación cancelada', content: { 'application/json': { schema: AccountDeletionSchema } } },
+      404: { description: 'No había una solicitud abierta', content: { 'application/problem+json': { schema: ProblemSchema } } },
+      ...errorResponses,
+    },
+  }), async (c) => {
+    const { data, error } = await userClient(c.req.header('Authorization')).rpc('cancel_account_deletion');
+    if (error) return failure(c);
+    if (data !== true) return fail(c, 404, 'Sin solicitud', 'No hay una eliminación pendiente que cancelar.');
+    return c.json({ status: 'none' as const }, 200);
   });
 
   app.openAPIRegistry.registerComponent('securitySchemes', 'bearerAuth', {

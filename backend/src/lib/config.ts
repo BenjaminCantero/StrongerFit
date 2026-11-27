@@ -2,7 +2,7 @@ export type ApiConfig = {
   basePath?: string;
   supabaseUrl?: string;
   supabaseAnonKey?: string;
-  // Solo en el servidor: permite eliminar la cuenta propia (CU-08). Nunca se expone al cliente.
+  // Solo en el servidor. Ya no la usa la ruta de eliminación (CU-08): el borrado lo ejecuta el cron en la base.
   supabaseServiceRoleKey?: string;
   allowedOrigins?: string[];
 };
