@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { completeOnboarding, createDraft, HEALTH_QUESTIONNAIRE_VERSION, type Draft } from '../../onboarding/domain/onboarding';
-import { accountStatus, onboardingPayload } from './account.mappers';
+import { accountStatus, deletionNotice, formatDeletionDate, onboardingPayload, parseAccountDeletion } from './account.mappers';
 
 const valid = (overrides: Partial<Draft> = {}): Draft => ({
   ...createDraft(), name: 'Ana', age: '30', sex: 'female', height: '165', weight: '80', activity: 'moderate',
@@ -62,5 +62,27 @@ describe('accountStatus', () => {
 
   it('con perfil y consentimiento vigente está lista', () => {
     expect(accountStatus({ hasProfile: true, consent: 'granted' })).toBe('ready');
+  });
+});
+
+describe('eliminación de cuenta', () => {
+  it('valida la respuesta del servidor con el contrato', () => {
+    expect(parseAccountDeletion({ status: 'none' })).toEqual({ status: 'none' });
+    expect(parseAccountDeletion({ status: 'pending', scheduledFor: '2026-12-01T15:00:00.000Z' }))
+      .toEqual({ status: 'pending', scheduledFor: '2026-12-01T15:00:00.000Z' });
+    expect(() => parseAccountDeletion({ status: 'pending' })).toThrow();
+    expect(() => parseAccountDeletion({ status: 'pending', scheduledFor: 'mañana' })).toThrow();
+    expect(() => parseAccountDeletion(null)).toThrow();
+  });
+
+  it('formatea la fecha en hora de Chile', () => {
+    expect(formatDeletionDate('2026-12-01T15:00:00.000Z')).toBe('1 de diciembre de 2026');
+    // 02:00 UTC del 2 aún es el día 1 en Santiago (UTC-3 en verano).
+    expect(formatDeletionDate('2026-12-02T02:00:00.000Z')).toBe('1 de diciembre de 2026');
+  });
+
+  it('arma el aviso con la fecha', () => {
+    expect(deletionNotice('2026-12-01T15:00:00.000Z'))
+      .toBe('Tu cuenta se eliminará el 1 de diciembre de 2026. Puedes cancelarlo entrando de nuevo antes de esa fecha.');
   });
 });

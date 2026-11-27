@@ -10,6 +10,7 @@ import { colors, radius, spacing } from '../../theme';
 import { AppInfoCard } from './components/AppInfoCard';
 import { NutritionCard } from './components/NutritionCard';
 import { PersonalDataCard } from './components/PersonalDataCard';
+import { deletionNotice } from '../account/data/account.mappers';
 import { PrivacyCard } from './components/PrivacyCard';
 import { NutritionEditor, PersonalEditor, TrainingSetupEditor } from './components/ProfileEditors';
 import { FormField } from '../../components/ui/FormField';
@@ -21,7 +22,7 @@ import type { PersonalValues, ProfileAction, ProfileData } from './domain/profil
 import type { NutritionValues } from './components/ProfileEditors';
 import type { Environment, Equipment, Goal, Zone } from '../onboarding/domain/onboarding';
 
-type Dialog = 'personal' | 'nutrition' | 'training' | 'photo' | 'delete' | 'consent' | null;
+type Dialog = 'personal' | 'nutrition' | 'training' | 'photo' | 'delete' | 'deletion-scheduled' | 'consent' | null;
 
 // Guardados en Supabase (SY-02). Cada uno devuelve un mensaje de error o null.
 export type ProfileSaves = {
@@ -46,7 +47,9 @@ type Props = {
   onSignIn: () => void;
   onSignUp: () => void;
   onSignOut: () => Promise<void>;
-  onDeleteAccount: (password: string) => Promise<{ ok: true } | { ok: false; message: string }>;
+  onDeleteAccount: (password: string) => Promise<{ ok: true; scheduledFor: string } | { ok: false; message: string }>;
+  // Tras ver el aviso de eliminación programada: cierra sesión y limpia el teléfono.
+  onAccountDeletionAcknowledged: () => Promise<void>;
 };
 
 const exportNotice: Record<ExportResult, string> = {
@@ -63,13 +66,14 @@ function heroSummary(profile: ProfileData): string {
   return parts.length ? parts.join(' · ') : 'Completa tu ficha para preparar tu plan';
 }
 
-export function ProfileScreen({ profile, dispatch, save, isPreview, onPickPhoto, onExport, onDeleteLocalData, onGoals, account, onSignIn, onSignUp, onSignOut, onDeleteAccount }: Props) {
+export function ProfileScreen({ profile, dispatch, save, isPreview, onPickPhoto, onExport, onDeleteLocalData, onGoals, account, onSignIn, onSignUp, onSignOut, onDeleteAccount, onAccountDeletionAcknowledged }: Props) {
   const [dialog, setDialog] = useState<Dialog>(null);
   const [notice, setNotice] = useState('');
   const [exporting, setExporting] = useState(false);
   const [password, setPassword] = useState('');
   const [deleteError, setDeleteError] = useState('');
   const [deleting, setDeleting] = useState(false);
+  const [scheduledFor, setScheduledFor] = useState<string | null>(null);
   const [saveError, setSaveError] = useState('');
   const [saving, setSaving] = useState(false);
   const close = () => { setDialog(null); setPassword(''); setDeleteError(''); setSaveError(''); };
@@ -111,7 +115,8 @@ export function ProfileScreen({ profile, dispatch, save, isPreview, onPickPhoto,
     finally { setExporting(false); }
   }
 
-  // CU-08: con cuenta, se reautentica y se elimina en el servidor antes de borrar el dispositivo.
+  // CU-08: con cuenta, se reautentica y se programa la eliminación en el servidor (4 días para cancelarla);
+  // se muestra el aviso con la fecha y al aceptarlo se cierra sesión y se limpia el teléfono.
   async function deleteData() {
     if (account.email) {
       if (!password) { setDeleteError('Ingresa tu contraseña para confirmar.'); return; }
@@ -119,9 +124,13 @@ export function ProfileScreen({ profile, dispatch, save, isPreview, onPickPhoto,
       const result = await onDeleteAccount(password);
       setDeleting(false);
       if (!result.ok) { setDeleteError(result.message); return; }
+      setPassword('');
+      setScheduledFor(result.scheduledFor);
+      setDialog('deletion-scheduled');
+      return;
     }
     onDeleteLocalData();
-    done(account.email ? 'Cuenta y datos de este dispositivo eliminados.' : 'Datos de este dispositivo eliminados.');
+    done('Datos de este dispositivo eliminados.');
   }
 
   return (
@@ -152,7 +161,7 @@ export function ProfileScreen({ profile, dispatch, save, isPreview, onPickPhoto,
       <NutritionCard exclusions={profile.exclusions} dietFocus={profile.dietFocus} preferences={profile.mealPreferences}
         trainingDayTargets={profile.trainingDayTargets} target={profile.nutritionPlan?.result ?? null} onGoals={onGoals} onAdjust={() => { setNotice(''); setDialog('nutrition'); }} />
       <PrivacyCard exporting={exporting} consentDate={formatDay(profile.onboarding?.consent.acceptedAt)}
-        healthDate={formatDay(profile.onboarding?.completedAt)} healthRisk={hasHealthRisk(profile.onboarding?.healthFlags ?? [])} onExport={exportData} onDelete={() => { setNotice(''); setDialog('delete'); }}
+        healthDate={formatDay(profile.onboarding?.completedAt)} healthRisk={hasHealthRisk(profile.onboarding?.healthFlags ?? [])} hasAccount={!!account.email} onExport={exportData} onDelete={() => { setNotice(''); setDialog('delete'); }}
         onWithdrawConsent={() => { setNotice(''); setDialog('consent'); }} />
       <AppInfoCard />
 
@@ -211,20 +220,31 @@ export function ProfileScreen({ profile, dispatch, save, isPreview, onPickPhoto,
         <AppButton label="Cancelar" variant="secondary" onPress={close} />
       </AppDialog>
 
+      <AppDialog title="Eliminación programada" visible={dialog === 'deletion-scheduled'} onClose={() => { void onAccountDeletionAcknowledged(); }}>
+        <AppText>{scheduledFor ? deletionNotice(scheduledFor) : ''}</AppText>
+        <AppButton label="Entendido" onPress={() => { void onAccountDeletionAcknowledged(); }} />
+      </AppDialog>
+
       <AppDialog title={account.email ? '¿Eliminar tu cuenta y tus datos?' : '¿Eliminar los datos de este dispositivo?'} visible={dialog === 'delete'} onClose={close}>
         <View style={styles.dangerIcon}>
           <Ionicons name="warning-outline" size={28} color={colors.error} />
         </View>
-        <AppText tone="muted">
-          Se borrarán el perfil, la foto elegida, el diario de alimentación y el historial de Progreso de esta app.
-          Esta acción <AppText variant="strong">no se puede deshacer</AppText>. Si quieres conservar una copia, expórtala antes.
-        </AppText>
         {account.email ? <>
-          <AppText variant="caption" tone="muted">También se eliminará tu cuenta {account.email}. Confirma tu identidad con tu contraseña.</AppText>
+          <AppText tone="muted">
+            Tu cuenta y tus datos se eliminarán <AppText variant="strong">en 4 días</AppText>, no de inmediato. Hasta entonces puedes
+            cancelarlo entrando de nuevo; pasado el plazo no se puede deshacer. Si quieres conservar una copia, expórtala antes.
+          </AppText>
+          <AppText variant="caption" tone="muted">Se eliminará la cuenta {account.email}. Confirma tu identidad con tu contraseña.</AppText>
           <FormField label="Contraseña" value={password} onChange={(value) => { setPassword(value); setDeleteError(''); }} error={deleteError}
             secureTextEntry autoCapitalize="none" autoComplete="current-password" maxLength={72} />
-        </> : <AppText variant="caption" tone="muted">No tienes una sesión iniciada, así que no hay una cuenta que eliminar.</AppText>}
-        <AppButton label={deleting ? 'Eliminando…' : account.email ? 'Sí, eliminar mi cuenta y datos' : 'Sí, eliminar mis datos'} variant="danger" icon="trash-outline"
+        </> : <>
+          <AppText tone="muted">
+            Se borrarán el perfil, la foto elegida, el diario de alimentación y el historial de Progreso de esta app.
+            Esta acción <AppText variant="strong">no se puede deshacer</AppText>. Si quieres conservar una copia, expórtala antes.
+          </AppText>
+          <AppText variant="caption" tone="muted">No tienes una sesión iniciada, así que no hay una cuenta que eliminar.</AppText>
+        </>}
+        <AppButton label={deleting ? 'Enviando…' : account.email ? 'Sí, programar eliminación' : 'Sí, eliminar mis datos'} variant="danger" icon="trash-outline"
           disabled={deleting} onPress={deleteData} />
         <AppButton label="Mantener mis datos" variant="secondary" onPress={close} />
       </AppDialog>

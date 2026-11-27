@@ -2,6 +2,7 @@ import type { Session } from '@supabase/supabase-js';
 import { useEffect, useState } from 'react';
 import { apiUrl } from '../../lib/env';
 import { getSupabase } from '../../lib/supabase';
+import { parseAccountDeletion } from './data/account.mappers';
 import { bindPendingOnboardingEmail } from './pendingOnboarding';
 import { authErrorMessage, type AuthForm, type AuthMode, type AuthResult } from './domain';
 
@@ -32,23 +33,27 @@ export async function submitAuth(mode: AuthMode, form: AuthForm): Promise<AuthRe
     : { ok: true, signedIn: false, message: 'Si existe una cuenta con ese correo, te enviamos un enlace para recuperar el acceso.' };
 }
 
-// CU-08: reautentica con la contraseña y pide al servidor eliminar la cuenta; luego cierra la sesión.
-export async function deleteAccount(password: string): Promise<{ ok: true } | { ok: false; message: string }> {
+// CU-08: reautentica con la contraseña y pide al servidor eliminar la cuenta. La eliminación queda programada
+// (plazo de 4 días para cancelarla) y devuelve la fecha. NO cierra la sesión: quien llama muestra el aviso y
+// luego cierra sesión y limpia el teléfono con signOutAndPurge.
+export async function deleteAccount(password: string): Promise<{ ok: true; scheduledFor: string } | { ok: false; message: string }> {
   const auth = getSupabase().auth;
   const email = (await auth.getUser()).data.user?.email;
   if (!email) return { ok: false, message: 'Tu sesión expiró. Inicia sesión de nuevo.' };
   const { data, error } = await auth.signInWithPassword({ email, password });
   if (error || !data.session) return { ok: false, message: error ? authErrorMessage(error) : 'No pudimos confirmar tu identidad.' };
+  const serverError = { ok: false, message: 'El servidor no pudo eliminar tu cuenta. Inténtalo más tarde.' } as const;
+  let response: Response;
   try {
-    const response = await fetch(`${apiUrl.replace(/\/$/, '')}/v1/me`, {
+    response = await fetch(`${apiUrl.replace(/\/$/, '')}/v1/me`, {
       method: 'DELETE', headers: { Authorization: `Bearer ${data.session.access_token}` },
     });
-    if (response.status !== 204) return { ok: false, message: 'El servidor no pudo eliminar tu cuenta. Inténtalo más tarde.' };
   } catch {
     return { ok: false, message: 'No hay conexión con el servidor. Inténtalo más tarde.' };
   }
-  await auth.signOut().catch(() => undefined);
-  return { ok: true };
+  if (response.status !== 202) return serverError;
+  const body = await response.json().then(parseAccountDeletion, () => null).catch(() => null);
+  return body?.status === 'pending' ? { ok: true, scheduledFor: body.scheduledFor } : serverError;
 }
 
 export function useAuthSession() {

@@ -22,10 +22,11 @@ function StatusRow({ icon, title, description, done }: { icon: IconName; title: 
   </View>;
 }
 
-type Props = { exporting: boolean; consentDate: string | null; healthDate: string | null; healthRisk: boolean; onExport: () => void; onDelete: () => void;
+type Props = { exporting: boolean; consentDate: string | null; healthDate: string | null; healthRisk: boolean; hasAccount: boolean; onExport: () => void; onDelete: () => void;
   onWithdrawConsent: () => void };
 
-export function PrivacyCard({ exporting, consentDate, healthDate, healthRisk, onExport, onDelete, onWithdrawConsent }: Props) {
+export function PrivacyCard({ exporting, consentDate, healthDate, healthRisk, hasAccount, onExport, onDelete, onWithdrawConsent }: Props) {
+  const deleteLabel = hasAccount ? 'Eliminar mi cuenta y mis datos' : 'Eliminar datos de este dispositivo';
   return (
     <View style={styles.section}>
       <View style={styles.sectionTitle}>
@@ -66,10 +67,10 @@ export function PrivacyCard({ exporting, consentDate, healthDate, healthRisk, on
           <AppText variant="label" tone="muted" style={styles.actionText}>Retirar consentimiento de datos de salud</AppText>
         </AppPressable>
 
-        <AppPressable accessibilityRole="button" accessibilityLabel="Eliminar datos de este dispositivo" onPress={onDelete}
+        <AppPressable accessibilityRole="button" accessibilityLabel={deleteLabel} accessibilityHint={hasAccount ? 'La eliminación se ejecuta en 4 días y puedes cancelarla en ese plazo.' : undefined} onPress={onDelete}
           style={({ pressed }) => [styles.actionRow, pressed && styles.dimmed]}>
           <Ionicons name="trash-outline" size={16} color={colors.error} />
-          <AppText variant="label" style={[styles.actionText, styles.dangerText]}>Eliminar datos de este dispositivo</AppText>
+          <AppText variant="label" style={[styles.actionText, styles.dangerText]}>{deleteLabel}</AppText>
           <Ionicons name="warning-outline" size={16} color={colors.error} />
         </AppPressable>
       </View>

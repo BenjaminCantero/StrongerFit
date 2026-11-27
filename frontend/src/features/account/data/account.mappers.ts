@@ -1,3 +1,4 @@
+import { AccountDeletionSchema, type AccountDeletion } from '@strongerfit/contracts';
 import { z } from 'zod';
 import { HEALTH_QUESTIONNAIRE_VERSION, weightGoalPace, type completeOnboarding } from '../../onboarding/domain/onboarding';
 
@@ -75,3 +76,14 @@ export function accountStatus({ hasProfile, consent }: { hasProfile: boolean; co
   if (!hasProfile) return 'needs-onboarding';
   return consent === 'granted' ? 'ready' : 'needs-consent';
 }
+
+// Eliminación de cuenta con plazo de gracia: valida el cuerpo del servidor con el contrato compartido.
+export type { AccountDeletion };
+export const parseAccountDeletion = (body: unknown): AccountDeletion => AccountDeletionSchema.parse(body);
+
+// Fecha en que se ejecutará la eliminación, en hora de Chile (ej.: "1 de diciembre de 2026").
+export const formatDeletionDate = (iso: string): string =>
+  new Intl.DateTimeFormat('es-CL', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'America/Santiago' }).format(new Date(iso));
+
+export const deletionNotice = (iso: string): string =>
+  `Tu cuenta se eliminará el ${formatDeletionDate(iso)}. Puedes cancelarlo entrando de nuevo antes de esa fecha.`;

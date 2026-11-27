@@ -12,11 +12,11 @@ import { appFonts } from '../theme/fonts';
 import { AppHeader } from '../components/AppHeader';
 import { routeAccess } from '../features/account/access';
 import { useAuthSession } from '../features/account/auth';
-import { AccountStatusErrorScreen, PendingOnboardingErrorScreen } from '../features/account/GateScreens';
+import { AccountDeletionPendingScreen, AccountStatusErrorScreen, PendingOnboardingErrorScreen } from '../features/account/GateScreens';
 import { signOutAndPurge, useSessionLifecycle } from '../features/account/session';
 import { useFinishPendingOnboarding } from '../features/account/useFinishPendingOnboarding';
 import { SessionContext } from '../features/account/SessionContext';
-import { useAccountStatus } from '../features/account/useAccount';
+import { useAccountDeletion, useAccountStatus, useCancelAccountDeletion } from '../features/account/useAccount';
 import { dataErrorMessage, toDataError } from '../lib/data/errors';
 import { cacheBuster } from '../lib/data/keys';
 import { CACHE_MAX_AGE, createQueryClient, listenToConnectivity, queryPersister } from '../lib/data/query';
@@ -82,9 +82,17 @@ function AppStack({ configured, userId }: { configured: boolean; userId: string 
   const queryClient = useQueryClient();
   useSessionLifecycle(queryClient, userId);
   const status = useAccountStatus(userId);
-  const access = routeAccess({ configured, sessionReady: true, userId, status: status.data, statusError: status.isError });
-  const finish = useFinishPendingOnboarding(userId, status.data);
-  const sessionExpired = status.isError && toDataError(status.error).kind === 'session';
+  const deletion = useAccountDeletion(userId);
+  const cancelDeletion = useCancelAccountDeletion(userId ?? 'anon');
+  // Solo vale lo confirmado por el servidor en esta apertura: un dato viejo de la caché no deja pasar.
+  const deletionData = deletion.isFetchedAfterMount ? deletion.data : undefined;
+  const access = routeAccess({
+    configured, sessionReady: true, userId, status: status.data, statusError: status.isError,
+    deletion: deletionData?.status, deletionError: deletion.isError,
+  });
+  const finish = useFinishPendingOnboarding(userId, access === 'deletion-pending' || access === 'deletion-error' ? undefined : status.data);
+  const sessionExpired = (status.isError && toDataError(status.error).kind === 'session')
+    || (deletion.isError && toDataError(deletion.error).kind === 'session');
 
   // Sesión revocada o vencida: se cierra sin borrar el borrador (puede tener una sesión sin enviar).
   useEffect(() => {
@@ -94,6 +102,11 @@ function AppStack({ configured, userId }: { configured: boolean; userId: string 
   if (access === 'loading') return <Splash label="Abriendo tu cuenta" />;
   if (access === 'status-error') return <AccountStatusErrorScreen message={dataErrorMessage(toDataError(status.error))}
     onRetry={() => status.refetch()} onSignOut={() => signOutAndPurge(queryClient)} />;
+  if (access === 'deletion-error') return <AccountStatusErrorScreen message={dataErrorMessage(toDataError(deletion.error))}
+    onRetry={() => deletion.refetch()} onSignOut={() => signOutAndPurge(queryClient)} />;
+  if (access === 'deletion-pending' && deletionData?.status === 'pending') return <AccountDeletionPendingScreen scheduledFor={deletionData.scheduledFor}
+    onSignOut={() => signOutAndPurge(queryClient)}
+    onCancel={() => cancelDeletion.mutateAsync().then(() => null, (error: unknown) => dataErrorMessage(toDataError(error)))} />;
   // Guardando el perfil hecho antes de crear la cuenta (sin <Redirect>: al quedar lista, las guardas llevan a Inicio).
   if (finish.phase === 'checking') return <Splash label="Abriendo tu cuenta" />;
   if (finish.phase === 'saving') return <Splash label="Guardando tu perfil" />;

@@ -4,6 +4,7 @@ import { Screen } from '../../components/Screen';
 import { AppButton } from '../../components/ui/AppButton';
 import { AppText } from '../../components/ui/AppText';
 import { spacing } from '../../theme';
+import { formatDeletionDate } from './data/account.mappers';
 import { CheckRow } from '../onboarding/components/CheckRow';
 
 // Sin claves de Supabase la app no puede funcionar: la cuenta es obligatoria (AU-01).
@@ -39,6 +40,33 @@ export function PendingOnboardingErrorScreen({ onRetry, onRedo }: { onRetry: () 
     <View style={styles.actions}>
       <AppButton label="Reintentar" icon="refresh" onPress={onRetry} />
       <AppButton label="Completar de nuevo" variant="secondary" onPress={onRedo} />
+    </View>
+  </Screen>;
+}
+
+// Eliminación programada: durante el plazo la cuenta no abre sus pantallas; se puede cancelar o salir.
+export function AccountDeletionPendingScreen({ scheduledFor, onCancel, onSignOut }: {
+  scheduledFor: string; onCancel: () => Promise<string | null>; onSignOut: () => void;
+}) {
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function cancel() {
+    setBusy(true);
+    setError(null);
+    try { setError(await onCancel()); } finally { setBusy(false); }
+  }
+
+  return <Screen safeBottom>
+    <AppText variant="title" accessibilityRole="header">Tu cuenta está programada para eliminarse</AppText>
+    <AppText>
+      Tu cuenta y tus datos se eliminarán el {formatDeletionDate(scheduledFor)}. Si cambiaste de opinión,
+      puedes cancelar la eliminación antes de esa fecha y seguir usando la app como siempre.
+    </AppText>
+    {error && <AppText accessibilityRole="alert" variant="caption">{error}</AppText>}
+    <View style={styles.actions}>
+      <AppButton label={busy ? 'Cancelando…' : 'Cancelar eliminación'} icon="close-circle-outline" disabled={busy} onPress={cancel} />
+      <AppButton label="Cerrar sesión" variant="secondary" disabled={busy} onPress={onSignOut} />
     </View>
   </Screen>;
 }
